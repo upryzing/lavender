@@ -8,11 +8,11 @@
   "editor.codeActionsOnSave": {
     "source.fixAll": "explicit"
   },
-  // Force to follow the `GUIDELINES.md`
+  // follow the style guidlines in `GUIDELINES.md`
   "editor.detectIndentation": false,
   "editor.insertSpaces": true,
   "editor.tabSize": 2,
-  // Tell `rust-analyzer` where the Tauri project is.
+  // tell `rust-analyzer` where the Tauri project is
   "rust-analyzer.linkedProjects": [
     "./packages/desktop/src-tauri/Cargo.toml"
   ],

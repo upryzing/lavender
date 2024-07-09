@@ -184,7 +184,7 @@ export function Message(props: Props) {
             }
           >
             <NewUser>
-              <Tooltip content="New to Revolt" placement="top">
+              <Tooltip content={t("app.main.channel.new_to_upryzing")} placement="top">
                 <MdSpa {...iconSize(16)} />
               </Tooltip>
             </NewUser>
@@ -196,15 +196,16 @@ export function Message(props: Props) {
             }
           >
             <NewUser>
-              <Tooltip content="New to the server" placement="top">
+              <Tooltip content={t("app.main.channel.new_to_space")} placement="top">
                 <MdSpa {...iconSize(16)} />
               </Tooltip>
             </NewUser>
           </Match>
+          {/* pronounce example
           <Match when={props.message.authorId === "01EX2NCWQ0CHS3QJF0FEQS1GR4"}>
             <span />
             <span>he/him &middot; </span>
-          </Match>
+          </Match> */}
         </Switch>
       }
       compact={
@@ -228,10 +229,10 @@ export function Message(props: Props) {
             menuGenerator={(user) =>
               user
                 ? floatingUserMenus(
-                    user!,
-                    // TODO: try to fetch on demand member
-                    props.message.server?.getMember(user!.id)
-                  )
+                  user!,
+                  // TODO: try to fetch on demand member
+                  props.message.server?.getMember(user!.id)
+                )
                 : {}
             }
             isServer={!!props.message.server}

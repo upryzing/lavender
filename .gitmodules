@@ -3,7 +3,7 @@
 	url = https://github.com/revoltchat/revolt.js
 [submodule "components/i18n/locales"]
 	path = packages/client/components/i18n/locales
-	url = https://github.com/revoltchat/translations
+	url = https://github.com/upryzing/translations
 [submodule "packages/solid-styled-components"]
 	path = packages/solid-styled-components
 	url = https://github.com/revoltchat/solid-styled-components

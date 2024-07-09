@@ -2,7 +2,7 @@ import { Match, Show, Switch } from "solid-js";
 
 import { cva } from "styled-system/css";
 
-import { IS_DEV, IS_REVOLT, useClient } from "@revolt/client";
+import { IS_DEV, IS_UPRYZING, useClient } from "@revolt/client";
 import { useTranslation } from "@revolt/i18n";
 import { modalController } from "@revolt/modal";
 import { useNavigate } from "@revolt/routing";
@@ -102,9 +102,9 @@ export function HomePage() {
   const navigate = useNavigate();
   const client = useClient();
 
-  // check if we're revolt.chat; if so, check if the user is in the Lounge
-  const showLoungeButton = IS_REVOLT;
-  const isInLounge =
+  // check if we're upryzing.app; if so, check if the user is in the Garden
+  const showGardenButton = IS_UPRYZING;
+  const isInGarden =
     client()!.servers.get("01F7ZSBSFHQ8TA81725KQCSDDP") !== undefined;
 
   return (
@@ -138,7 +138,7 @@ export function HomePage() {
               {t("app.home.group")}
             </CategoryButton>
             <Switch fallback={null}>
-              <Match when={showLoungeButton && isInLounge}>
+              <Match when={showGardenButton && isInGarden}>
                 <CategoryButton
                   onClick={() => navigate("/server/01F7ZSBSFHQ8TA81725KQCSDDP")}
                   description={t("app.home.goto-testers_desc")}
@@ -147,7 +147,7 @@ export function HomePage() {
                   {t("app.home.goto-testers")}
                 </CategoryButton>
               </Match>
-              <Match when={showLoungeButton && !isInLounge}>
+              <Match when={showGardenButton && !isInGarden}>
                 <CategoryButton
                   description={t("app.home.join-testers_desc")}
                   icon={<MdGroups3 />}
@@ -167,7 +167,7 @@ export function HomePage() {
             </CategoryButton>
           </SeparatedColumn>
           <SeparatedColumn>
-            <Show when={IS_REVOLT}>
+            <Show when={IS_UPRYZING}>
               <CategoryButton
                 onClick={() => navigate("/discover")}
                 description={t("app.home.discover_desc")}

@@ -62,7 +62,8 @@ const Interface = (props: { children: JSX.Element }) => {
           }}
         >
           <Notice>
-            ⚠️ This is beta software, things will break! State:{" "}
+            ⚠️ This is beta software. <b>Things will break!</b><br />
+            State:{" "}
             <Switch>
               <Match
                 when={clientController.lifecycle.state() === State.Connecting}

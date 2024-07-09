@@ -1,13 +1,13 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
-    "beforeDevCommand": "pnpm --filter client dev --port 6173",
+    "beforeDevCommand": "pnpm --filter @upryzing/lavender dev --port 6173",
     "devPath": "http://localhost:6173",
     "distDir": "../handoff",
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "Revolt",
+    "productName": "Upryzing",
     "version": "0.1.0"
   },
   "tauri": {
@@ -44,8 +44,8 @@
         "../../client/assets/logo_round.png",
         "../../client/assets/icons/icon.ico"
       ],
-      "identifier": "chat.revolt.app",
-      "longDescription": "User-first, privacy focused chat platform.",
+      "identifier": "app.upryzing.desktop",
+      "longDescription": "Your conversations, your way. Connect with Upryzing.",
       "macOS": {
         "entitlements": null,
         "exceptionDomain": "",
@@ -54,7 +54,7 @@
         "signingIdentity": null
       },
       "resources": [],
-      "shortDescription": "User-first, privacy focused chat platform.",
+      "shortDescription": "Your conversations, your way.",
       "targets": "all",
       "windows": {
         "certificateThumbprint": null,
@@ -73,7 +73,7 @@
         "fullscreen": false,
         "height": 720,
         "resizable": true,
-        "title": "Revolt",
+        "title": "Upryzing",
         "width": 1280,
         "visible": true,
         "center": true,

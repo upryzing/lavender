@@ -14,11 +14,11 @@ use tauri::{
 
 fn main() {
   let tray_menu = SystemTrayMenu::new()
-    .add_item(CustomMenuItem::new("title".to_string(), "Revolt").disabled())
+    .add_item(CustomMenuItem::new("title".to_string(), "Upryzing").disabled())
     .add_native_item(SystemTrayMenuItem::Separator)
-    .add_item(CustomMenuItem::new("open".to_string(), "Open Revolt"))
-    .add_item(CustomMenuItem::new("hide".to_string(), "Hide Revolt"))
-    .add_item(CustomMenuItem::new("quit".to_string(), "Quit Revolt"));
+    .add_item(CustomMenuItem::new("open".to_string(), "Open Upryzing"))
+    .add_item(CustomMenuItem::new("hide".to_string(), "Hide Upryzing"))
+    .add_item(CustomMenuItem::new("quit".to_string(), "Quit Upryzing"));
 
   let system_tray = SystemTray::new().with_menu(tray_menu);
 

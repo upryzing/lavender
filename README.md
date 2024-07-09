@@ -1,6 +1,6 @@
-# Revolt Frontend
+# Upryzing's Web App (Lavender)
 
-This repository contains the code for Revolt's frontend, built with Solid.js.
+This repository houses the source code for Lavender, Upryzing's web app, built with Solid.js.
 
 ## Development Guide
 
@@ -8,16 +8,16 @@ Before contributing, make yourself familiar with [our contribution guidelines](h
 
 Before getting started, you'll want to install:
 
-- Git
-- Node.js
-- pnpm (run `corepack enable`)
+- Git,
+- Node.js (v18+), and
+- pnpm (run `corepack enable`).
 
 Then proceed to setup:
 
 ```bash
 # clone the repository
-git clone --recursive https://github.com/revoltchat/frontend client
-cd client
+git clone --recursive https://github.com/upryzing/lavender lavender
+cd lavender
 
 # update submodules if you pull new changes
 # git submodule init && git submodule update
@@ -28,7 +28,7 @@ pnpm i
 # build deps:
 pnpm build:deps
 
-# or build a specific dep (e.g. revolt.js updates):
+# ...or build a specific dep (e.g. revolt.js updates):
 # pnpm --filter revolt.js run build
 
 # run dev server
@@ -79,7 +79,7 @@ pnpm build:deps
 # build for web
 pnpm build:web
 
-# ... when building for Revolt production, use this instead of :web
+# ... when building for production, use this instead of :web
 pnpm build:prod
 ```
 

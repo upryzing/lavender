@@ -49,7 +49,7 @@ export default function Feedback() {
           </CategoryButton>
         </Link>
         <Link
-          href="https://github.com/revoltchat/frontend/issues/new/choose"
+          href="https://github.com/upryzing/lavender/issues/new/choose"
           target="_blank"
         >
           <CategoryButton
@@ -82,7 +82,7 @@ export default function Feedback() {
           onClick={() => void 0}
           description="You can report issues and discuss improvements with us directly here."
         >
-          Join the Revolt Lounge
+          Join the Upryzing Garden
         </CategoryButton>
       </CategoryButtonGroup>
     </Column>

@@ -49,7 +49,7 @@ attachDevtoolsOverlay();
 
 /** TEMPORARY */
 function MountTheme(props: { children: any }) {
-  const [accent, setAccent] = createSignal("#FF5733");
+  const [accent, setAccent] = createSignal("#dca3ff");
   const [darkMode, setDarkMode] = createSignal(false);
 
   (window as any)._demo_setAccent = setAccent;

@@ -1,4 +1,4 @@
-import { BiLogosGithub, BiLogosMastodon, BiLogosTwitter } from "solid-icons/bi";
+import { BiLogosGithub, BiLogosMastodon } from "solid-icons/bi";
 import { JSX } from "solid-js";
 
 import { styled } from "styled-system/jsx";
@@ -153,16 +153,14 @@ export function AuthPage(props: { children: JSX.Element }) {
       <Nav>
         <NavItems variant="stack">
           <NavItems>
-            <LinkWithIcon href="https://github.com/revoltchat" target="_blank">
+            <LinkWithIcon href="https://github.com/upryzing" target="_blank">
               <BiLogosGithub size={24} />
             </LinkWithIcon>
-            <LinkWithIcon href="https://twitter.com/revoltchat" target="_blank">
-              <BiLogosTwitter size={24} />
-            </LinkWithIcon>
             <LinkWithIcon
-              href="https://mastodon.social/web/@revoltchat"
+              href="https://lea.pet/@upryzing"
               target="_blank"
             >
+              {/* before you ask: if the package had a fedi icon I'd use it */}
               <BiLogosMastodon size={24} />
             </LinkWithIcon>
           </NavItems>

@@ -1,7 +1,7 @@
 {
-  "name": "desktop",
+  "name": "@upryzing/lavender-desktop",
   "version": "0.1.0",
-  "description": "Revolt desktop app.",
+  "description": "Upryzing's main desktop app",
   "scripts": {
     "tauri": "tauri"
   },

@@ -1,11 +1,11 @@
 [package]
-name = "revolt"
+name = "upryzing"
 version = "0.1.0"
-description = "User-first, privacy focused chat platform."
+description = "Your conversations, your way."
 authors = ["Vexcited"]
 license = "MIT"
-repository = "https://github.com/revoltchat/frontend"
-default-run = "revolt"
+repository = "https://github.com/upryzing/lavender"
+default-run = "upryzing"
 edition = "2021"
 rust-version = "1.59"
 

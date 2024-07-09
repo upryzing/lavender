@@ -1,7 +1,7 @@
 {
-  "name": "resolvite",
-  "version": "1.0.0",
-  "description": "Revolt's front-end monorepo.",
+  "name": "@upryzing/lavender-mono",
+  "version": "0.1.0",
+  "description": "Upryzing's main web and desktop apps",
   "scripts": {
     "test": "pnpm --filter test-runner test",
     "test:coverage": "pnpm --filter test-runner coverage",
@@ -10,11 +10,11 @@
     "test:browser:report": "pnpm --filter browser-test-runner exec playwright show-report",
     "lint": "eslint --ext .ts,.tsx components/ packages/",
     "lint:fix": "pnpm lint --fix",
-    "dev:web": "pnpm --filter client dev",
-    "dev:desktop": "pnpm --filter desktop tauri dev",
+    "dev:web": "pnpm --filter @upryzing/lavender dev",
+    "dev:desktop": "pnpm --filter @upryzing/lavender-desktop tauri dev",
     "build:deps": "pnpm --filter revolt.js build",
-    "build:web": "pnpm --filter client build",
-    "build:desktop": "pnpm --filter desktop tauri build",
+    "build:web": "pnpm --filter @upryzing/lavender build",
+    "build:desktop": "pnpm --filter @upryzing/lavender-desktop tauri build",
     "start": "cd packages/client && pnpm run serve",
     "fmt": "prettier --write '**/*.{ts,tsx,json}'",
     "fmt:check": "prettier --check '**/*.{ts,tsx,json}'",
@@ -22,7 +22,7 @@
   },
   "keywords": [],
   "engines": {
-    "node": ">=16",
+    "node": ">=18",
     "pnpm": ">=6"
   },
   "private": true,

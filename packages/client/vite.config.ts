@@ -27,9 +27,9 @@ export default defineConfig({
       filename: "sw.ts",
       strategies: "injectManifest",
       manifest: {
-        name: "Revolt",
-        short_name: "Revolt",
-        description: "User-first open source chat platform.",
+        name: "Upryzing",
+        short_name: "Upryzing",
+        description: "Your conversations, your way. Connect with Upryzing.",
         categories: ["communication", "chat", "messaging"],
         start_url: "/pwa",
         orientation: "portrait",
