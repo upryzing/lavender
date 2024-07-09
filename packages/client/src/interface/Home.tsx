@@ -14,6 +14,7 @@ import {
   Typography,
   iconSize,
   styled,
+  useTheme,
 } from "@revolt/ui";
 
 import MdAddCircle from "@material-design-icons/svg/filled/add_circle.svg?component-solid";
@@ -98,6 +99,7 @@ const Image = styled("img")`
  * Home page
  */
 export function HomePage() {
+  const theme = useTheme();
   const t = useTranslation();
   const navigate = useNavigate();
   const client = useClient();
@@ -133,7 +135,7 @@ export function HomePage() {
                 })
               }
               description={t("app.home.group_desc")}
-              icon={<MdAddCircle />}
+              icon={<MdAddCircle fill={theme!.colours.foreground} />}
             >
               {t("app.home.group")}
             </CategoryButton>
@@ -142,7 +144,7 @@ export function HomePage() {
                 <CategoryButton
                   onClick={() => navigate("/server/01F7ZSBSFHQ8TA81725KQCSDDP")}
                   description={t("app.home.goto-testers_desc")}
-                  icon={<MdGroups3 />}
+                  icon={<MdGroups3 fill={theme!.colours.foreground} />}
                 >
                   {t("app.home.goto-testers")}
                 </CategoryButton>
@@ -150,7 +152,7 @@ export function HomePage() {
               <Match when={showGardenButton && !isInGarden}>
                 <CategoryButton
                   description={t("app.home.join-testers_desc")}
-                  icon={<MdGroups3 />}
+                  icon={<MdGroups3 fill={theme!.colours.foreground} />}
                 >
                   {t("app.home.join-testers")}
                 </CategoryButton>
@@ -161,7 +163,7 @@ export function HomePage() {
                 window.open("https://insrt.uk/donate?utm_source=revoltapp")
               }
               description={t("app.home.donate_desc")}
-              icon={<MdPayments />}
+              icon={<MdPayments fill={theme!.colours.foreground} />}
             >
               {t("app.home.donate")}
             </CategoryButton>
@@ -171,14 +173,14 @@ export function HomePage() {
               <CategoryButton
                 onClick={() => navigate("/discover")}
                 description={t("app.home.discover_desc")}
-                icon={<MdExplore />}
+                icon={<MdExplore fill={theme!.colours.foreground} />}
               >
                 {t("app.home.discover")}
               </CategoryButton>
             </Show>
             <CategoryButton
               description={t("app.home.feedback_desc")}
-              icon={<MdRateReview {...iconSize(22)} />}
+              icon={<MdRateReview fill={theme!.colours.foreground} {...iconSize(22)} />}
             >
               {t("app.home.feedback")}
             </CategoryButton>
@@ -187,7 +189,7 @@ export function HomePage() {
                 modalController.push({ type: "settings", config: "user" })
               }
               description={t("app.home.settings-tooltip")}
-              icon={<MdSettings />}
+              icon={<MdSettings fill={theme!.colours.foreground} />}
             >
               {t("app.home.settings")}
             </CategoryButton>
