@@ -366,6 +366,12 @@ export const darkTheme: (
       "settings-sidebar-foreground": materialColour("onSecondary", 20),
       "settings-sidebar-button-hover": materialColour("secondary", 90),
       "settings-sidebar-button-active": materialColour("secondary", 82),
+
+      // Banner gradient
+      "user-banner-gradient": `rgba(${hexToRgb(
+        materialColour("primary", 100)
+      )}, 0.7)`,
+
       // Temporary Colours
       "temp-1": materialColour("secondary", 85),
     },

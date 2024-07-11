@@ -164,33 +164,37 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             },
             {
               id: "profile",
-              icon: <MdAccountCircle {...iconSize(20)} />,
+              icon: <MdAccountCircle fill={theme!.colours.foreground} {...iconSize(20)} />,
               title: t("app.settings.pages.profile.title"),
             },
             {
               id: "sessions",
-              icon: <MdVerifiedUser {...iconSize(20)} />,
+              icon: <MdVerifiedUser fill={theme!.colours.foreground} {...iconSize(20)} />,
               title: t("app.settings.pages.sessions.title"),
             },
           ],
         },
         {
-          title: "Revolt",
+          title: "Upryzing",
           entries: [
             {
               id: "bots",
-              icon: <MdSmartToy {...iconSize(20)} />,
+              icon: <MdSmartToy fill={theme!.colours.foreground} {...iconSize(20)} />,
               title: t("app.settings.pages.bots.title"),
             },
             {
               id: "feedback",
-              icon: <MdRateReview {...iconSize(20)} />,
+              icon: <MdRateReview fill={theme!.colours.foreground} {...iconSize(20)} />,
               title: t("app.settings.pages.feedback.title"),
             },
             {
               href: "https://insrt.uk/donate",
-              icon: <MdLocalCafe {...iconSize(20)} />,
-              title: t("app.settings.pages.donate.title"),
+              icon: <MdLocalCafe fill={theme!.customColours.warning.color} {...iconSize(20)} />,
+              title: (
+                <ColouredText colour={theme!.customColours.warning.color}>
+                  {t("app.settings.pages.donate.title")}
+                </ColouredText>
+              ),
             },
           ],
         },
@@ -232,7 +236,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             // },
             {
               id: "language",
-              icon: <MdLanguage {...iconSize(20)} />,
+              icon: <MdLanguage fill={theme!.colours.foreground} {...iconSize(20)} />,
               title: t("app.settings.pages.language.title"),
             },
             // {
@@ -248,7 +252,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             // },
             {
               id: "experiments",
-              icon: <MdScience {...iconSize(20)} />,
+              icon: <MdScience fill={theme!.colours.foreground} {...iconSize(20)} />,
               title: t("app.settings.pages.experiments.title"),
             },
           ],
@@ -263,7 +267,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             // },
             {
               href: "https://github.com/revoltchat",
-              icon: <MdMemory {...iconSize(20)} />,
+              icon: <MdMemory fill={theme!.colours.foreground} {...iconSize(20)} />,
               title: t("app.settings.pages.source_code"),
             },
             {

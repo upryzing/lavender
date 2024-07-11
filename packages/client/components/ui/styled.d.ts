@@ -100,7 +100,8 @@ declare module "solid-styled-components" {
                 | "category"
                 | "foreground"
                 | `button-${"hover" | "active"}`}`}`
-        | `temp-1`]: string;
+        | `temp-1`
+        | `user-banner-gradient`]: string;
     };
     rgb: {
       [key in "header" | "typing-indicator"]: string;

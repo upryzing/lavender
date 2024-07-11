@@ -5,7 +5,7 @@ import { User } from "revolt.js";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
-import { Avatar, Button, CategoryButtonGroup, iconSize } from "@revolt/ui";
+import { Avatar, Button, CategoryButtonGroup, iconSize, useTheme } from "@revolt/ui";
 
 import MdCakeFill from "@material-design-icons/svg/filled/cake.svg?component-solid";
 import MdEdit from "@material-design-icons/svg/outlined/edit.svg?component-solid";
@@ -16,14 +16,15 @@ export function UserSummary(props: {
   bannerUrl?: string;
   onEdit?: () => void;
 }) {
+  const theme = useTheme();
   const bannerStyle = () =>
     props.bannerUrl
       ? {
-          "background-image": `linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7)), url("${props.bannerUrl}")`,
-        }
+        "background-image": `linear-gradient(${theme.colours["user-banner-gradient"]}, ${theme.colours["user-banner-gradient"]}), url("${props.bannerUrl}")`,
+      }
       : {
-          background: `var(--colours-settings-background)`,
-        };
+        background: `var(--colours-settings-background)`,
+      };
 
   return (
     <CategoryButtonGroup>
