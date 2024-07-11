@@ -93,7 +93,7 @@ export default function FlowLogin() {
         }
       >
         <Match when={clientController.isLoggedIn()}>
-          <Navigate href="/app" />
+          <Navigate href="/web" />
         </Match>
         <Match when={clientController.lifecycle.state() === State.LoggingIn}>
           <Preloader type="ring" />

@@ -22,7 +22,7 @@ export default function FlowHome() {
   return (
     <>
       <Show when={clientController.isLoggedIn()}>
-        <Navigate href="/app" />
+        <Navigate href="/web" />
       </Show>
 
       <Column gap="xl">

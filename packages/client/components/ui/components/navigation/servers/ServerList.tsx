@@ -93,7 +93,7 @@ export const ServerList = (props: Props) => {
     const nextIndex = currentServerIndex + byOffset;
 
     if (nextIndex === -1) {
-      return navigate("/app");
+      return navigate("/web");
     }
 
     // this will wrap the index around
@@ -137,7 +137,7 @@ export const ServerList = (props: Props) => {
               <Swoosh topItem />
             </PositionSwoosh>
           </Show> */}
-          <a href="/">
+          <a href="/web">
             <Avatar size={42} fallback={<MdHome />} />
           </a>
         </EntryContainer>
@@ -152,7 +152,7 @@ export const ServerList = (props: Props) => {
           aria={props.user.username}
         >
           <EntryContainer>
-            <a href="/">
+            <a href="/web">
               <Avatar
                 size={42}
                 src={props.user.avatarURL}
@@ -195,7 +195,7 @@ export const ServerList = (props: Props) => {
         </For>
         <Show when={props.unreadConversations.length > 9}>
           <EntryContainer>
-            <a href={`/`}>
+            <a href="/web">
               <Avatar
                 size={42}
                 fallback={<>+{props.unreadConversations.length - 9}</>}
