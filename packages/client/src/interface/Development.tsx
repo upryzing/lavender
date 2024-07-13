@@ -16,6 +16,7 @@ import {
   iconSize,
   styled as oldStyled,
 } from "@revolt/ui";
+import StackView from "@revolt/ui/components/design/atoms/display/StackView";
 
 import Face from "@material-design-icons/svg/filled/face.svg?component-solid";
 
@@ -106,6 +107,14 @@ export function DevelopmentPage() {
       >
         best of both worlds?
       </div>
+
+      <StackView>
+        <StackView.Layer depth={1}>Hello World</StackView.Layer>
+
+        <StackView.Layer depth={2} offset={[0, 50]}>
+          Hello World 2
+        </StackView.Layer>
+      </StackView>
 
       <Button onPress={open}>Open Modal</Button>
       <Button onPress={changelog}>Changelog Modal</Button>
