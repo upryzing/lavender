@@ -381,6 +381,7 @@ const NameStatusStack = styled("div", {
  */
 function Member(props: { user?: User; member?: ServerMember }) {
   const t = useTranslation();
+  const client = useClient();
 
   /**
    * Create user information
@@ -413,6 +414,10 @@ function Member(props: { user?: User; member?: ServerMember }) {
             src={user().avatar}
             size={32}
             holepunch="bottom-right"
+            deco={
+              user().username === client().user?.username &&
+              "https://autumn.revolt.chat/attachments/z64sjt5TqL5upI4aO2NuuzlAJzv9iPjOYdKlS3pfop/Deco.png"
+            }
             overlay={
               <UserStatusGraphic
                 status={(props.user ?? props.member?.user)?.presence}

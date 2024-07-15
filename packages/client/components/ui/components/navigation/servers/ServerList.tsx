@@ -158,6 +158,7 @@ export const ServerList = (props: Props) => {
                 src={props.user.avatarURL}
                 holepunch={"bottom-right"}
                 overlay={<UserStatusGraphic status={props.user.presence} />}
+                deco="https://autumn.revolt.chat/attachments/z64sjt5TqL5upI4aO2NuuzlAJzv9iPjOYdKlS3pfop/Deco.png"
                 interactive
               />
             </a>

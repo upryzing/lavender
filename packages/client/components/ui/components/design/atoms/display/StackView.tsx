@@ -2,36 +2,28 @@ import { Component, JSXElement } from "solid-js";
 import { styled } from "solid-styled-components";
 
 interface LayerProps {
-  depth: number;
+  position: "behind" | "front" | "middle";
   children: JSXElement;
-  /** [top, left] */
-  offset?: [number, number];
+  top?: number;
 }
 
 interface StackViewProps {
   children: JSXElement;
+  size?: number;
 }
 
-const StackViewBase = styled("div")`
-  display: block;
-  position: relative;
+const StackViewBase = styled("div")<{ size?: number }>`
+  display: grid;
 `;
 
-const Layer: Component<LayerProps> = (props) => {
-  return (
-    <div
-      class={`layer dpth-${props.depth}`}
-      style={{
-        "z-index": props.depth,
-        position: "absolute",
-        top: props.offset && `${props.offset[0]}px`,
-        left: props.offset && `${props.offset[1]}px`,
-      }}
-    >
-      {props.children}
-    </div>
-  );
-};
+const Layer = styled("div")<LayerProps>`
+  z-index: ${(props) => ({ behind: -1, front: 1, middle: 0 }[props.position])};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-row: 1;
+  grid-column: 1;
+`;
 
 /**
  * StackView is a component that allows for the rendering of multiple layers on top of each other.
@@ -47,7 +39,7 @@ const StackView: Component<StackViewProps> & {
    */
   Layer: Component<LayerProps>;
 } = (props) => {
-  return <StackViewBase>{props.children}</StackViewBase>;
+  return <StackViewBase size={props.size}>{props.children}</StackViewBase>;
 };
 
 StackView.Layer = Layer;

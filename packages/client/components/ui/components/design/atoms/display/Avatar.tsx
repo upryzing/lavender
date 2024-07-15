@@ -1,7 +1,8 @@
-import { JSXElement, createEffect, createSignal, on } from "solid-js";
+import { JSXElement, Show, createEffect, createSignal, on } from "solid-js";
 import { styled } from "solid-styled-components";
 
 import { Initials } from "./Initials";
+import StackView from "./StackView";
 
 export type Props = {
   /**
@@ -50,6 +51,13 @@ export type Props = {
    * Whether this icon is interactive
    */
   interactive?: boolean;
+
+  /**
+   * TODO: Serverside implementation
+   *
+   * deco url
+   */
+  deco?: string | undefined;
 };
 
 /**
@@ -111,6 +119,11 @@ const ParentBase = styled("svg", "Avatar")<Pick<Props, "interactive">>`
   }
 `;
 
+const Deco = styled("img")<{ initialSize: number }>`
+  width: ${(props) => props.initialSize * 1.5}px;
+  height: ${(props) => props.initialSize * 1.5}px;
+`;
+
 /**
  * Generic Avatar component
  *
@@ -136,38 +149,50 @@ export function Avatar(props: Props) {
   );
 
   return (
-    <ParentBase
-      width={props.size}
-      height={props.size}
-      viewBox="0 0 32 32"
-      interactive={props.interactive}
-    >
-      <foreignObject
-        x="0"
-        y="0"
-        width="32"
-        height="32"
-        // @ts-expect-error Solid.js typing issue
-        mask={
-          props.holepunch ? `url(#holepunch-${props.holepunch})` : undefined
-        }
-      >
-        {url() && <Image src={url()} draggable={false} shape={props.shape} />}
-        {!url() && (
-          <FallbackBase
-            use:ripple
-            shape={props.shape}
-            primaryContrast={props.primaryContrast}
+    <StackView size={props.size}>
+      <Show when={props.deco}>
+        <StackView.Layer position="behind">
+          <Deco initialSize={props.size!} src={props.deco} />
+        </StackView.Layer>
+      </Show>
+
+      <StackView.Layer position="middle">
+        <ParentBase
+          width={props.size}
+          height={props.size}
+          viewBox="0 0 32 32"
+          interactive={props.interactive}
+        >
+          <foreignObject
+            x="0"
+            y="0"
+            width="32"
+            height="32"
+            // @ts-expect-error Solid.js typing issue
+            mask={
+              props.holepunch ? `url(#holepunch-${props.holepunch})` : undefined
+            }
           >
-            {typeof props.fallback === "string" ? (
-              <Initials input={props.fallback} maxLength={2} />
-            ) : (
-              props.fallback
+            {url() && (
+              <Image src={url()} draggable={false} shape={props.shape} />
             )}
-          </FallbackBase>
-        )}
-      </foreignObject>
-      {props.overlay}
-    </ParentBase>
+            {!url() && (
+              <FallbackBase
+                use:ripple
+                shape={props.shape}
+                primaryContrast={props.primaryContrast}
+              >
+                {typeof props.fallback === "string" ? (
+                  <Initials input={props.fallback} maxLength={2} />
+                ) : (
+                  props.fallback
+                )}
+              </FallbackBase>
+            )}
+          </foreignObject>
+          {props.overlay}
+        </ParentBase>
+      </StackView.Layer>
+    </StackView>
   );
 }

@@ -104,7 +104,14 @@ export function Message(props: Props) {
         <AvatarContainer
           use:floating={floatingUserMenusFromMessage(props.message)}
         >
-          <Avatar size={36} src={props.message.avatarURL} />
+          <Avatar
+            size={36}
+            deco={
+              client().user?.id === props.message.authorId &&
+              "https://autumn.revolt.chat/attachments/z64sjt5TqL5upI4aO2NuuzlAJzv9iPjOYdKlS3pfop/Deco.png"
+            }
+            src={props.message.avatarURL}
+          />
         </AvatarContainer>
       }
       contextMenu={() => <MessageContextMenu message={props.message} />}
@@ -184,7 +191,10 @@ export function Message(props: Props) {
             }
           >
             <NewUser>
-              <Tooltip content={t("app.main.channel.new_to_upryzing")} placement="top">
+              <Tooltip
+                content={t("app.main.channel.new_to_upryzing")}
+                placement="top"
+              >
                 <MdSpa {...iconSize(16)} />
               </Tooltip>
             </NewUser>
@@ -196,7 +206,10 @@ export function Message(props: Props) {
             }
           >
             <NewUser>
-              <Tooltip content={t("app.main.channel.new_to_space")} placement="top">
+              <Tooltip
+                content={t("app.main.channel.new_to_space")}
+                placement="top"
+              >
                 <MdSpa {...iconSize(16)} />
               </Tooltip>
             </NewUser>
@@ -229,10 +242,10 @@ export function Message(props: Props) {
             menuGenerator={(user) =>
               user
                 ? floatingUserMenus(
-                  user!,
-                  // TODO: try to fetch on demand member
-                  props.message.server?.getMember(user!.id)
-                )
+                    user!,
+                    // TODO: try to fetch on demand member
+                    props.message.server?.getMember(user!.id)
+                  )
                 : {}
             }
             isServer={!!props.message.server}

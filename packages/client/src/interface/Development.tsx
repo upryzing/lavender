@@ -7,6 +7,7 @@ import { styled } from "styled-system/jsx";
 import { clientController } from "@revolt/client";
 import { modalController } from "@revolt/modal";
 import {
+  Avatar,
   Button,
   CategoryButton,
   CategoryCollapse,
@@ -22,6 +23,11 @@ import Face from "@material-design-icons/svg/filled/face.svg?component-solid";
 
 const SomeComponent = oldStyled.div`
   background: red;
+`;
+
+const Block = oldStyled("img")`
+  width: 56px;
+  height: 56px;
 `;
 
 const NewComponent = styled("div", {
@@ -109,10 +115,16 @@ export function DevelopmentPage() {
       </div>
 
       <StackView>
-        <StackView.Layer depth={1}>Hello World</StackView.Layer>
-
-        <StackView.Layer depth={2} offset={[0, 50]}>
-          Hello World 2
+        <StackView.Layer position="middle">
+          <Avatar
+            fallback="Amy"
+            shape="circle"
+            size={36}
+            src="https://autumn.revolt.chat/avatars/0lNi6zHZ21qbPHXI41IyR1VHiiDrZrzVHyZy9b-zRj?max_side=256"
+          />
+        </StackView.Layer>
+        <StackView.Layer position="behind">
+          <Block src="https://autumn.revolt.chat/attachments/z64sjt5TqL5upI4aO2NuuzlAJzv9iPjOYdKlS3pfop/Deco.png" />
         </StackView.Layer>
       </StackView>
 
