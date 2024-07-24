@@ -380,6 +380,8 @@ importers:
         specifier: ^5.4.2
         version: 5.4.2
 
+  packages/revolt.js/lib/esm: {}
+
   packages/solid-styled-components:
     dependencies:
       csstype:
