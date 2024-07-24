@@ -101,18 +101,17 @@ export function Message(props: Props) {
         </div>
       }
       avatar={
-        <AvatarContainer
+        <Avatar
+          size={36}
+          decoration={
+            props.message.authorId === client().user?.id && [
+              "https://autumn.revolt.chat/attachments/FOgVmSVJdWPUqCLDpsAxjtEpUI26BoG-I7KUfOxzx_?max_side=512",
+              "https://autumn.revolt.chat/attachments/QiuueMFG4ef9JkYoXTAgi17Nx7qrTkGjWbgNbHrOsE?max_side=512",
+            ]
+          }
+          src={props.message.avatarURL}
           use:floating={floatingUserMenusFromMessage(props.message)}
-        >
-          <Avatar
-            size={36}
-            deco={
-              client().user?.id === props.message.authorId &&
-              "https://autumn.revolt.chat/attachments/z64sjt5TqL5upI4aO2NuuzlAJzv9iPjOYdKlS3pfop/Deco.png"
-            }
-            src={props.message.avatarURL}
-          />
-        </AvatarContainer>
+        />
       }
       contextMenu={() => <MessageContextMenu message={props.message} />}
       timestamp={props.message.createdAt}

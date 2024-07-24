@@ -55,9 +55,10 @@ export type Props = {
   /**
    * TODO: Serverside implementation
    *
-   * deco url
+   * tuple
+   * [bottom layer, top layer]
    */
-  deco?: string | undefined;
+  decoration?: [string?, string?];
 };
 
 /**
@@ -119,9 +120,10 @@ const ParentBase = styled("svg", "Avatar")<Pick<Props, "interactive">>`
   }
 `;
 
-const Deco = styled("img")<{ initialSize: number }>`
-  width: ${(props) => props.initialSize * 1.5}px;
-  height: ${(props) => props.initialSize * 1.5}px;
+const AvatarContainer = styled.div<Pick<Props, "size">>`
+  position: relative;
+  width: ${(props) => (props.size ?? 0) + 20}px;
+  border-radius: ${(props) => props.theme!.borderRadius.full};
 `;
 
 /**
@@ -149,50 +151,70 @@ export function Avatar(props: Props) {
   );
 
   return (
-    <StackView size={props.size}>
-      <Show when={props.deco}>
-        <StackView.Layer position="behind">
-          <Deco initialSize={props.size!} src={props.deco} />
-        </StackView.Layer>
+    <AvatarContainer size={props.size}>
+      <Show when={props.decoration?.[0]}>
+        <img
+          loading="lazy"
+          src={props.decoration?.[0]}
+          style={{
+            position: "absolute",
+            display: "block",
+            top: "-5px",
+            left: "-10px",
+            "pointer-events": "none",
+          }}
+        />
       </Show>
-
-      <StackView.Layer position="middle">
-        <ParentBase
-          width={props.size}
-          height={props.size}
-          viewBox="0 0 32 32"
-          interactive={props.interactive}
+      <ParentBase
+        width={props.size}
+        height={props.size}
+        viewBox="0 0 32 32"
+        interactive={props.interactive}
+        style={{
+          position: "absolute",
+          "margin-top": "5px",
+        }}
+      >
+        <foreignObject
+          x="0"
+          y="0"
+          width="32"
+          height="32"
+          // @ts-expect-error Solid.js typing issue
+          mask={
+            props.holepunch ? `url(#holepunch-${props.holepunch})` : undefined
+          }
         >
-          <foreignObject
-            x="0"
-            y="0"
-            width="32"
-            height="32"
-            // @ts-expect-error Solid.js typing issue
-            mask={
-              props.holepunch ? `url(#holepunch-${props.holepunch})` : undefined
-            }
-          >
-            {url() && (
-              <Image src={url()} draggable={false} shape={props.shape} />
-            )}
-            {!url() && (
-              <FallbackBase
-                use:ripple
-                shape={props.shape}
-                primaryContrast={props.primaryContrast}
-              >
-                {typeof props.fallback === "string" ? (
-                  <Initials input={props.fallback} maxLength={2} />
-                ) : (
-                  props.fallback
-                )}
-              </FallbackBase>
-            )}
-          </foreignObject>
-          {props.overlay}
-        </ParentBase>
-      </StackView.Layer>
-    </StackView>
+          {url() && <Image src={url()} draggable={false} shape={props.shape} />}
+          {!url() && (
+            <FallbackBase
+              use:ripple
+              shape={props.shape}
+              primaryContrast={props.primaryContrast}
+            >
+              {typeof props.fallback === "string" ? (
+                <Initials input={props.fallback} maxLength={2} />
+              ) : (
+                props.fallback
+              )}
+            </FallbackBase>
+          )}
+        </foreignObject>
+        {props.overlay}
+      </ParentBase>
+      <Show when={props.decoration?.[1]}>
+        <img
+          loading="lazy"
+          src={props.decoration?.[1]}
+          style={{
+            position: "absolute",
+            display: "block",
+            top: "-5px",
+            left: "-10px",
+            "pointer-events": "none",
+          }}
+        />
+      </Show>
+    </AvatarContainer>
   );
 }
