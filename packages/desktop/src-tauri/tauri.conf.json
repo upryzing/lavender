@@ -87,7 +87,7 @@
     "systemTray": {
       "iconPath": "../../client/assets/icons/tray/trayIcon.png",
       "iconAsTemplate": true,
-      "title": "Revolt"
+      "title": "Upryzing"
     }
   }
 }
