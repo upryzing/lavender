@@ -380,8 +380,6 @@ importers:
         specifier: ^5.4.2
         version: 5.4.2
 
-  packages/revolt.js/lib/esm: {}
-
   packages/solid-styled-components:
     dependencies:
       csstype:
@@ -4328,7 +4326,7 @@ packages:
       '@babel/helper-split-export-declaration': 7.24.7
       '@babel/parser': 7.24.7
       '@babel/types': 7.24.7
-      debug: 4.3.4
+      debug: 4.3.6
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -4917,7 +4915,7 @@ packages:
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
       ajv: 6.12.6
-      debug: 4.3.4
+      debug: 4.3.6
       espree: 9.6.1
       globals: 13.20.0
       ignore: 5.3.1
@@ -4976,7 +4974,7 @@ packages:
     engines: {node: '>=10.10.0'}
     dependencies:
       '@humanwhocodes/object-schema': 2.0.2
-      debug: 4.3.4
+      debug: 4.3.6
       minimatch: 3.1.2
     transitivePeerDependencies:
       - supports-color
@@ -5241,10 +5239,6 @@ packages:
     dependencies:
       '@jridgewell/gen-mapping': 0.3.5
       '@jridgewell/trace-mapping': 0.3.25
-    dev: true
-
-  /@jridgewell/sourcemap-codec@1.4.15:
-    resolution: {integrity: sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==}
     dev: true
 
   /@jridgewell/sourcemap-codec@1.5.0:
@@ -7269,11 +7263,11 @@ packages:
       - supports-color
     dev: true
 
-  /@storybook/builder-vite@8.3.0-alpha.8(storybook@8.2.0-alpha.5)(typescript@5.4.2)(vite@5.1.6):
-    resolution: {integrity: sha512-Ly6en/WvMRNjvAe1adDS2Tj3VkAzeWBRXthLtz+Pv/C7PknMCBoyjLAvT5cc9V7OW3AenPW3D2pXdye8WaFrBA==}
+  /@storybook/builder-vite@8.3.0-beta.0(storybook@8.2.0-alpha.5)(typescript@5.4.2)(vite@5.1.6):
+    resolution: {integrity: sha512-8DePr6K1t6PAqQ5N5FXYpSXoM6aJTQWt0pMu1Zhy8QUYXGB0IDBbvVzUJK2q2/yL4Hecf4G0KJTQAeYOpFqS0w==}
     peerDependencies:
       '@preact/preset-vite': '*'
-      storybook: ^8.3.0-alpha.8
+      storybook: ^8.3.0-beta.0
       typescript: '>= 4.3.x'
       vite: ^4.0.0 || ^5.0.0
       vite-plugin-glimmerx: '*'
@@ -7285,7 +7279,7 @@ packages:
       vite-plugin-glimmerx:
         optional: true
     dependencies:
-      '@storybook/csf-plugin': 8.3.0-alpha.8(storybook@8.2.0-alpha.5)
+      '@storybook/csf-plugin': 8.3.0-beta.0(storybook@8.2.0-alpha.5)
       '@types/find-cache-dir': 3.2.1
       browser-assert: 1.2.1
       es-module-lexer: 1.5.4
@@ -7596,10 +7590,10 @@ packages:
       - supports-color
     dev: true
 
-  /@storybook/csf-plugin@8.3.0-alpha.8(storybook@8.2.0-alpha.5):
-    resolution: {integrity: sha512-E8HXVgK5BxqzyJqZktskRL/t2uA4/IfVHLE6Gtrl6PzgPm3sDnT6TrNhVi5CtDHb7mKQHZ7fpI0h3ANo7PjKsA==}
+  /@storybook/csf-plugin@8.3.0-beta.0(storybook@8.2.0-alpha.5):
+    resolution: {integrity: sha512-CpXUFgNkwB9JwNE95QEL4mLRUyY/2uZbj+rEAn/5fBn0jCwbyOqaMG4wcgyvzaYa3dgWzJlXzz0qBr+zqW1PJw==}
     peerDependencies:
-      storybook: ^8.3.0-alpha.8
+      storybook: ^8.3.0-beta.0
     dependencies:
       storybook: 8.2.0-alpha.5(react-dom@18.3.1)(react@18.3.1)
       unplugin: 1.12.2
@@ -8526,7 +8520,7 @@ packages:
     dependencies:
       '@typescript-eslint/typescript-estree': 5.62.0(typescript@5.4.2)
       '@typescript-eslint/utils': 5.62.0(eslint@8.57.0)(typescript@5.4.2)
-      debug: 4.3.4
+      debug: 4.3.6
       eslint: 8.57.0
       tsutils: 3.21.0(typescript@5.4.2)
       typescript: 5.4.2
@@ -8641,7 +8635,7 @@ packages:
   /@vitest/snapshot@1.4.0:
     resolution: {integrity: sha512-saAFnt5pPIA5qDGxOHxJ/XxhMFKkUSBJmVt5VgDsAqPTX6JP326r5C/c9UuCMPoXNzuudTPsYDZCoJ5ilpqG2A==}
     dependencies:
-      magic-string: 0.30.8
+      magic-string: 0.30.11
       pathe: 1.1.2
       pretty-format: 29.7.0
     dev: true
@@ -8702,7 +8696,7 @@ packages:
       '@vue/compiler-ssr': 3.4.19
       '@vue/shared': 3.4.19
       estree-walker: 2.0.2
-      magic-string: 0.30.8
+      magic-string: 0.30.11
       postcss: 8.4.35
       source-map-js: 1.2.0
     dev: true
@@ -8763,12 +8757,12 @@ packages:
       acorn-walk: 7.2.0
     dev: true
 
-  /acorn-jsx@5.3.2(acorn@8.11.3):
+  /acorn-jsx@5.3.2(acorn@8.12.1):
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
     peerDependencies:
       acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
     dependencies:
-      acorn: 8.11.3
+      acorn: 8.12.1
     dev: true
 
   /acorn-walk@7.2.0:
@@ -8783,12 +8777,6 @@ packages:
 
   /acorn@7.4.1:
     resolution: {integrity: sha512-nQyp0o1/mNdbTO1PO6kHkwSrmgZ0MT/jCCpNiwbUjGoRN4dlBhqJtoQuCnEOKzgTVwg0ZWiCoQy6SxMebQVh8A==}
-    engines: {node: '>=0.4.0'}
-    hasBin: true
-    dev: true
-
-  /acorn@8.11.3:
-    resolution: {integrity: sha512-Y9rRfJG5jcKOE0CLisYbojUjIrIEE7AGMzA/Sm4BslANhbS+cDMpgBdcPT91oJ7OuJ9hYJBx59RjbhxVnrF8Xg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
     dev: true
@@ -10941,8 +10929,8 @@ packages:
     resolution: {integrity: sha512-oruZaFkjorTpF32kDSI5/75ViwGeZginGGy2NoOSg3Q9bnwlnmDm4HLnkl0RE3n+njDXR037aY1+x58Z/zFdwQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dependencies:
-      acorn: 8.11.3
-      acorn-jsx: 5.3.2(acorn@8.11.3)
+      acorn: 8.12.1
+      acorn-jsx: 5.3.2(acorn@8.12.1)
       eslint-visitor-keys: 3.4.3
     dev: true
 
@@ -12463,7 +12451,7 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
-      debug: 4.3.4
+      debug: 4.3.6
       istanbul-lib-coverage: 3.2.2
     transitivePeerDependencies:
       - supports-color
@@ -13577,7 +13565,7 @@ packages:
     resolution: {integrity: sha512-ISQTe55T2ao7XtlAStud6qwYPZjE4GK1S/BeVPus4jrq6JuOnQ00YKQC581RWhR122W7msZV263KzVeLoqidyQ==}
     engines: {node: '>=12'}
     dependencies:
-      '@jridgewell/sourcemap-codec': 1.4.15
+      '@jridgewell/sourcemap-codec': 1.5.0
     dev: true
 
   /magicast@0.3.4:
@@ -16070,7 +16058,7 @@ packages:
     resolution: {integrity: sha512-dD+VMYC5fBBQNesVb+mjB0LOkZIf100SQFbjAt9/sDstNUvc5ce3yZwLYXzgcOc7jcSMkrBu/cZNRzEM4YIAyw==}
     engines: {node: ^14.18 || >=16}
     dependencies:
-      '@storybook/builder-vite': 8.3.0-alpha.8(storybook@8.2.0-alpha.5)(typescript@5.4.2)(vite@5.1.6)
+      '@storybook/builder-vite': 8.3.0-beta.0(storybook@8.2.0-alpha.5)(typescript@5.4.2)(vite@5.1.6)
     transitivePeerDependencies:
       - '@preact/preset-vite'
       - storybook
@@ -17188,7 +17176,7 @@ packages:
     hasBin: true
     dependencies:
       cac: 6.7.14
-      debug: 4.3.4
+      debug: 4.3.6
       pathe: 1.1.2
       picocolors: 1.0.0
       vite: 5.1.6
