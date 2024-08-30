@@ -18,6 +18,7 @@ import MdFace from "@material-design-icons/svg/outlined/face.svg?component-solid
 import MdPersonAddAlt from "@material-design-icons/svg/outlined/person_add_alt.svg?component-solid";
 import MdPersonRemove from "@material-design-icons/svg/outlined/person_remove.svg?component-solid";
 import MdReport from "@material-design-icons/svg/outlined/report.svg?component-solid";
+import MdSchedule from "@material-design-icons/svg/outlined/schedule.svg?component-solid"
 
 import {
   ContextMenu,
@@ -96,6 +97,16 @@ export function UserContextMenu(props: {
       type: "ban_member",
       member: props.member!,
     });
+  }
+
+  /**
+   * Timeout the member for a specified amount
+   */
+  function timeoutMember() {
+    getController("modal").push({
+       type: "timeout_member",
+       member: props.member!
+    })
   }
 
   /**
@@ -208,6 +219,20 @@ export function UserContextMenu(props: {
             {t("app.context_menu.ban_member")}
           </ContextMenuButton>
         </Show>
+	<Show
+	  when={
+	    !props.user.self &&
+	    props.member?.server?.havePermission("TimeoutMembers") &&
+	    props.member.inferiorTo(props.member.server.member!)
+	  }>
+	    <ContextMenuButton
+	      icon={MdSchedule}
+	      onClick={timeoutMember}
+	      destructive
+	    >
+	      (PLACEHOLDER) Timeout Member
+            </ContextMenuButton>
+	</Show>
       </Show>
       <Show when={props.member}>
         <ContextMenuDivider />

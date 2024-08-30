@@ -44,6 +44,7 @@ import server_info from "./ServerInfo";
 import settings from "./Settings";
 import sign_out_sessions from "./SignOutSessions";
 import signed_out from "./SignedOut";
+import timeout_member from "./TimeoutMember"
 
 const Modals: Record<AllModals["type"], PropGenerator<any>> = {
   add_friend,
@@ -85,6 +86,7 @@ const Modals: Record<AllModals["type"], PropGenerator<any>> = {
   settings,
   signed_out,
   sign_out_sessions,
+  timeout_member,
   ...({} as any),
 };
 
