@@ -30,6 +30,7 @@ import MdNotificationsOff from "@material-design-icons/svg/filled/notifications_
 import MdShield from "@material-design-icons/svg/filled/shield.svg?component-solid";
 import MdSmartToy from "@material-design-icons/svg/filled/smart_toy.svg?component-solid";
 import MdSpa from "@material-design-icons/svg/filled/spa.svg?component-solid";
+import MdSchedule from "@material-design-icons/svg/filled/schedule.svg?component-solid";
 
 import { MessageContextMenu } from "../../../menus/MessageContextMenu";
 import {
@@ -172,6 +173,11 @@ export function Message(props: Props) {
               <MdCloud {...iconSize(16)} />
             </Tooltip>
           </Match>
+	  <Match when={props.message.member?.timeout}>
+	    <Tooltip content={`User has been timed out for ${dayjs(props.message.member?.timeout).toNow(true)}`} placement="top">
+	      <MdSchedule {...iconSize(16)} />
+            </Tooltip>
+	  </Match>
           <Match when={props.message.isSuppressed}>
             <Tooltip content={"Silent" /* TODO: i18n */} placement="top">
               <MdNotificationsOff {...iconSize(16)} />
