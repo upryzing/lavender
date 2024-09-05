@@ -19,6 +19,7 @@ import MdPersonAddAlt from "@material-design-icons/svg/outlined/person_add_alt.s
 import MdPersonRemove from "@material-design-icons/svg/outlined/person_remove.svg?component-solid";
 import MdReport from "@material-design-icons/svg/outlined/report.svg?component-solid";
 import MdSchedule from "@material-design-icons/svg/outlined/schedule.svg?component-solid"
+import MdTimerOff from "@material-design-icons/svg/outlined/timer_off.svg?component-solid"
 
 import {
   ContextMenu,
@@ -107,6 +108,13 @@ export function UserContextMenu(props: {
        type: "timeout_member",
        member: props.member!
     })
+  }
+
+  /**
+   * Clear the member's timeout
+   */
+  function clearTimeout() {
+	props.member!.edit({ remove: [ "Timeout" ] })
   }
 
   /**
@@ -223,14 +231,30 @@ export function UserContextMenu(props: {
 	  when={
 	    !props.user.self &&
 	    props.member?.server?.havePermission("TimeoutMembers") &&
-	    props.member.inferiorTo(props.member.server.member!)
+	    props.member.inferiorTo(props.member.server.member!) &&
+	    !props.member.timeout
 	  }>
 	    <ContextMenuButton
 	      icon={MdSchedule}
 	      onClick={timeoutMember}
 	      destructive
 	    >
-	      (PLACEHOLDER) Timeout Member
+	      Timeout Member
+            </ContextMenuButton>
+	</Show>
+	<Show
+	  when={
+	    !props.user.self &&
+	    props.member?.server?.havePermission("TimeoutMembers") &&
+	    props.member.inferiorTo(props.member.server.member!) &&
+	    props.member.timeout
+	  }>
+	    <ContextMenuButton
+	      icon={MdTimerOff}
+	      onClick={clearTimeout}
+	      destructive
+	    >
+		Clear Timeout
             </ContextMenuButton>
 	</Show>
       </Show>
