@@ -105,8 +105,8 @@ export function UserContextMenu(props: {
    */
   function timeoutMember() {
     getController("modal").push({
-       type: "timeout_member",
-       member: props.member!
+      type: "timeout_member",
+      member: props.member!
     })
   }
 
@@ -114,7 +114,7 @@ export function UserContextMenu(props: {
    * Clear the member's timeout
    */
   function clearTimeout() {
-	props.member!.edit({ remove: [ "Timeout" ] })
+    props.member!.edit({ remove: ["Timeout"] })
   }
 
   /**
@@ -181,22 +181,20 @@ export function UserContextMenu(props: {
           props.member &&
           (props.user.self
             ? props.member!.server!.havePermission("ChangeNickname") ||
-              props.member!.server!.havePermission("ChangeAvatar")
+            props.member!.server!.havePermission("ChangeAvatar")
             : (props.member!.server!.havePermission("ManageNicknames") ||
-                props.member!.server!.havePermission("RemoveAvatars")) &&
-              props.member!.inferiorTo(props.member!.server!.member!))
+              props.member!.server!.havePermission("RemoveAvatars")) &&
+            props.member!.inferiorTo(props.member!.server!.member!))
         }
       >
         <ContextMenuButton icon={MdFace} onClick={editIdentity}>
           {t(
-            `app.context_menu.${
-              props.user.self ? "edit_your_identity" : "edit_identity"
+            `app.context_menu.${props.user.self ? "edit_your_identity" : "edit_identity"
             }`
           )}
         </ContextMenuButton>
       </Show>
       <Show when={props.member}>
-        {/** TODO: #287 timeout users */}
         <Show
           when={
             !props.user.self &&
@@ -227,36 +225,36 @@ export function UserContextMenu(props: {
             {t("app.context_menu.ban_member")}
           </ContextMenuButton>
         </Show>
-	<Show
-	  when={
-	    !props.user.self &&
-	    props.member?.server?.havePermission("TimeoutMembers") &&
-	    props.member.inferiorTo(props.member.server.member!) &&
-	    !props.member.timeout
-	  }>
-	    <ContextMenuButton
-	      icon={MdSchedule}
-	      onClick={timeoutMember}
-	      destructive
-	    >
-	      Timeout Member
-            </ContextMenuButton>
-	</Show>
-	<Show
-	  when={
-	    !props.user.self &&
-	    props.member?.server?.havePermission("TimeoutMembers") &&
-	    props.member.inferiorTo(props.member.server.member!) &&
-	    props.member.timeout
-	  }>
-	    <ContextMenuButton
-	      icon={MdTimerOff}
-	      onClick={clearTimeout}
-	      destructive
-	    >
-		Clear Timeout
-            </ContextMenuButton>
-	</Show>
+        <Show
+          when={
+            !props.user.self &&
+            props.member?.server?.havePermission("TimeoutMembers") &&
+            props.member.inferiorTo(props.member.server.member!) &&
+            !props.member.timeout
+          }>
+          <ContextMenuButton
+            icon={MdSchedule}
+            onClick={timeoutMember}
+            destructive
+          >
+            {t("app.context_menu.timeout_member")}
+          </ContextMenuButton>
+        </Show>
+        <Show
+          when={
+            !props.user.self &&
+            props.member?.server?.havePermission("TimeoutMembers") &&
+            props.member.inferiorTo(props.member.server.member!) &&
+            props.member.timeout
+          }>
+          <ContextMenuButton
+            icon={MdTimerOff}
+            onClick={clearTimeout}
+            destructive
+          >
+            {t("app.context_menu.clear_timeout")}
+          </ContextMenuButton>
+        </Show>
       </Show>
       <Show when={props.member}>
         <ContextMenuDivider />
