@@ -38,11 +38,11 @@
       },
       "externalBin": [],
       "icon": [
-        "../../client/assets/icons/favicon-16x16.png",
-        "../../client/assets/icons/android-chrome-512x512.png",
-        "../../client/assets/icons/icon.icns",
-        "../../client/assets/logo_round.png",
-        "../../client/assets/icons/icon.ico"
+        "../../client/public/assets/icons/favicon-16x16.png",
+        "../../client/public/assets/icons/android-chrome-512x512.png",
+        "../../client/public/assets/icons/icon.icns",
+        "../../client/public/assets/logo_round.png",
+        "../../client/public/assets/icons/icon.ico"
       ],
       "identifier": "app.upryzing.desktop",
       "longDescription": "Your conversations, your way. Connect with Upryzing.",
@@ -85,7 +85,7 @@
       }
     ],
     "systemTray": {
-      "iconPath": "../../client/assets/icons/tray/trayIcon.png",
+      "iconPath": "../../client/public/assets/icons/tray/trayIcon.png",
       "iconAsTemplate": true,
       "title": "Upryzing"
     }
