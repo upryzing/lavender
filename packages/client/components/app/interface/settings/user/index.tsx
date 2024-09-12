@@ -266,7 +266,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             //   title: t("app.special.modals.changelogs.title"),
             // },
             {
-              href: "https://github.com/revoltchat",
+              href: "https://github.com/upryzing",
               icon: <MdMemory fill={theme!.colours.foreground} {...iconSize(20)} />,
               title: t("app.settings.pages.source_code"),
             },

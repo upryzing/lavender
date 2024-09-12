@@ -4,7 +4,7 @@ This repository houses the source code for Lavender, Upryzing's web app, built w
 
 ## Development Guide
 
-Before contributing, make yourself familiar with [our contribution guidelines](https://developers.revolt.chat/contrib.html), the [code style guidelines](./GUIDELINES.md), and the [technical documentation for this project](https://revoltchat.github.io/frontend/).
+Before contributing, make yourself familiar with [our contribution guidelines](https://developers.revolt.chat/contrib.html), the [code style guidelines](./GUIDELINES.md), and the [technical documentation for this project](https://upryzing.github.io/lavender/).
 
 Before getting started, you'll want to install:
 
