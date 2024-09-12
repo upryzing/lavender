@@ -25,4 +25,5 @@ jobs:
         with:
           author_name: Upryzing CI
           author_email: upryzing-ci@users.noreply.github.com
+          fetch: false
           message: "chore: update locale strings"
