@@ -38,7 +38,7 @@ const segmentedButtonOption = cva({
     border: "none",
     width: "auto",
 
-    padding: 2,
+    paddingY: 2,
 
     fontWeight: 500,
     fontFamily: "inherit",
