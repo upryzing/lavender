@@ -78,7 +78,7 @@ export function SegmentedButtonGroup(
       AriaRadioGroupProps &
       JSX.DirectiveAttributes,
     "onClick"
-  >
+  >,
 ) {
   const [style, rest] = splitProps(props, []);
 
@@ -100,7 +100,7 @@ export function SegmentedButton(
       AriaRadioProps &
       JSX.DirectiveAttributes,
     "onClick"
-  >
+  >,
 ) {
   let ref: HTMLInputElement | undefined;
 

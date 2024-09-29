@@ -1,5 +1,11 @@
+import { For } from "solid-js";
+
 import { useTranslation } from "@revolt/i18n";
 import { Avatar, Column } from "@revolt/ui";
+import {
+  SegmentedButton,
+  SegmentedButtonGroup,
+} from "@revolt/ui/components/design/atoms/inputs/SegmentedButton";
 
 import { createFormModal } from "../form";
 import { PropGenerator } from "../types";
@@ -18,16 +24,31 @@ function parseTimeInput(input: string): number | null {
   // Being able to specify the same letter multiple times
   // (e.g. 1s1s) and having their values stack is a feature
   for (const piece of pieces) {
-    const [num, letter] = [Number(piece.slice(0, piece.length - 1)), piece.slice(piece.length - 1)];
+    const [num, letter] = [
+      Number(piece.slice(0, piece.length - 1)),
+      piece.slice(piece.length - 1),
+    ];
     let multiplier = 0;
 
     switch (letter) {
-      case 's': multiplier = 1000; break;
-      case 'm': multiplier = 1000 * 60; break;
-      case 'h': multiplier = 1000 * 60 * 60; break;
-      case 'd': multiplier = 1000 * 60 * 60 * 24; break;
-      case 'w': multiplier = 1000 * 60 * 60 * 24 * 7; break;
-      case 'y': multiplier = 1000 * 60 * 60 * 24 * 365; break;
+      case "s":
+        multiplier = 1000;
+        break;
+      case "m":
+        multiplier = 1000 * 60;
+        break;
+      case "h":
+        multiplier = 1000 * 60 * 60;
+        break;
+      case "d":
+        multiplier = 1000 * 60 * 60 * 24;
+        break;
+      case "w":
+        multiplier = 1000 * 60 * 60 * 24 * 7;
+        break;
+      case "y":
+        multiplier = 1000 * 60 * 60 * 24 * 365;
+        break;
     }
 
     res += num * multiplier;
@@ -35,6 +56,37 @@ function parseTimeInput(input: string): number | null {
 
   return res;
 }
+
+const presetTimeouts = [
+  {
+    amount: "1m",
+    tKey: "app.special.modals.prompt.timeout_preset_1",
+  },
+  {
+    amount: "5m",
+    tKey: "app.special.modals.prompt.timeout_preset_2",
+  },
+  {
+    amount: "10m",
+    tKey: "app.special.modals.prompt.timeout_preset_3",
+  },
+  {
+    amount: "30m",
+    tKey: "app.special.modals.prompt.timeout_preset_4",
+  },
+  {
+    amount: "1d",
+    tKey: "app.special.modals.prompt.timeout_preset_5",
+  },
+  {
+    amount: "1w",
+    tKey: "app.special.modals.prompt.timeout_preset_6",
+  },
+  {
+    amount: "custom",
+    tKey: "app.special.modals.prompt.timeout_preset_custom",
+  },
+];
 
 /**
  * Modal to timeout server member
@@ -48,7 +100,7 @@ const TimeoutMember: PropGenerator<"timeout_member"> = (props) => {
     },
     schema: {
       member: "custom",
-      amount: "text",
+      amount: "radio",
     },
     data: {
       member: {
@@ -62,13 +114,20 @@ const TimeoutMember: PropGenerator<"timeout_member"> = (props) => {
         ),
       },
       amount: {
-        field: t("app.special.modals.prompt.confirm_timeout_amount"),
+        choices: presetTimeouts.map((preset) => {
+          return {
+            name: t(preset.tKey),
+            value: preset.amount,
+          };
+        }),
       },
     },
     callback: async ({ amount }) => {
-      const duration = parseTimeInput(amount ?? "")
-      if (!duration) return
-      await props.member.edit({ timeout: new Date(Date.now() + duration).toISOString() })
+      const duration = parseTimeInput(amount ?? "");
+      if (!duration) return;
+      await props.member.edit({
+        timeout: new Date(Date.now() + duration).toISOString(),
+      });
     },
     submit: {
       variant: "error",

@@ -1,8 +1,20 @@
 /* eslint-disable solid/reactivity */
-import { ComponentProps, For, JSX, Match, Show, Switch } from "solid-js";
+import {
+  ComponentProps,
+  For,
+  JSX,
+  Match,
+  Show,
+  Switch,
+  createEffect,
+} from "solid-js";
 import { SetStoreFunction, createStore } from "solid-js/store";
 
 import { Button, Column } from "../design";
+import {
+  SegmentedButton,
+  SegmentedButtonGroup,
+} from "../design/atoms/inputs/SegmentedButton";
 
 import {
   InputElement,
@@ -11,6 +23,14 @@ import {
   Value,
   emptyValue,
 } from "./InputElement";
+
+// HACK: override form element to use segmented buttons since the old radio buttons are being used on InputElement.tsx
+type Choice = {
+  value: string;
+  name: JSX.Element;
+  disabled?: boolean;
+  selected?: boolean;
+};
 
 /**
  * Form schema
@@ -94,14 +114,14 @@ export interface Props<T extends FormTemplate> {
  */
 export function getInitialValues<T extends FormTemplate>(
   schema: T,
-  defaults?: Partial<MapFormToValues<T>>
+  defaults?: Partial<MapFormToValues<T>>,
 ) {
   const values: Partial<MapFormToValues<T>> = {};
 
   Object.keys(schema).forEach(
     (key) =>
       (values[key as keyof typeof values] =
-        defaults?.[key] ?? emptyValue(schema[key]))
+        defaults?.[key] ?? emptyValue(schema[key])),
   );
 
   return values as MapFormToValues<T>;
@@ -119,7 +139,7 @@ export function Form<T extends FormTemplate>(props: Props<T>) {
     setStore = props.setStore!;
   } else {
     const newStore = createStore(
-      getInitialValues(props.schema, props.defaults)
+      getInitialValues(props.schema, props.defaults),
     );
     store = newStore[0];
     setStore = newStore[1];
@@ -137,18 +157,41 @@ export function Form<T extends FormTemplate>(props: Props<T>) {
           fallback={
             <For each={keys}>
               {(key) => (
-                <InputElement
-                  type={props.schema[key]}
-                  disabled={props.disabled}
-                  value={() =>
-                    store[key] as Value<(typeof props.schema)[typeof key]>
+                <Switch
+                  fallback={
+                    <InputElement
+                      type={props.schema[key]}
+                      disabled={props.disabled}
+                      value={() =>
+                        store[key] as Value<(typeof props.schema)[typeof key]>
+                      }
+                      onChange={(value) => {
+                        setStore(key as never, value as never);
+                        props.onChange?.(store, key);
+                      }}
+                      {...props.data[key]}
+                    />
                   }
-                  onChange={(value) => {
-                    setStore(key as never, value as never);
-                    props.onChange?.(store, key);
-                  }}
-                  {...props.data[key]}
-                />
+                >
+                  <Match when={props.schema[key] === "radio"}>
+                    <SegmentedButtonGroup
+                      value={store[key] as string}
+                      isDisabled={props.disabled}
+                      onChange={(value) => {
+                        setStore(key as never, value as never);
+                        props.onChange?.(store, key);
+                      }}
+                    >
+                      <For each={props.data[key].choices as Choice[]}>
+                        {(choice) => (
+                          <SegmentedButton value={choice.value}>
+                            {choice.name}
+                          </SegmentedButton>
+                        )}
+                      </For>
+                    </SegmentedButtonGroup>
+                  </Match>
+                </Switch>
               )}
             </For>
           }
