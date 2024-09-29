@@ -1,6 +1,6 @@
 # Upryzing's Web App (Lavender)
 
-This repository houses the source code for Lavender, Upryzing's web app, built with Solid.js. sus
+This repository houses the source code for Lavender, Upryzing's web app, built with Solid.js. sussy
 
 ## Development Guide
 
