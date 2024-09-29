@@ -82,10 +82,11 @@ const presetTimeouts = [
     amount: "1w",
     tKey: "app.special.modals.prompt.timeout_preset_6",
   },
-  {
-    amount: "custom",
-    tKey: "app.special.modals.prompt.timeout_preset_custom",
-  },
+  // TODO
+  // {
+  //   amount: "custom",
+  //   tKey: "app.special.modals.prompt.timeout_preset_custom",
+  // },
 ];
 
 /**
