@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { BiSolidPalette, BiSolidSpeaker } from "solid-icons/bi";
+import { createSignal } from "solid-js";
 
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
@@ -17,7 +18,7 @@ import {
   styled as oldStyled,
 } from "@revolt/ui";
 import {
-  Option,
+  SegmentedButtonGroup,
   SegmentedButton,
 } from "@revolt/ui/components/design/atoms/inputs/SegmentedButton";
 
@@ -41,7 +42,10 @@ const newComponent = cva({
   },
 });
 
+type options = "a" | "b" | "c" | string;
+
 export function DevelopmentPage() {
+  const [pressedOption, setPressedOption] = createSignal<options>("");
   function open() {
     modalController.push({
       type: "custom_status",
@@ -163,11 +167,13 @@ export function DevelopmentPage() {
             </CategoryButton>
           </CategoryCollapse>
 
-          <SegmentedButton>
-            <Option>A</Option>
-            <Option>B</Option>
-            <Option>C</Option>
-          </SegmentedButton>
+          <SegmentedButtonGroup onChange={(v) => setPressedOption(v)} value={pressedOption()}>
+            <SegmentedButton value="a">A</SegmentedButton>
+            <SegmentedButton value="b">B</SegmentedButton>
+            <SegmentedButton value="c">C</SegmentedButton>
+          </SegmentedButtonGroup>
+
+          <div>{pressedOption()}</div>
         </Column>
       </div>
     </Column>

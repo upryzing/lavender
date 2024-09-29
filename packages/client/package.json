@@ -60,6 +60,7 @@
     "@sentry/browser": "^7.107.0",
     "@sentry/tracing": "^7.107.0",
     "@solid-aria/button": "^0.1.3",
+    "@solid-aria/radio": "^0.1.3",
     "@solid-devtools/debugger": "^0.23.3",
     "@solid-devtools/overlay": "^0.29.3",
     "@solid-primitives/i18n": "^1.1.1",

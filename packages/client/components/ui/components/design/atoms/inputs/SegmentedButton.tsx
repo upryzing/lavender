@@ -2,11 +2,11 @@ import { splitProps } from "solid-js";
 import { JSX } from "solid-js/jsx-runtime";
 
 import {
-  AriaButtonProps,
-  AriaToggleButtonProps,
-  createButton,
-  createToggleButton,
-} from "@solid-aria/button";
+  AriaRadioGroupProps,
+  AriaRadioProps,
+  createRadio,
+  createRadioGroup,
+} from "@solid-aria/radio";
 import { cva } from "styled-system/css/cva";
 
 const segmentedButtonContainer = cva({
@@ -22,11 +22,6 @@ const segmentedButtonContainer = cva({
     cursor: "pointer",
     borderRadius: "var(--borderRadius-xxl)",
     transition: "var(--transitions-fast) all",
-
-    // "&:hover": {
-    //   filter: "brightness(1.2)",
-    // },
-
     "&:disabled": {
       cursor: "not-allowed",
     },
@@ -42,20 +37,14 @@ const segmentedButtonOption = cva({
     border: "none",
     width: "auto",
 
-    padding: 2,
+    paddingY: 2,
 
     fontWeight: 500,
     fontFamily: "inherit",
-    backgroundColor: "var(--colours-component-btn-background-secondary)",
-
     cursor: "pointer",
     transition: "var(--transitions-fast) all",
     borderY: "1px solid var(--colours-component-segbtn-outline)",
     borderRight: "1px solid var(--colours-component-segbtn-outline)",
-
-    // "&:hover": {
-    //   filter: "brightness(1.2)",
-    // },
 
     "&:first-child": {
       borderLeftRadius: "var(--borderRadius-xxl)",
@@ -69,8 +58,11 @@ const segmentedButtonOption = cva({
     "&:disabled": {
       cursor: "not-allowed",
     },
-    "&[aria-pressed='true']": {
-      backgroundColor: "var(--colours-component-segbtn-background-primary)",
+    "& input": {
+      display: "none",
+    },
+    "&[data-selected=true]": {
+      backgroundColor: "var(--colours-component-segbtn-background-selected)",
     },
   },
 });
@@ -80,47 +72,52 @@ const segmentedButtonOption = cva({
  * @param props
  * @returns
  */
-export function SegmentedButton(
+export function SegmentedButtonGroup(
   props: Omit<
-    Parameters<typeof segmentedButtonContainer>[0] & {
-      children: JSX.Element;
-    } & JSX.DirectiveAttributes,
+    Parameters<typeof segmentedButtonContainer>[0] &
+      AriaRadioGroupProps &
+      JSX.DirectiveAttributes,
     "onClick"
   >
 ) {
   const [style, rest] = splitProps(props, []);
 
+  const { RadioGroupProvider, groupProps } = createRadioGroup(rest);
+
   return (
-    <form {...rest} class={segmentedButtonContainer(style)}>
-      {rest.children}
-    </form>
+    <div {...groupProps} class={segmentedButtonContainer(style)}>
+      <RadioGroupProvider>{rest.children}</RadioGroupProvider>
+    </div>
   );
 }
 /**
  * Segmented Button Option
  * @returns
  */
-export function Option(
+export function SegmentedButton(
   props: Omit<
     Parameters<typeof segmentedButtonOption>[0] &
-      AriaToggleButtonProps &
+      AriaRadioProps &
       JSX.DirectiveAttributes,
     "onClick"
   >
 ) {
-  const [style, rest] = splitProps(props, []);
-  let ref: HTMLButtonElement | undefined;
+  let ref: HTMLInputElement | undefined;
 
-  const { buttonProps, state } = createToggleButton(rest, () => ref);
+  const { inputProps, state } = createRadio(props, () => ref);
+
+  // eslint-disable-next-line spellcheck/spell-checker
+  // eslint-disable-next-line require-jsdoc
+  const isSelected = () => state.selectedValue() === props.value;
+
   return (
-    <button
-      {...buttonProps}
-      ref={ref}
+    <label
       class={segmentedButtonOption()}
+      data-selected={isSelected()}
       use:ripple
-      // @codegen directives props=rest include=floating
     >
-      {rest.children}
-    </button>
+      <input {...inputProps} ref={ref} />
+      {props.children}
+    </label>
   );
 }
