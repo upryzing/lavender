@@ -154,8 +154,8 @@ export const darkTheme: (
         40
       ),
       // Component: Segmented Button,
-      "component-segbtn-background-primary": materialColour("primary", 90),
-      "component-segbtn-outline": materialColour("outline", 0),
+      "component-segbtn-background-selected": materialColour("primary", 90),
+      "component-segbtn-outline": materialColour("outline"),
       // Component: Menu Button
       "component-menubtn-default-background": "transparent",
       "component-menubtn-default-foreground": materialColour(
