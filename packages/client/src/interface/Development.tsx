@@ -16,6 +16,10 @@ import {
   iconSize,
   styled as oldStyled,
 } from "@revolt/ui";
+import {
+  Option,
+  SegmentedButton,
+} from "@revolt/ui/components/design/atoms/inputs/SegmentedButton";
 
 import Face from "@material-design-icons/svg/filled/face.svg?component-solid";
 
@@ -158,6 +162,12 @@ export function DevelopmentPage() {
               combo box
             </CategoryButton>
           </CategoryCollapse>
+
+          <SegmentedButton>
+            <Option>A</Option>
+            <Option>B</Option>
+            <Option>C</Option>
+          </SegmentedButton>
         </Column>
       </div>
     </Column>
