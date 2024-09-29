@@ -25,14 +25,14 @@ import MdPayments from "@material-design-icons/svg/filled/payments.svg?component
 import MdRateReview from "@material-design-icons/svg/filled/rate_review.svg?component-solid";
 import MdSettings from "@material-design-icons/svg/filled/settings.svg?component-solid";
 
-import RevoltSvg from "../../public/assets/wordmark_wide_500px.svg?component-solid";
+// import UpryzingSvg from "../../public/assets/wordmark_wide_500px.svg?component-solid";
 
 import { HeaderIcon } from "./common/CommonHeader";
 
-const Logo = styled(RevoltSvg)`
-  width: 240px;
-  fill: ${(props) => props.theme!.colours["foreground"]};
-`;
+// const Logo = styled(RevoltSvg)`
+//   width: 240px;
+//   fill: ${(props) => props.theme!.colours["foreground"]};
+// `;
 
 /**
  * Base layout of the home page (i.e. the header/background)
@@ -123,7 +123,7 @@ export function HomePage() {
           <Typography variant="home-page-title">
             {t("app.special.modals.onboarding.welcome")}
           </Typography>
-          <Logo />
+          {/* <Logo /> */}
         </Column>
         <Buttons>
           <SeparatedColumn>

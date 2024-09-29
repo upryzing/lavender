@@ -16,19 +16,19 @@ import {
 
 import MdArrowBack from "@material-design-icons/svg/filled/arrow_back.svg?component-solid";
 
-import RevoltSvg from "../../../../public/assets/wordmark_wide_500px.svg?component-solid";
+// import UpryzingSvg from "../../../../public/assets/wordmark_wide_500px.svg?component-solid";
 import { clientController } from "../../../client";
 
 import { FlowTitle } from "./Flow";
 import { Fields, Form } from "./Form";
 
-const Logo = styled(RevoltSvg, {
-  base: {
-    height: "0.8em",
-    display: "inline",
-    fill: "var(--colours-messaging-message-box-foreground)",
-  },
-});
+// const Logo = styled(RevoltSvg, {
+//   base: {
+//     height: "0.8em",
+//     display: "inline",
+//     fill: "var(--colours-messaging-message-box-foreground)",
+//   },
+// });
 
 /**
  * Flow for logging into an account
@@ -101,7 +101,7 @@ export default function FlowLogin() {
         <Match when={clientController.lifecycle.state() === State.Onboarding}>
           <FlowTitle subtitle={t("app.special.modals.onboarding.pick")}>
             <Row gap="sm">
-              {t("app.special.modals.onboarding.welcome")} <Logo />
+              {t("app.special.modals.onboarding.welcome")} {/* <Logo /> */}
             </Row>
           </FlowTitle>
 
