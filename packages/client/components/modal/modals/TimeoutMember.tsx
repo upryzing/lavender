@@ -60,32 +60,32 @@ function parseTimeInput(input: string): number | null {
 const presetTimeouts = [
   {
     amount: "1m",
-    tKey: "app.special.modals.prompt.timeout_preset_1",
+    tKey: "app.special.modals.timeout.timeout_preset_1",
   },
   {
     amount: "5m",
-    tKey: "app.special.modals.prompt.timeout_preset_2",
+    tKey: "app.special.modals.timeout.timeout_preset_2",
   },
   {
     amount: "10m",
-    tKey: "app.special.modals.prompt.timeout_preset_3",
+    tKey: "app.special.modals.timeout.timeout_preset_3",
   },
   {
-    amount: "30m",
-    tKey: "app.special.modals.prompt.timeout_preset_4",
+    amount: "1h",
+    tKey: "app.special.modals.timeout.timeout_preset_4",
   },
   {
     amount: "1d",
-    tKey: "app.special.modals.prompt.timeout_preset_5",
+    tKey: "app.special.modals.timeout.timeout_preset_5",
   },
   {
     amount: "1w",
-    tKey: "app.special.modals.prompt.timeout_preset_6",
+    tKey: "app.special.modals.timeout.timeout_preset_6",
   },
   // TODO
   // {
   //   amount: "custom",
-  //   tKey: "app.special.modals.prompt.timeout_preset_custom",
+  //   tKey: "app.special.modals.timeout.timeout_preset_custom",
   // },
 ];
 
