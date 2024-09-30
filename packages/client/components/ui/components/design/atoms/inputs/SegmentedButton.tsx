@@ -31,13 +31,14 @@ const segmentedButtonContainer = cva({
 const segmentedButtonOption = cva({
   base: {
     flexGrow: 1,
+    flexShrink: 0,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     border: "none",
     width: "auto",
 
-    paddingY: 2,
+    padding: 2,
 
     fontWeight: 500,
     fontFamily: "inherit",
