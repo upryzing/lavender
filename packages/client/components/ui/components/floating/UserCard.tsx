@@ -4,16 +4,25 @@ import { styled } from "solid-styled-components";
 
 import { getController } from "@revolt/common";
 
-import { ColouredText, Row, Username } from "../design";
+import { Avatar, ColouredText, Row, Username } from "../design";
 
 /**
  * Base element for the card
  */
 const Base = styled("div", "Tooltip")`
-  color: white;
-  background: black;
   width: 400px;
   height: 400px;
+  border-radius: ${(props) => props.theme!.borderRadius.lg};
+  padding: ${(props) => props.theme!.gap.lg};
+
+  /** FIXME: make these their own colours */
+  background: ${(props) =>
+    props.theme!.colours["component-context-menu-background"]};
+  color: ${(props) =>
+    props.theme!.colours["component-context-menu-foreground"]};
+
+  box-shadow: 0 0 3px
+    ${(props) => props.theme!.colours["component-context-menu-shadow"]};
 `;
 
 /**
@@ -31,14 +40,19 @@ export function UserCard(
 
   return (
     <Base>
-      <Show when={props.member}>
-        <Username
-          username={props.member!.nickname ?? props.user.username}
-          colour={props.member!.roleColour!}
-        />
-        <br />
-      </Show>
-      {props.user.username}
+      <Row style={{ "align-items": "center" }}>
+        <Avatar src={props.user.animatedAvatarURL} size={58} />
+        <div>
+          <Show when={props.member}>
+            <Username
+              username={props.member!.nickname ?? props.user.username}
+              colour={props.member!.roleColour!}
+            />
+            <br />
+          </Show>
+          {props.user.username}
+        </div>
+      </Row>
       <Show when={props.member}>
         <br />
         <br />
