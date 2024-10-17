@@ -23,7 +23,7 @@
   "keywords": [],
   "engines": {
     "node": ">=18",
-    "pnpm": ">=6"
+    "pnpm": ">=8"
   },
   "private": true,
   "packageManager": "pnpm@8.6.0"
