@@ -92,7 +92,7 @@ export function Fields(props: FieldProps) {
   return (
     <For each={props.fields}>
       {(field) => (field != "invite" || inviteCodeNeeded) && (
-        <FormGroup >
+        <FormGroup>
           {field === "log-out" ? (
             <label class={labelRow()}>
               <Checkbox name="log-out" />
