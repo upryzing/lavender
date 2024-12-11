@@ -39,6 +39,12 @@ export default {
    * Maximum number of attachments a message can have
    */
   MAX_ATTACHMENTS: (import.meta.env.VITE_CFG_MAX_ATTACHMENTS as number) ?? 5,
+
+  /**
+   * Determines whether or not an invite code is required on signing up.
+  */
+  INVITE_ONLY: (import.meta.env.VITE_INVITE_ONLY as boolean) ?? false,
+
   /**
    * Session ID to set during development.
    */
