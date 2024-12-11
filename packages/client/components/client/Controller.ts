@@ -127,7 +127,7 @@ class Lifecycle {
         },
         captcha: {} as never,
         email: true,
-        invite_only: false,
+        invite_only: true,
         voso: {} as never,
       },
       vapid: String(),

@@ -3,14 +3,15 @@ import { For, JSX, Show, createSignal } from "solid-js";
 
 import { cva } from "styled-system/css";
 
-import { mapAnyError } from "@revolt/client";
+import { clientController, mapAnyError } from "@revolt/client";
 import { useTranslation } from "@revolt/i18n";
 import { Checkbox, Column, FormGroup, Input, Typography } from "@revolt/ui";
+import { autoComplete } from "@revolt/ui/directives";
 
 /**
  * Available field types
  */
-type Field = "email" | "password" | "new-password" | "log-out" | "username";
+type Field = "email" | "password" | "new-password" | "log-out" | "username" | "invite";
 
 /**
  * Properties to apply to fields
@@ -47,6 +48,13 @@ const useFieldConfiguration = () => {
       name: () => t("login.username"),
       placeholder: () => t("login.enter.username"),
     },
+    invite: {
+      minLength: 2,
+      type: "text",
+      autoComplete: "none",
+      name: () => t("login.invite"),
+      placeholder: () => t("login.enter.invite"),
+    }
   };
 };
 
@@ -72,6 +80,8 @@ export function Fields(props: FieldProps) {
   const fieldConfiguration = useFieldConfiguration();
   const [failedValidation, setFailedValidation] = createSignal(false);
 
+  const inviteCodeNeeded: boolean|undefined = clientController.lifecycle.client.configuration?.features.invite_only;
+
   /**
    * If an input element notifies us it was invalid, enable live input validation.
    */
@@ -81,8 +91,8 @@ export function Fields(props: FieldProps) {
 
   return (
     <For each={props.fields}>
-      {(field) => (
-        <FormGroup>
+      {(field) => (field != "invite" || inviteCodeNeeded) && (
+        <FormGroup >
           {field === "log-out" ? (
             <label class={labelRow()}>
               <Checkbox name="log-out" />
