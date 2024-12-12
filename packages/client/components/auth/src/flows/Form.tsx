@@ -51,7 +51,7 @@ const useFieldConfiguration = () => {
     invite: {
       minLength: 2,
       type: "text",
-      autoComplete: "none",
+      autocomplete: "none",
       name: () => t("login.invite"),
       placeholder: () => t("login.enter.invite"),
     }
