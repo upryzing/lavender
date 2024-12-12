@@ -91,31 +91,33 @@ export function Fields(props: FieldProps) {
 
   return (
     <For each={props.fields}>
-      {(field) => (field != "invite" || inviteCodeNeeded) && (
-        <FormGroup>
-          {field === "log-out" ? (
-            <label class={labelRow()}>
-              <Checkbox name="log-out" />
-              <Typography variant="label">
-                {fieldConfiguration["log-out"].name()}
-              </Typography>
-            </label>
-          ) : (
-            <>
-              <Typography variant="label">
-                {fieldConfiguration[field].name()}
-              </Typography>
-              <Input
-                required
-                {...fieldConfiguration[field]}
-                name={field}
-                placeholder={fieldConfiguration[field].placeholder()}
-                submissionTried={failedValidation()}
-                onInvalid={onInvalid}
-              />
-            </>
-          )}
-        </FormGroup>
+      {(field) => (
+        <Show when={field != "invite" || inviteCodeNeeded}>
+          <FormGroup>
+            {field === "log-out" ? (
+              <label class={labelRow()}>
+                <Checkbox name="log-out" />
+                <Typography variant="label">
+                  {fieldConfiguration["log-out"].name()}
+                </Typography>
+              </label>
+            ) : (
+              <>
+                <Typography variant="label">
+                  {fieldConfiguration[field].name()}
+                </Typography>
+                <Input
+                  required
+                  {...fieldConfiguration[field]}
+                  name={field}
+                  placeholder={fieldConfiguration[field].placeholder()}
+                  submissionTried={failedValidation()}
+                  onInvalid={onInvalid}
+                />
+              </>
+            )}
+          </FormGroup>
+        </Show>
       )}
     </For>
   );
