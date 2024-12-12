@@ -80,7 +80,7 @@ export function Fields(props: FieldProps) {
   const fieldConfiguration = useFieldConfiguration();
   const [failedValidation, setFailedValidation] = createSignal(false);
 
-  const inviteCodeNeeded: boolean|undefined = clientController.lifecycle.client.configuration?.features.invite_only;
+  const inviteCodeNeeded: boolean | undefined = clientController.lifecycle.client.configuration?.features.invite_only;
 
   /**
    * If an input element notifies us it was invalid, enable live input validation.
