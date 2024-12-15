@@ -116,7 +116,7 @@ class Lifecycle {
 
     let useBaseConfig = !CONFIGURATION.REQUEST_CONFIG;
 
-    if (CONFIGURATION.REQUEST_CONFIG) {
+    if (!useBaseConfig) {
       fetch(CONFIGURATION.DEFAULT_API_URL).then(response => {
         if (!response.ok)
           throw new Error(response.statusText);
