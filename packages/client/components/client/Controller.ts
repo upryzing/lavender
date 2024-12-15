@@ -135,8 +135,6 @@ class Lifecycle {
         }
 
         this.client.configuration = conf;
-
-        console.log(conf);
       }).catch(error => {
         console.error(error);
 
