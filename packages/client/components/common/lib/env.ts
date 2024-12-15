@@ -1,32 +1,37 @@
 export default {
   /**
+   * Determines whether or not Lavender will request the server's config
+  */
+  REQUEST_CONFIG: (import.meta.env.VITE_REQUEST_CONFIG as boolean) ?? true,
+
+  /**
    * What API server to connect to by default.
    */
   DEFAULT_API_URL:
     (import.meta.env.DEV ? import.meta.env.VITE_DEV_API_URL : undefined) ??
     (import.meta.env.VITE_API_URL as string) ??
-    "https://revolt.chat/api",
+    "https://web.upryzing.app/api",
   /**
    * What WS server to connect to by default.
    */
   DEFAULT_WS_URL:
     (import.meta.env.DEV ? import.meta.env.VITE_DEV_WS_URL : undefined) ??
     (import.meta.env.VITE_WS_URL as string) ??
-    "wss://revolt.chat/events",
+    "wss://web.upryzing.app/events",
   /**
    * What media server to connect to by default.
    */
   DEFAULT_MEDIA_URL:
     (import.meta.env.DEV ? import.meta.env.VITE_DEV_WS_URL : undefined) ??
-    (import.meta.env.VITE_WS_URL as string) ??
-    "https://autumn.revolt.chat",
+    (import.meta.env.VITE_MEDIA_URL as string) ??
+    "https://web.upryzing.app/pigeon",
   /**
    * What proxy server to connect to by default.
    */
   DEFAULT_PROXY_URL:
     (import.meta.env.DEV ? import.meta.env.VITE_DEV_WS_URL : undefined) ??
-    (import.meta.env.VITE_WS_URL as string) ??
-    "https://jan.revolt.chat",
+    (import.meta.env.VITE_PROXY_URL as string) ??
+    "https://web.upryzing.app/dove",
   /**
    * hCaptcha site key to use if enabled
    */
