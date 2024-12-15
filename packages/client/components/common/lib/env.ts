@@ -1,6 +1,6 @@
 export default {
   /**
-   * Determines whether or not Lavender will request the servers config
+   * Determines whether or not Lavender will request the server's config
   */
   REQUEST_CONFIG: (import.meta.env.VITE_REQUEST_CONFIG as boolean) ?? true,
 
