@@ -1,5 +1,5 @@
 import HCaptcha, { HCaptchaFunctions } from "solid-hcaptcha";
-import { For, JSX, Show, createSignal } from "solid-js";
+import { For, JSX, Show, Switch, Match, createSignal } from "solid-js";
 
 import { cva } from "styled-system/css";
 
@@ -94,28 +94,33 @@ export function Fields(props: FieldProps) {
       {(field) => (
         <Show when={field != "invite" || inviteCodeNeeded}>
           <FormGroup>
-            {field === "log-out" ? (
-              <label class={labelRow()}>
-                <Checkbox name="log-out" />
-                <Typography variant="label">
-                  {fieldConfiguration["log-out"].name()}
-                </Typography>
-              </label>
-            ) : (
-              <>
-                <Typography variant="label">
-                  {fieldConfiguration[field].name()}
-                </Typography>
-                <Input
-                  required
-                  {...fieldConfiguration[field]}
-                  name={field}
-                  placeholder={fieldConfiguration[field].placeholder()}
-                  submissionTried={failedValidation()}
-                  onInvalid={onInvalid}
-                />
+            <Switch fallback={
+                <>
+                  <Typography variant="label">
+                    {fieldConfiguration[field].name()}
+                  </Typography>
+                  <Input
+                    required
+                    {...fieldConfiguration[field]}
+                    name={field}
+                    // Following ignore is due to log-out not having a placeholder but log-out never gets here from the fallback
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    placeholder={fieldConfiguration[field].placeholder()}
+                    submissionTried={failedValidation()}
+                    onInvalid={onInvalid}
+                  />
               </>
-            )}
+            }>
+              <Match when={field == "log-out"}>
+                  <label class={labelRow()}>
+                    <Checkbox name="log-out" />
+                    <Typography variant="label">
+                      {fieldConfiguration["log-out"].name()}
+                    </Typography>
+                  </label>
+              </Match>
+            </Switch>
           </FormGroup>
         </Show>
       )}
