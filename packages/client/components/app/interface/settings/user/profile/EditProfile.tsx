@@ -37,8 +37,8 @@ export function EditProfile() {
       <CategoryButtonGroup>
         <CategoryCollapse
           icon={<MdGroups {...iconSize(22)} />}
-          title="Server Identities"
-          description="Change your profile per-server"
+          title="Space Identities"
+          description="Change your profile per-space"
           scrollable
         >
           <For each={client().servers.toList()}>
