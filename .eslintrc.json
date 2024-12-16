@@ -1,7 +1,10 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "plugins": ["solid", "spellcheck"],
+  "plugins": [
+    "solid",
+    "spellcheck"
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:solid/typescript",
@@ -17,7 +20,14 @@
         "strings": false,
         "identifiers": false,
         "templates": false,
-        "skipWords": ["dismissable", "regex", "accessor", "dnd", "webhooks"],
+        "skipWords": [
+          "dismissable",
+          "regex",
+          "accessor",
+          "dnd",
+          "webhooks",
+          "upryzing"
+        ],
         "minLength": 3
       }
     ],
