@@ -12,7 +12,7 @@ pub(crate) fn create_menu(app: &mut App) -> Result<Menu<Wry>, Box<dyn std::error
 		"amycatgirl".to_string(),
 	];
 
-	let a = AboutMetadata {
+	let aboutInfo = AboutMetadata {
 		name: Some("Upryzing".to_string()),
 		version: Some("0.0.1".to_string()),
 		short_version: Some("0.0.1".to_string()),
@@ -27,7 +27,7 @@ pub(crate) fn create_menu(app: &mut App) -> Result<Menu<Wry>, Box<dyn std::error
 	};
 
 	let seperator = PredefinedMenuItem::separator(handle)?;
-	let abt = PredefinedMenuItem::about(handle, Some("About Upryzing"), Some(a))?;
+	let abt = PredefinedMenuItem::about(handle, Some("About Upryzing"), Some(aboutInfo))?;
 
 	let show_i = MenuItem::with_id(handle, "show", "Show Upryzing", true, None::<&str>)?;
 	let quit_i = MenuItem::with_id(handle, "quit", "Quit", true, None::<&str>)?;
