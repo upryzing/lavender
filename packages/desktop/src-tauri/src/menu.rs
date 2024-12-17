@@ -6,11 +6,17 @@ use tauri::{
 pub(crate) fn create_menu(app: &mut App) -> Result<Menu<Wry>, Box<dyn std::error::Error>> {
 	let handle = app.handle();
 
+	let authors = [
+		"Tulpenkiste".to_string(),
+		"Rexogamer".to_string(),
+		"amycatgirl".to_string(),
+	];
+
 	let a = AboutMetadata {
 		name: Some("Upryzing".to_string()),
-		version: Some("0.0.0".to_string()),
-		short_version: Some("0.0.0".to_string()),
-		authors: Some(["Tulpenkiste".to_string()].to_vec()),
+		version: Some("0.0.1".to_string()),
+		short_version: Some("0.0.1".to_string()),
+		authors: Some(authors.to_vec()),
 		comments: Some("".to_string()),
 		copyright: Some("".to_string()),
 		license: Some("AGPL-v3".to_string()),
@@ -20,8 +26,8 @@ pub(crate) fn create_menu(app: &mut App) -> Result<Menu<Wry>, Box<dyn std::error
 		icon: None,
 	};
 
-	let abt = PredefinedMenuItem::about(handle, Some("About Upryzing"), Some(a))?;
 	let seperator = PredefinedMenuItem::separator(handle)?;
+	let abt = PredefinedMenuItem::about(handle, Some("About Upryzing"), Some(a))?;
 
 	let show_i = MenuItem::with_id(handle, "show", "Show Upryzing", true, None::<&str>)?;
 	let quit_i = MenuItem::with_id(handle, "quit", "Quit", true, None::<&str>)?;
