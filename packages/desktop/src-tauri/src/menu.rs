@@ -17,12 +17,12 @@ pub(crate) fn create_menu(app: &mut App) -> Result<Menu<Wry>, Box<dyn std::error
 		version: Some("0.0.1".to_string()),
 		short_version: Some("0.0.1".to_string()),
 		authors: Some(authors.to_vec()),
-		comments: Some("".to_string()),
-		copyright: Some("".to_string()),
+		comments: None,
+		copyright: None,
 		license: Some("AGPL-v3".to_string()),
-		website: Some("".to_string()),
-		website_label: Some("".to_string()),
-		credits: Some("".to_string()),
+		website: Some("https://upryzing.app".to_string()),
+		website_label: Some("Homepage".to_string()),
+		credits: None,
 		icon: None,
 	};
 

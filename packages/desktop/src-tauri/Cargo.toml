@@ -1,7 +1,7 @@
 [package]
 name = "Upryzing"
 version = "0.0.1"
-description = "Your Conversations, Your Way"
+description = "Your conversations, your way."
 authors = ["Tulpenkiste"]
 license = "AGPL-3.0"
 repository = "https://github.com/upryzing/lavender"
