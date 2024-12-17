@@ -1,7 +1,7 @@
 export default {
   /**
    * Determines whether or not Lavender will request the server's config
-  */
+   */
   REQUEST_CONFIG: (import.meta.env.VITE_REQUEST_CONFIG as boolean) ?? true,
 
   /**
@@ -17,7 +17,7 @@ export default {
   DEFAULT_WS_URL:
     (import.meta.env.DEV ? import.meta.env.VITE_DEV_WS_URL : undefined) ??
     (import.meta.env.VITE_WS_URL as string) ??
-    "wss://web.upryzing.app/events",
+    "wss://web.upryzing.app/ws",
   /**
    * What media server to connect to by default.
    */
@@ -47,7 +47,7 @@ export default {
 
   /**
    * Determines whether or not an invite code is required on signing up.
-  */
+   */
   INVITE_ONLY: (import.meta.env.VITE_INVITE_ONLY as boolean) ?? false,
 
   /**
