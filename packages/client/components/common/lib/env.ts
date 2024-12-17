@@ -22,14 +22,14 @@ export default {
    * What media server to connect to by default.
    */
   DEFAULT_MEDIA_URL:
-    (import.meta.env.DEV ? import.meta.env.VITE_DEV_WS_URL : undefined) ??
+    (import.meta.env.DEV ? import.meta.env.VITE_DEV_MEDIA_URL : undefined) ??
     (import.meta.env.VITE_MEDIA_URL as string) ??
     "https://web.upryzing.app/pigeon",
   /**
    * What proxy server to connect to by default.
    */
   DEFAULT_PROXY_URL:
-    (import.meta.env.DEV ? import.meta.env.VITE_DEV_WS_URL : undefined) ??
+    (import.meta.env.DEV ? import.meta.env.VITE_DEV_PROXY_URL : undefined) ??
     (import.meta.env.VITE_PROXY_URL as string) ??
     "https://web.upryzing.app/dove",
   /**
