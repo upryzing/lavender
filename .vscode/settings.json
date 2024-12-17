@@ -16,8 +16,7 @@
   "[rust]": {
     "editor.tabSize": 4,
     "editor.insertSpaces": false,
-    "editor.detectIndentation": false,
-    "editor.formatOnSave": false
+    "editor.detectIndentation": false
   },
   // tell `rust-analyzer` where the Tauri project is
   "rust-analyzer.linkedProjects": [

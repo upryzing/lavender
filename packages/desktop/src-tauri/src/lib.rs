@@ -8,7 +8,8 @@ use tauri::{
 pub fn run() {
 	tauri::Builder::default()
 		.setup(|app| {
-			let show_i = MenuItem::with_id(app, "show", "Show Upryzing Window", true, None::<&str>)?;
+			let show_i =
+				MenuItem::with_id(app, "show", "Show Upryzing Window", true, None::<&str>)?;
 			let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
 			let menu = Menu::with_items(app, &[&show_i, &quit_i])?;
 
