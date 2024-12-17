@@ -1,0 +1,31 @@
+use tauri::{
+	menu::{AboutMetadata, Menu, MenuItem, PredefinedMenuItem},
+	App, Wry,
+};
+
+pub(crate) fn create_menu(app: &mut App) -> Result<Menu<Wry>, Box<dyn std::error::Error>> {
+	let handle = app.handle();
+
+	let a = AboutMetadata {
+		name: Some("Upryzing".to_string()),
+		version: Some("0.0.0".to_string()),
+		short_version: Some("0.0.0".to_string()),
+		authors: Some(["Tulpenkiste".to_string()].to_vec()),
+		comments: Some("".to_string()),
+		copyright: Some("".to_string()),
+		license: Some("AGPL-v3".to_string()),
+		website: Some("".to_string()),
+		website_label: Some("".to_string()),
+		credits: Some("".to_string()),
+		icon: None,
+	};
+
+	let abt = PredefinedMenuItem::about(handle, Some("About Upryzing"), Some(a))?;
+	let seperator = PredefinedMenuItem::separator(handle)?;
+
+	let show_i = MenuItem::with_id(handle, "show", "Show Upryzing", true, None::<&str>)?;
+	let quit_i = MenuItem::with_id(handle, "quit", "Quit", true, None::<&str>)?;
+	let menu = Menu::with_items(handle, &[&abt, &seperator, &show_i, &seperator, &quit_i])?;
+
+	Ok(menu)
+}

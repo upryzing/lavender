@@ -1,17 +1,15 @@
 use tauri::{
-	menu::{Menu, MenuItem},
 	tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent},
 	Manager,
 };
+
+mod menu;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
 	tauri::Builder::default()
 		.setup(|app| {
-			let show_i =
-				MenuItem::with_id(app, "show", "Show Upryzing Window", true, None::<&str>)?;
-			let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
-			let menu = Menu::with_items(app, &[&show_i, &quit_i])?;
+			let tray_menu = menu::create_menu(app)?;
 
 			if cfg!(debug_assertions) {
 				app.handle().plugin(
@@ -23,7 +21,7 @@ pub fn run() {
 
 			TrayIconBuilder::new()
 				.icon(app.default_window_icon().unwrap().clone())
-				.menu(&menu)
+				.menu(&tray_menu)
 				.menu_on_left_click(false)
 				.on_tray_icon_event(|tray, event| match event {
 					TrayIconEvent::Click {
