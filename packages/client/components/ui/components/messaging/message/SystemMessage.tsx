@@ -9,7 +9,7 @@ import {
   User,
   UserModeratedSystemMessage,
   UserSystemMessage,
-} from "revolt.js";
+} from "@upryzing/upryzing.js";
 
 import { Typography } from "../../design";
 

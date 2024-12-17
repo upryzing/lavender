@@ -5,7 +5,7 @@ import {
   BiSolidTrash,
 } from "solid-icons/bi";
 
-import { Channel } from "revolt.js";
+import { Channel } from "@upryzing/upryzing.js";
 
 import { useClient } from "@revolt/client";
 import { getController } from "@revolt/common";

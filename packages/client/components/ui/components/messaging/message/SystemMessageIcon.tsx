@@ -15,7 +15,7 @@ import {
 import { Match, Switch } from "solid-js";
 import { styled } from "solid-styled-components";
 
-import { SystemMessage } from "revolt.js";
+import { SystemMessage } from "@upryzing/upryzing.js";
 
 import { Time } from "../../design";
 import { formatTime } from "../../design/atoms/display/Time";
@@ -99,17 +99,16 @@ const Base = styled.div<{ type: SystemMessage["type"] }>`
   display: grid;
   place-items: center;
 
-  color: ${
-    "var(--unset-fg)"
-    // (props) =>
-    // props.theme!.colours[
-    //   danger.has(props.type)
-    //     ? "error"
-    //     : warning.has(props.type)
-    //     ? "warning"
-    //     : success.has(props.type)
-    //     ? "success"
-    //     : "foreground-200"
-    // ]
+  color: ${"var(--unset-fg)"
+  // (props) =>
+  // props.theme!.colours[
+  //   danger.has(props.type)
+  //     ? "error"
+  //     : warning.has(props.type)
+  //     ? "warning"
+  //     : success.has(props.type)
+  //     ? "success"
+  //     : "foreground-200"
+  // ]
   };
 `;

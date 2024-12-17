@@ -2,7 +2,7 @@ import { BiRegularAt, BiSolidXCircle } from "solid-icons/bi";
 import { Show } from "solid-js";
 import { styled } from "solid-styled-components";
 
-import type { Message } from "revolt.js";
+import type { Message } from "@upryzing/upryzing.js";
 
 import { useTranslation } from "@revolt/i18n";
 
@@ -56,7 +56,7 @@ const MentionToggle = styled.a<{ mention: boolean }>`
 
   color: ${(props) =>
     props.theme!.colours[
-      `messaging-indicator-reply-${props.mention ? "enabled" : "disabled"}`
+    `messaging-indicator-reply-${props.mention ? "enabled" : "disabled"}`
     ]};
 `;
 

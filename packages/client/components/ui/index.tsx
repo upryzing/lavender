@@ -4,7 +4,7 @@ import { useTheme } from "solid-styled-components";
 import { DirectiveProvider } from "solid-styled-components";
 
 import { Placement } from "@floating-ui/dom";
-import { Channel, Client, ServerMember, User } from "revolt.js";
+import { Channel, Client, ServerMember, User } from "@upryzing/upryzing.js";
 
 import {
   AutoCompleteState,
@@ -101,61 +101,61 @@ declare module "solid-js" {
   namespace JSX {
     interface Directives {
       ripple:
-        | true
-        | {
-            enable: boolean;
+      | true
+      | {
+        enable: boolean;
 
-            /**
-             * Pass-through class names
-             */
-            class?: string;
-          };
+        /**
+         * Pass-through class names
+         */
+        class?: string;
+      };
       scrollable:
-        | true
-        | {
-            /**
-             * Scroll direction
-             */
-            direction?: "x" | "y";
+      | true
+      | {
+        /**
+         * Scroll direction
+         */
+        direction?: "x" | "y";
 
-            /**
-             * Offset to apply to top of scroll container
-             */
-            offsetTop?: number;
+        /**
+         * Offset to apply to top of scroll container
+         */
+        offsetTop?: number;
 
-            /**
-             * Whether to only show scrollbar on hover
-             */
-            showOnHover?: boolean;
+        /**
+         * Whether to only show scrollbar on hover
+         */
+        showOnHover?: boolean;
 
-            /**
-             * Pass-through class names
-             */
-            class?: string;
+        /**
+         * Pass-through class names
+         */
+        class?: string;
 
-            /**
-             * Set custom foreground on track
-             */
-            foreground?: string;
+        /**
+         * Set custom foreground on track
+         */
+        foreground?: string;
 
-            /**
-             * Set custom background on track
-             */
-            background?: string;
-          };
+        /**
+         * Set custom background on track
+         */
+        background?: string;
+      };
       invisibleScrollable:
-        | true
-        | {
-            /**
-             * Scroll direction
-             */
-            direction?: "x" | "y";
+      | true
+      | {
+        /**
+         * Scroll direction
+         */
+        direction?: "x" | "y";
 
-            /**
-             * Pass-through class names
-             */
-            class?: string;
-          };
+        /**
+         * Pass-through class names
+         */
+        class?: string;
+      };
       floating: {
         tooltip?: {
           /**
@@ -164,27 +164,27 @@ declare module "solid-js" {
           placement: Placement;
         } & (
           | {
-              /**
-               * Tooltip content
-               */
-              content: Component;
+            /**
+             * Tooltip content
+             */
+            content: Component;
 
-              /**
-               * Aria label fallback
-               */
-              aria: string;
-            }
+            /**
+             * Aria label fallback
+             */
+            aria: string;
+          }
           | {
-              /**
-               * Tooltip content
-               */
-              content: string | undefined;
+            /**
+             * Tooltip content
+             */
+            content: string | undefined;
 
-              /**
-               * Content is used as aria fallback
-               */
-              aria?: undefined;
-            }
+            /**
+             * Content is used as aria fallback
+             */
+            aria?: undefined;
+          }
         );
         userCard?: {
           /**
@@ -205,18 +205,18 @@ declare module "solid-js" {
         };
       };
       autoComplete:
-        | true
-        | {
-            client?: Client;
-            onKeyDown?: (
-              event: KeyboardEvent & { currentTarget: HTMLTextAreaElement }
-            ) => void;
-            searchSpace?: {
-              users?: User[];
-              members?: ServerMember[];
-              channels?: Channel[];
-            };
-          };
+      | true
+      | {
+        client?: Client;
+        onKeyDown?: (
+          event: KeyboardEvent & { currentTarget: HTMLTextAreaElement }
+        ) => void;
+        searchSpace?: {
+          users?: User[];
+          members?: ServerMember[];
+          channels?: Channel[];
+        };
+      };
     }
   }
 }

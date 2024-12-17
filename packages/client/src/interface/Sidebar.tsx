@@ -1,7 +1,7 @@
 import { Component, Match, Show, Switch, createMemo } from "solid-js";
 import { JSX } from "solid-js";
 
-import { Channel, Server as ServerI } from "revolt.js";
+import { Channel, Server as ServerI } from "@upryzing/upryzing.js";
 
 import { ChannelContextMenu, ServerSidebarContextMenu } from "@revolt/app";
 import { useClient, useUser } from "@revolt/client";

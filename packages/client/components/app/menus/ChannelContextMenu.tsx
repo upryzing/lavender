@@ -1,6 +1,6 @@
 import { Show } from "solid-js";
 
-import { Channel } from "revolt.js";
+import { Channel } from "@upryzing/upryzing.js";
 
 import { getController } from "@revolt/common";
 import { useTranslation } from "@revolt/i18n";
@@ -90,8 +90,7 @@ export function ChannelContextMenu(props: { channel: Channel }) {
    */
   function copyLink() {
     navigator.clipboard.writeText(
-      `${location.origin}${
-        props.channel.server ? `/server/${props.channel.server?.id}` : ""
+      `${location.origin}${props.channel.server ? `/server/${props.channel.server?.id}` : ""
       }/channel/${props.channel.id}`
     );
   }

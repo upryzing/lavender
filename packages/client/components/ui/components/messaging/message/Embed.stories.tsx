@@ -1,7 +1,7 @@
 import type { ComponentProps } from "solid-js";
 
-import { API, Client, WebsiteEmbed } from "revolt.js";
-import { MessageEmbed } from "revolt.js";
+import { API, Client, WebsiteEmbed } from "@upryzing/upryzing.js";
+import { MessageEmbed } from "@upryzing/upryzing.js";
 
 import FitContentDecorator from "../../../decorators/FitContentDecorator";
 import MotherboardIcon from "../../../test-images/icons8-motherboard-48.png";

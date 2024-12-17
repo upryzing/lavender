@@ -1,7 +1,7 @@
 import { Accessor, Show } from "solid-js";
 
 import dayjs from "dayjs";
-import { User } from "revolt.js";
+import { User } from "@upryzing/upryzing.js";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 

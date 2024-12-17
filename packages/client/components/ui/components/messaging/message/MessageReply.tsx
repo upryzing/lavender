@@ -3,7 +3,7 @@ import { Match, Switch } from "solid-js";
 import { Show } from "solid-js";
 import { styled as styledL } from "solid-styled-components";
 
-import type { Message } from "revolt.js";
+import type { Message } from "@upryzing/upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { useTranslation } from "@revolt/i18n";
@@ -37,7 +37,7 @@ interface Props {
   noDecorations?: boolean;
 }
 
-export const Base = styledL("div", "Reply")<Pick<Props, "noDecorations">>`
+export const Base = styledL("div", "Reply") <Pick<Props, "noDecorations">>`
   min-width: 0;
   flex-grow: 1;
   display: flex;

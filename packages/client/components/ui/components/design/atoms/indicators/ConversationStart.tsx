@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
 import { styled } from "solid-styled-components";
 
-import { Channel } from "revolt.js";
+import { Channel } from "@upryzing/upryzing.js";
 
 import { useTranslation } from "@revolt/i18n";
 
@@ -29,8 +29,7 @@ export function ConversationStart(props: Props) {
       </Show>
       <Typography variant="conversation-start">
         {t(
-          `app.main.channel.start.${
-            props.channel.type === "SavedMessages" ? "saved" : "group"
+          `app.main.channel.start.${props.channel.type === "SavedMessages" ? "saved" : "group"
           }`
         )}
       </Typography>

@@ -1,6 +1,6 @@
 import { Accessor, JSX, createSignal, onCleanup } from "solid-js";
 
-import { Channel, Client, ServerMember, User } from "revolt.js";
+import { Channel, Client, ServerMember, User } from "@upryzing/upryzing.js";
 
 import emojiMapping from "../emojiMapping.json";
 

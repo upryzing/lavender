@@ -1,6 +1,6 @@
 import { Accessor, createEffect, createSignal } from "solid-js";
 
-import { ServerMember } from "revolt.js";
+import { ServerMember } from "@upryzing/upryzing.js";
 
 import { useTranslation } from "@revolt/i18n";
 import { Avatar, Column, Input, MessageContainer, Username } from "@revolt/ui";
@@ -64,11 +64,11 @@ const ServerIdentity: PropGenerator<"server_identity"> = (props) => {
           await props.member.edit(
             nickname()
               ? {
-                  nickname: nickname(),
-                }
+                nickname: nickname(),
+              }
               : {
-                  remove: ["Nickname"],
-                }
+                remove: ["Nickname"],
+              }
           );
 
           return true;

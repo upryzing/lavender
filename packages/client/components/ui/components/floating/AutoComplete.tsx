@@ -1,7 +1,7 @@
 import { For, JSX, Match, Show, Switch } from "solid-js";
 import { styled } from "solid-styled-components";
 
-import { ServerMember } from "revolt.js";
+import { ServerMember } from "@upryzing/upryzing.js";
 
 import { CustomEmoji, UnicodeEmoji } from "@revolt/markdown/emoji";
 
@@ -96,7 +96,7 @@ export function AutoComplete(
 /**
  * Individual auto complete entry
  */
-const Entry = styled(Row)<{ selected: boolean }>`
+const Entry = styled(Row) <{ selected: boolean }>`
   cursor: pointer;
   padding: ${(props) => props.theme!.gap.sm} ${(props) => props.theme!.gap.md};
   background: ${(props) =>

@@ -28,8 +28,8 @@ pnpm i
 # build deps:
 pnpm build:deps
 
-# ...or build a specific dep (e.g. revolt.js updates):
-# pnpm --filter revolt.js run build
+# ...or build a specific dep (e.g. @upryzing/upryzing.js updates):
+# pnpm --filter @upryzing/upryzing.js run build
 
 # run dev server
 pnpm dev:web
@@ -37,17 +37,17 @@ pnpm dev:web
 
 Finally, navigate to http://local.revolt.chat:5173.
 
-### Faster iteration with Revolt.js
+### Faster iteration with @upryzing/upryzing.js
 
-To make it easier to work with `revolt.js`, you may want to temporarily make this change:
+To make it easier to work with `uprzying.js`, you may want to temporarily make this change:
 
 ```diff
-# packages/revolt.js/package.json
+# packages/uprzying.js/package.json
 -  "module": "lib/esm/index.js",
 +  "module": "src/index.ts",
 ```
 
-Any edits to the revolt.js codebase will immediately be reflected while developing.
+Any edits to the `uprzying.js` codebase will immediately be reflected while developing.
 
 ## Deployment Guide
 

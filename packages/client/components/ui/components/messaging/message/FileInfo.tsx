@@ -10,7 +10,7 @@ import {
 import { Match, Show, Switch } from "solid-js";
 import { styled } from "solid-styled-components";
 
-import { File, MessageEmbed } from "revolt.js";
+import { File, MessageEmbed } from "@upryzing/upryzing.js";
 
 import { Typography } from "../../design/atoms/display/Typography";
 import { Column, Row } from "../../design/layout";

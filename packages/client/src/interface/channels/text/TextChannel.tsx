@@ -8,7 +8,7 @@ import {
   onMount,
 } from "solid-js";
 
-import { Message as MessageInterface } from "revolt.js";
+import { Message as MessageInterface } from "@upryzing/upryzing.js";
 import { decodeTime, ulid } from "ulid";
 
 import { DraftMessages, Message, Messages } from "@revolt/app";

@@ -1,7 +1,7 @@
 import { For, Match, Show, Switch, createMemo, onMount } from "solid-js";
 
 import { VirtualContainer } from "@minht11/solid-virtual-container";
-import { Channel, ServerMember, User } from "revolt.js";
+import { Channel, ServerMember, User } from "@upryzing/upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { floatingUserMenus } from "@revolt/app/menus/UserContextMenu";

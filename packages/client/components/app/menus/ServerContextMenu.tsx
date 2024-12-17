@@ -1,6 +1,6 @@
 import { Show } from "solid-js";
 
-import { Server } from "revolt.js";
+import { Server } from "@upryzing/upryzing.js";
 
 import { useClient } from "@revolt/client";
 import { getController } from "@revolt/common";

@@ -1,6 +1,6 @@
 import { Show } from "solid-js";
 
-import { Message } from "revolt.js";
+import { Message } from "@upryzing/upryzing.js";
 
 import { useClient, useUser } from "@revolt/client";
 import { getController } from "@revolt/common";
@@ -91,8 +91,7 @@ export function MessageContextMenu(props: { message: Message }) {
    */
   function copyLink() {
     navigator.clipboard.writeText(
-      `${location.origin}${
-        props.message.server ? `/server/${props.message.server?.id}` : ""
+      `${location.origin}${props.message.server ? `/server/${props.message.server?.id}` : ""
       }/channel/${props.message.channelId}/${props.message.id}`
     );
   }

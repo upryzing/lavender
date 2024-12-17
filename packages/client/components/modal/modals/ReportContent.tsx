@@ -1,4 +1,4 @@
-import { API, Server, User } from "revolt.js";
+import { API, Server, User } from "@upryzing/upryzing.js";
 
 import { Message } from "@revolt/app";
 import { useTranslation } from "@revolt/i18n";
@@ -46,9 +46,9 @@ const ReportContent: PropGenerator<"report_content"> = (props) => {
         /* TEMP TODO */ props.target instanceof User
           ? "user"
           : props.target instanceof Server
-          ? "server"
-          : "message"
-      }`,
+            ? "server"
+            : "message"
+        }`,
     },
     schema: {
       preview: "custom",
@@ -113,18 +113,18 @@ const ReportContent: PropGenerator<"report_content"> = (props) => {
         content:
           props.target instanceof User
             ? {
-                type: "User",
-                id: props.target.id,
-                report_reason: category as API.UserReportReason,
-                message_id: props.contextMessage?.id,
-              }
+              type: "User",
+              id: props.target.id,
+              report_reason: category as API.UserReportReason,
+              message_id: props.contextMessage?.id,
+            }
             : props.target instanceof Server
-            ? {
+              ? {
                 type: "Server",
                 id: props.target.id,
                 report_reason: category as API.ContentReportReason,
               }
-            : {
+              : {
                 type: "Message",
                 id: props.target.id,
                 report_reason: category as API.ContentReportReason,

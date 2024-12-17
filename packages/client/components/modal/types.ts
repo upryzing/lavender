@@ -13,7 +13,7 @@ import {
   ServerMember,
   Session,
   User,
-} from "revolt.js";
+} from "@upryzing/upryzing.js";
 
 import { SettingsConfigurations } from "@revolt/app";
 import type { KeyComboSequence, KeybindAction } from "@revolt/keybinds";
@@ -233,7 +233,7 @@ export type Modals =
   | {
       type: "timeout_member";
       member: ServerMember;
-  };
+    };
 
 export type ModalProps<T extends Modals["type"]> = Modals & { type: T };
 export type ReturnType =

@@ -1,7 +1,7 @@
 import { BiSolidCloud, BiSolidTrash } from "solid-icons/bi";
 import { For, Match, Show, Switch, createSignal, onMount } from "solid-js";
 
-import type { ChannelWebhook } from "revolt.js";
+import type { ChannelWebhook } from "@upryzing/upryzing.js";
 
 import { useClient } from "@revolt/client";
 import {

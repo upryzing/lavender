@@ -1,7 +1,7 @@
 import { For, Match, Show, Switch } from "solid-js";
 import { styled } from "solid-styled-components";
 
-import { User } from "revolt.js";
+import { User } from "@upryzing/upryzing.js";
 
 import { useTranslation } from "@revolt/i18n";
 import { useUsers } from "@revolt/markdown/users";

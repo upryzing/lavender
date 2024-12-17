@@ -1,7 +1,7 @@
 import { Match, Show, Switch } from "solid-js";
 import { styled } from "solid-styled-components";
 
-import { TextEmbed as TextEmbedClass, WebsiteEmbed } from "revolt.js";
+import { TextEmbed as TextEmbedClass, WebsiteEmbed } from "@upryzing/upryzing.js";
 
 import { Markdown } from "@revolt/markdown";
 
@@ -15,7 +15,7 @@ import {
 import { Attachment } from "./Attachment";
 import { SpecialEmbed } from "./SpecialEmbed";
 
-const Base = styled("div", "TextEmbed")<{ borderColour?: string }>`
+const Base = styled("div", "TextEmbed") <{ borderColour?: string }>`
   display: flex;
   max-width: 480px; /* TODO: theme this */
   flex-direction: row;
@@ -31,8 +31,8 @@ const Base = styled("div", "TextEmbed")<{ borderColour?: string }>`
 
   border-inline-start: var(--gap-sm) solid
     ${(props) =>
-      props.borderColour ??
-      props.theme!.colours["messaging-component-text-embed-foreground"]};
+    props.borderColour ??
+    props.theme!.colours["messaging-component-text-embed-foreground"]};
 `;
 
 const SiteInformation = styled("div", "SiteInfo")`

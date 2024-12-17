@@ -6,7 +6,7 @@ import {
   TextEmbed as TextEmbedClass,
   VideoEmbed,
   WebsiteEmbed,
-} from "revolt.js";
+} from "@upryzing/upryzing.js";
 
 import { SizedContent } from "../../design/layout/SizedContent";
 

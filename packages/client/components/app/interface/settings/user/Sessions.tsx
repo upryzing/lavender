@@ -15,7 +15,7 @@ import {
   onMount,
 } from "solid-js";
 
-import { Session } from "revolt.js";
+import { Session } from "@upryzing/upryzing.js";
 
 import { useClient } from "@revolt/client";
 import { getController } from "@revolt/common";

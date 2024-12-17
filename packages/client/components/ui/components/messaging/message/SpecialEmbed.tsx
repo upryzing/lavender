@@ -1,4 +1,4 @@
-import type { WebsiteEmbed } from "revolt.js";
+import type { WebsiteEmbed } from "@upryzing/upryzing.js";
 
 import { SizedContent } from "../../design";
 

@@ -1,7 +1,7 @@
 import { For, Show, createMemo } from "solid-js";
 import { styled } from "solid-styled-components";
 
-import { API } from "revolt.js";
+import { API } from "@upryzing/upryzing.js";
 
 import { useTranslation } from "@revolt/i18n";
 import { Emoji } from "@revolt/markdown";
@@ -199,7 +199,7 @@ function Reaction(props: {
 /**
  * Reaction styling
  */
-const ReactionBase = styled("div", "Reaction")<{ active?: boolean }>`
+const ReactionBase = styled("div", "Reaction") <{ active?: boolean }>`
   display: flex;
   flex-direction: row;
   gap: ${(props) => props.theme!.gap.md};
@@ -212,15 +212,13 @@ const ReactionBase = styled("div", "Reaction")<{ active?: boolean }>`
   border-radius: ${(props) => props.theme!.borderRadius.md};
   color: ${(props) =>
     props.theme!.colours[
-      `messaging-component-reaction${
-        props.active ? "-selected" : ""
-      }-foreground`
+    `messaging-component-reaction${props.active ? "-selected" : ""
+    }-foreground`
     ]};
   background: ${(props) =>
     props.theme!.colours[
-      `messaging-component-reaction${
-        props.active ? "-selected" : ""
-      }-background`
+    `messaging-component-reaction${props.active ? "-selected" : ""
+    }-background`
     ]};
   transition: ${(props) => props.theme!.transitions.fast} all;
 

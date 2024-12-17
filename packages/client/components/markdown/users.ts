@@ -1,6 +1,6 @@
 import { Accessor, createMemo } from "solid-js";
 
-import { ServerMember, User } from "revolt.js";
+import { ServerMember, User } from "@upryzing/upryzing.js";
 
 import { useClient } from "@revolt/client";
 import { useParams } from "@revolt/routing";

@@ -2,7 +2,7 @@ import { Accessor, For, Show, onCleanup, onMount } from "solid-js";
 import { JSX } from "solid-js";
 import { styled as styledLegacy } from "solid-styled-components";
 
-import { Channel, Server, User } from "revolt.js";
+import { Channel, Server, User } from "@upryzing/upryzing.js";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 

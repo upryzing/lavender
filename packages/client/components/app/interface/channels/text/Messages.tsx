@@ -16,7 +16,7 @@ import {
 } from "solid-js";
 
 import isEqual from "lodash.isequal";
-import { Channel, Message as MessageInterface } from "revolt.js";
+import { Channel, Message as MessageInterface } from "@upryzing/upryzing.js";
 
 import { useClient } from "@revolt/client";
 import { dayjs } from "@revolt/i18n";
@@ -816,23 +816,23 @@ const Padding = styled.div`
  */
 type ListEntry =
   | {
-      // Message
-      t: 0;
-      message: MessageInterface;
-      tail: boolean;
-      highlight: boolean;
-    }
+    // Message
+    t: 0;
+    message: MessageInterface;
+    tail: boolean;
+    highlight: boolean;
+  }
   | {
-      // Message Divider
-      t: 1;
-      date?: string;
-      unread?: boolean;
-    }
+    // Message Divider
+    t: 1;
+    date?: string;
+    unread?: boolean;
+  }
   | {
-      // Blocked messages
-      t: 2;
-      count: number;
-    };
+    // Blocked messages
+    t: 2;
+    count: number;
+  };
 
 /**
  * Render individual list entry

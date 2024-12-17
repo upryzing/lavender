@@ -1,6 +1,6 @@
 import { useTheme } from "solid-styled-components";
 
-import type { API } from "revolt.js";
+import type { API } from "@upryzing/upryzing.js";
 
 export type Props = {
   /**

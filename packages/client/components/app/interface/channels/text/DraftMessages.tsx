@@ -1,6 +1,6 @@
 import { For } from "solid-js";
 
-import { Channel } from "revolt.js";
+import { Channel } from "@upryzing/upryzing.js";
 
 import { state } from "@revolt/state";
 

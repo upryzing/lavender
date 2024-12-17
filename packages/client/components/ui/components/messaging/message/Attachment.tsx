@@ -1,7 +1,7 @@
 import { Match, Show, Switch } from "solid-js";
 import { styled } from "solid-styled-components";
 
-import { File, ImageEmbed, VideoEmbed } from "revolt.js";
+import { File, ImageEmbed, VideoEmbed } from "@upryzing/upryzing.js";
 
 import { getController } from "@revolt/common";
 

@@ -1,6 +1,6 @@
 import { Accessor } from "solid-js";
 
-import type { Client, User } from "revolt.js";
+import type { Client, User } from "@upryzing/upryzing.js";
 
 import ClientController from "./Controller";
 
@@ -15,7 +15,7 @@ export const clientController = new ClientController();
 
 /**
  * Get the currently active client if one is available
- * @returns Revolt.js Client
+ * @returns @upryzing/upryzing.js Client
  */
 export function useClient(): Accessor<Client> {
   return () => clientController.getCurrentClient()!;

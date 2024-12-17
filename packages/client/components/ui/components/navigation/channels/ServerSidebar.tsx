@@ -19,7 +19,7 @@ import {
 } from "solid-js";
 import { styled } from "solid-styled-components";
 
-import type { API, Channel, Server, ServerFlags } from "revolt.js";
+import type { API, Channel, Server, ServerFlags } from "@upryzing/upryzing.js";
 
 import { getController } from "@revolt/common";
 import { useTranslation } from "@revolt/i18n";
@@ -300,7 +300,7 @@ function Category(
 /**
  * Category title styling
  */
-const CategoryBase = styled(Row)<{ open: boolean }>`
+const CategoryBase = styled(Row) <{ open: boolean }>`
   padding: 0 4px;
   cursor: pointer;
   user-select: none;

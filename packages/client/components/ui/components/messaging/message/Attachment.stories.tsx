@@ -1,6 +1,6 @@
 import type { ComponentProps } from "solid-js";
 
-import { API, Client, File } from "revolt.js";
+import { API, Client, File } from "@upryzing/upryzing.js";
 
 import FitContentDecorator from "../../../decorators/FitContentDecorator";
 import type { ComponentStory } from "../../stories";
@@ -20,10 +20,10 @@ client.configuration = {
 
 export const attachments: {
   [key in
-    | "audio"
-    | "text"
-    | "file"
-    | `${"tall" | "wide"}_${"image" | "video"}`]: API.File;
+  | "audio"
+  | "text"
+  | "file"
+  | `${"tall" | "wide"}_${"image" | "video"}`]: API.File;
 } = {
   tall_image: {
     tag: "attachments",

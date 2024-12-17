@@ -1,7 +1,7 @@
 import { Match, Switch, createSignal, onMount } from "solid-js";
 import { styled } from "solid-styled-components";
 
-import { File } from "revolt.js";
+import { File } from "@upryzing/upryzing.js";
 
 import { useTranslation } from "@revolt/i18n";
 

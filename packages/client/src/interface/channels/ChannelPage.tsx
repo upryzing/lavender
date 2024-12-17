@@ -1,6 +1,6 @@
 import { Component, Match, Switch, createMemo } from "solid-js";
 
-import { Channel } from "revolt.js";
+import { Channel } from "@upryzing/upryzing.js";
 
 import { useClient } from "@revolt/client";
 import { TextWithEmoji } from "@revolt/markdown";

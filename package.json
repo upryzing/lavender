@@ -12,7 +12,7 @@
     "lint:fix": "pnpm lint --fix",
     "dev:web": "pnpm --filter @upryzing/lavender dev",
     "dev:desktop": "pnpm --filter @upryzing/lavender-desktop tauri dev",
-    "build:deps": "pnpm --filter revolt.js build",
+    "build:deps": "pnpm --filter @upryzing/upryzing.js build",
     "build:web": "pnpm --filter @upryzing/lavender build",
     "build:desktop": "pnpm --filter @upryzing/lavender-desktop tauri build",
     "start": "cd packages/client && pnpm run serve",

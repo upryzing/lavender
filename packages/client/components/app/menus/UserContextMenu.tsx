@@ -1,6 +1,6 @@
 import { JSX, Show } from "solid-js";
 
-import { Channel, Message, ServerMember, User } from "revolt.js";
+import { Channel, Message, ServerMember, User } from "@upryzing/upryzing.js";
 
 import { useClient } from "@revolt/client";
 import { getController } from "@revolt/common";

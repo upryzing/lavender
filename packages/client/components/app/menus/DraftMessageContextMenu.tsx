@@ -1,6 +1,6 @@
 import { Show } from "solid-js";
 
-import { Channel } from "revolt.js";
+import { Channel } from "@upryzing/upryzing.js";
 
 import { useClient } from "@revolt/client";
 import { useTranslation } from "@revolt/i18n";

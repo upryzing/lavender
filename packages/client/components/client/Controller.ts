@@ -2,8 +2,8 @@
 // Above comment removes annoyingness
 import { Accessor, Setter, createSignal } from "solid-js";
 
+import { API, Client, ConnectionState } from "@upryzing/upryzing.js";
 import { detect } from "detect-browser";
-import { API, Client, ConnectionState } from "revolt.js";
 
 import {
   CONFIGURATION,
@@ -117,33 +117,35 @@ class Lifecycle {
     let useBaseConfig = !CONFIGURATION.REQUEST_CONFIG;
 
     if (!useBaseConfig) {
-      fetch(CONFIGURATION.DEFAULT_API_URL).then(response => {
-        if (!response.ok)
-          throw new Error(response.statusText);
+      fetch(CONFIGURATION.DEFAULT_API_URL)
+        .then((response) => {
+          if (!response.ok) throw new Error(response.statusText);
 
-        return response.json();
-      }).then(conf => {
-        // TODO: swap these around (not in revolt land anymore)
-        if (!conf.features.january) {
-          conf.features.january = conf.features.dove;
-          delete conf.features.dove;
-        }
+          return response.json();
+        })
+        .then((conf) => {
+          // TODO: swap these around (not in revolt land anymore)
+          if (!conf.features.january) {
+            conf.features.january = conf.features.dove;
+            delete conf.features.dove;
+          }
 
-        if (!conf.features.autumn) {
-          conf.features.autumn = conf.features.pigeon;
-          delete conf.features.pigeon;
-        }
+          if (!conf.features.autumn) {
+            conf.features.autumn = conf.features.pigeon;
+            delete conf.features.pigeon;
+          }
 
-        this.client.configuration = conf;
-      }).catch(error => {
-        console.error(error);
+          this.client.configuration = conf;
+        })
+        .catch((error) => {
+          console.error(error);
 
-        useBaseConfig = true;
-      });
+          useBaseConfig = true;
+        });
     }
-    
+
     if (useBaseConfig) {
-        this.client.configuration = {
+      this.client.configuration = {
         revolt: String(),
         app: String(),
         build: {} as never,

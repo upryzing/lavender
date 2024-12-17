@@ -1,6 +1,6 @@
 import { For } from "solid-js";
 
-import type { Channel } from "revolt.js";
+import type { Channel } from "@upryzing/upryzing.js";
 
 import { useClient, useUser } from "@revolt/client";
 import { userInformation } from "@revolt/markdown/users";
@@ -34,8 +34,8 @@ export function DraftMessage(props: Props) {
         props.draft.status === "sending"
           ? "Sending..."
           : props.draft.status === "failed"
-          ? "Failed to send" // add icons here
-          : "Unsent message" // add icons here
+            ? "Failed to send" // add icons here
+            : "Unsent message" // add icons here
       }
       sendStatus={props.draft.status === "sending" ? "sending" : "failed"}
       username={<Username username={userInfo().username} />}

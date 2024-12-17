@@ -1,6 +1,6 @@
 import { batch } from "solid-js";
 
-import { API, Channel, Client, Message } from "revolt.js";
+import { API, Channel, Client, Message } from "@upryzing/upryzing.js";
 
 import { CONFIGURATION, insecureUniqueId } from "@revolt/common";
 

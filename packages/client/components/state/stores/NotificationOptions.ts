@@ -1,4 +1,4 @@
-import { Channel, Server } from "revolt.js";
+import { Channel, Server } from "@upryzing/upryzing.js";
 
 import { State } from "..";
 

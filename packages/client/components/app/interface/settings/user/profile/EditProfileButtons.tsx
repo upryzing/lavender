@@ -1,6 +1,6 @@
 import { Match, Switch } from "solid-js";
 
-import { User } from "revolt.js";
+import { User } from "@upryzing/upryzing.js";
 
 import { useClient } from "@revolt/client";
 import { createOwnProfileResource } from "@revolt/client/resources";

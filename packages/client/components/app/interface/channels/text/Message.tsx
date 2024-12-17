@@ -1,6 +1,6 @@
 import { For, Match, Show, Switch, onMount } from "solid-js";
 
-import { Message as MessageInterface, WebsiteEmbed } from "revolt.js";
+import { Message as MessageInterface, WebsiteEmbed } from "@upryzing/upryzing.js";
 import { decodeTime } from "ulid";
 
 import { useClient } from "@revolt/client";
@@ -173,11 +173,11 @@ export function Message(props: Props) {
               <MdCloud {...iconSize(16)} />
             </Tooltip>
           </Match>
-	  <Match when={props.message.member?.timeout}>
-	    <Tooltip content={`User has been timed out for ${dayjs(props.message.member?.timeout).toNow(true)}`} placement="top">
-	      <MdSchedule {...iconSize(16)} />
+          <Match when={props.message.member?.timeout}>
+            <Tooltip content={`User has been timed out for ${dayjs(props.message.member?.timeout).toNow(true)}`} placement="top">
+              <MdSchedule {...iconSize(16)} />
             </Tooltip>
-	  </Match>
+          </Match>
           <Match when={props.message.isSuppressed}>
             <Tooltip content={"Silent" /* TODO: i18n */} placement="top">
               <MdNotificationsOff {...iconSize(16)} />

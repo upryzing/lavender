@@ -1,6 +1,6 @@
 import { Component, JSX, Match, Switch, onCleanup, onMount } from "solid-js";
 
-import { Server } from "revolt.js";
+import { Server } from "@upryzing/upryzing.js";
 
 import { ChannelContextMenu, ServerContextMenu } from "@revolt/app";
 import { clientController } from "@revolt/client";

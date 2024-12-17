@@ -8,7 +8,7 @@ import {
   BiSolidUserX,
 } from "solid-icons/bi";
 
-import { Server } from "revolt.js";
+import { Server } from "@upryzing/upryzing.js";
 
 import { useUser } from "@revolt/client";
 import { getController } from "@revolt/common";

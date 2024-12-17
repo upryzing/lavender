@@ -1,7 +1,7 @@
 import { BiRegularAbacus, BiRegularGlobe, BiSolidFlag } from "solid-icons/bi";
 import { Show } from "solid-js";
 
-import { ServerFlags } from "revolt.js";
+import { ServerFlags } from "@upryzing/upryzing.js";
 
 import { useClient } from "@revolt/client";
 import {

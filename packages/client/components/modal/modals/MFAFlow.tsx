@@ -8,7 +8,7 @@ import {
   onMount,
 } from "solid-js";
 
-import type { API } from "revolt.js";
+import type { API } from "@upryzing/upryzing.js";
 
 import { useTranslation } from "@revolt/i18n";
 import { CategoryButton, Input, Preloader, Typography } from "@revolt/ui";
@@ -75,39 +75,38 @@ const MFAFlow: PropGenerator<"mfa_flow"> = (props) => {
     actions: () =>
       selectedMethod()
         ? [
-            {
-              palette: "primary",
-              children: t("app.special.modals.actions.confirm"),
-              onClick: generateTicket,
-              confirmation: true,
-            },
-            {
-              palette: "plain",
-              children: t(
-                `app.special.modals.actions.${
-                  methods()!.length === 1 ? "cancel" : "back"
-                }`
-              ),
-              onClick: () => {
-                if (methods()!.length === 1) {
-                  props.callback();
-                  return true;
-                }
-
-                setSelected(undefined);
-              },
-            },
-          ]
-        : [
-            {
-              palette: "plain",
-              children: t("app.special.modals.actions.cancel"),
-              onClick: () => {
+          {
+            palette: "primary",
+            children: t("app.special.modals.actions.confirm"),
+            onClick: generateTicket,
+            confirmation: true,
+          },
+          {
+            palette: "plain",
+            children: t(
+              `app.special.modals.actions.${methods()!.length === 1 ? "cancel" : "back"
+              }`
+            ),
+            onClick: () => {
+              if (methods()!.length === 1) {
                 props.callback();
                 return true;
-              },
+              }
+
+              setSelected(undefined);
             },
-          ],
+          },
+        ]
+        : [
+          {
+            palette: "plain",
+            children: t("app.special.modals.actions.cancel"),
+            onClick: () => {
+              props.callback();
+              return true;
+            },
+          },
+        ],
     // If we are logging in or have selected a method,
     // don't allow the user to dismiss the modal by clicking off.
     // This is to just generally prevent annoying situations
