@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 import { Match, Switch } from "solid-js";
 
 import { User } from "@upryzing/upryzing.js";
@@ -18,6 +19,7 @@ import MdDelete from "@material-design-icons/svg/outlined/delete.svg?component-s
 import MdReplaceImage from "@material-design-icons/svg/outlined/edit.svg?component-solid";
 import MdEditNote from "@material-design-icons/svg/outlined/edit_note.svg?component-solid";
 import MdImage from "@material-design-icons/svg/outlined/image.svg?component-solid";
+import { state } from "@revolt/state";
 
 export function EditProfileButtons(props: { user: User }) {
   const client = useClient();
@@ -35,11 +37,16 @@ export function EditProfileButtons(props: { user: User }) {
           const body = new FormData();
           body.append("file", file);
 
+          const token = state.auth.getSession()?.token ?? "";
+
           const data = await fetch(
             `${client().configuration?.features.autumn.url}/${tag}`,
             {
               method: "POST",
               body,
+              headers: {
+                "X-Session-Token": (token)
+              }
             }
           ).then((res) => res.json());
 
