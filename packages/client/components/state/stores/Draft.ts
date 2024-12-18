@@ -301,6 +301,7 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
         const body = new FormData();
         const { file } = this.getFile(fileId);
         body.set("file", file);
+        const token = this.state.auth.getSession()?.token ?? "";
 
         // We have to use XMLHttpRequest because modern fetch duplex streams require QUIC or HTTP/2
         const xhr = new XMLHttpRequest();
@@ -323,8 +324,11 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
           xhr.open(
             "POST",
             `${client.configuration!.features.autumn.url}/attachments`,
-            true
+            true,
           );
+
+          xhr.setRequestHeader("X-Session-Token", token);
+
           xhr.send(body);
         });
 

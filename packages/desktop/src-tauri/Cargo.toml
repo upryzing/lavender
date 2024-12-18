@@ -1,27 +1,25 @@
 [package]
-name = "upryzing"
-version = "0.1.0"
+name = "Upryzing"
+version = "0.0.1"
 description = "Your conversations, your way."
-authors = ["Vexcited"]
-license = "MIT"
+authors = ["Tulpenkiste"]
+license = "AGPL-3.0"
 repository = "https://github.com/upryzing/lavender"
-default-run = "upryzing"
 edition = "2021"
-rust-version = "1.59"
+rust-version = "1.77.2"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "1.2.1", features = [] }
+tauri-build = { version = "2.0.2", features = [] }
 
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.2.4", features = ["shell-open", "system-tray", "window-close", "window-hide", "window-maximize", "window-minimize", "window-show", "window-start-dragging", "window-unmaximize", "window-unminimize"] }
-window-shadows = "0.2.1"
-
-[features]
-# by default Tauri runs in production mode
-# when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL
-default = [ "custom-protocol" ]
-# this feature is used for production builds where `devPath` points to the filesystem
-# DO NOT remove this
-custom-protocol = [ "tauri/custom-protocol" ]
+log = "0.4"
+tauri = { version = "2.1.0", features = [ "tray-icon" ] }
+tauri-plugin-log = "2.0.0-rc"

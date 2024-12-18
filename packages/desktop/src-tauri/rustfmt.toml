@@ -1,0 +1,4 @@
+hard_tabs = true
+
+imports_indent = "Block"
+indent_style = "Block"
