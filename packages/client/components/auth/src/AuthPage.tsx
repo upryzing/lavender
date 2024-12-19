@@ -152,14 +152,14 @@ export function AuthPage(props: { children: JSX.Element }) {
       <Nav>
         <NavItems variant="stack">
           <NavItems>
-            <LinkWithIcon href="https://github.com/revoltchat" target="_blank">
+            <LinkWithIcon href="https://github.com/upryzing" target="_blank">
               <BiLogosGithub size={24} />
             </LinkWithIcon>
-            <LinkWithIcon href="https://twitter.com/revoltchat" target="_blank">
+            <LinkWithIcon href="https://twitter.com/upryzing" target="_blank">
               <BiLogosTwitter size={24} />
             </LinkWithIcon>
             <LinkWithIcon
-              href="https://mastodon.social/web/@revoltchat"
+              href="https://lea.pet/@upryzing"
               target="_blank"
             >
               <BiLogosMastodon size={24} />

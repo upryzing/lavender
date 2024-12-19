@@ -1,5 +1,10 @@
 export default {
   /**
+   * Determines whether or not Lavender will request the server's config
+   */
+  REQUEST_CONFIG: (import.meta.env.VITE_REQUEST_CONFIG as boolean) ?? true,
+  
+  /**
    * What API server to connect to by default.
    */
   DEFAULT_API_URL:

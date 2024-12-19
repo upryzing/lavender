@@ -52,7 +52,7 @@ export function ConfirmDelete() {
         {t(`${i18nScope}.success.description.header`)}
         <br />
         {t(`${i18nScope}.success.description.paragraph_first`)}{" "}
-        <a href="mailto:contact@revolt.chat">
+        <a href="mailto:contact@upryzing.app">
           {t(`${i18nScope}.success.description.support`)}
         </a>{" "}
         {t(`${i18nScope}.success.description.paragraph_second`)}

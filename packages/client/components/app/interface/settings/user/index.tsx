@@ -164,18 +164,18 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             },
             {
               id: "profile",
-              icon: <MdAccountCircle {...iconSize(20)} />,
+              icon: <MdAccountCircle fill={theme!.colours.foreground} {...iconSize(20)} />,
               title: t("app.settings.pages.profile.title"),
             },
             {
               id: "sessions",
-              icon: <MdVerifiedUser {...iconSize(20)} />,
+              icon: <MdVerifiedUser fill={theme!.colours.foreground} {...iconSize(20)} />,
               title: t("app.settings.pages.sessions.title"),
             },
           ],
         },
         {
-          title: "Revolt",
+          title: "Upryzing",
           entries: [
             {
               id: "bots",
@@ -186,12 +186,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
               id: "feedback",
               icon: <MdRateReview {...iconSize(20)} />,
               title: t("app.settings.pages.feedback.title"),
-            },
-            {
-              href: "https://insrt.uk/donate",
-              icon: <MdLocalCafe {...iconSize(20)} />,
-              title: t("app.settings.pages.donate.title"),
-            },
+            }
           ],
         },
         {
@@ -232,7 +227,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             // },
             {
               id: "language",
-              icon: <MdLanguage {...iconSize(20)} />,
+              icon: <MdLanguage fill={theme!.colours.foreground} {...iconSize(20)} />,
               title: t("app.settings.pages.language.title"),
             },
             // {
@@ -248,7 +243,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             // },
             {
               id: "experiments",
-              icon: <MdScience {...iconSize(20)} />,
+              icon: <MdScience fill={theme!.colours.foreground} {...iconSize(20)} />,
               title: t("app.settings.pages.experiments.title"),
             },
           ],
@@ -262,7 +257,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             //   title: t("app.special.modals.changelogs.title"),
             // },
             {
-              href: "https://github.com/revoltchat",
+              href: "https://github.com/upryzing",
               icon: <MdMemory {...iconSize(20)} />,
               title: t("app.settings.pages.source_code"),
             },

@@ -2,7 +2,7 @@ import { Match, Show, Switch } from "solid-js";
 
 import { cva } from "styled-system/css";
 
-import { IS_DEV, IS_REVOLT, useClient } from "@revolt/client";
+import { IS_DEV, IS_UPRYZING, useClient } from "@revolt/client";
 import { useTranslation } from "@revolt/i18n";
 import { modalController } from "@revolt/modal";
 import { useNavigate } from "@revolt/routing";
@@ -102,10 +102,10 @@ export function HomePage() {
   const navigate = useNavigate();
   const client = useClient();
 
-  // check if we're revolt.chat; if so, check if the user is in the Lounge
-  const showLoungeButton = IS_REVOLT;
+  // check if we're web.upryzing.app; if so, check if the user is in the Lounge
+  const showLoungeButton = IS_UPRYZING;
   const isInLounge =
-    client()!.servers.get("01F7ZSBSFHQ8TA81725KQCSDDP") !== undefined;
+    client()!.servers.get("01JESQYCPY76XFN67R79YGCWMR") !== undefined;
 
   return (
     // TODO: i18n
@@ -140,7 +140,7 @@ export function HomePage() {
             <Switch fallback={null}>
               <Match when={showLoungeButton && isInLounge}>
                 <CategoryButton
-                  onClick={() => navigate("/server/01F7ZSBSFHQ8TA81725KQCSDDP")}
+                  onClick={() => navigate("/server/01JESQYCPY76XFN67R79YGCWMR")}
                   description={t("app.home.goto-testers_desc")}
                   icon={<MdGroups3 />}
                 >
@@ -158,7 +158,8 @@ export function HomePage() {
             </Switch>
             <CategoryButton
               onClick={() =>
-                window.open("https://insrt.uk/donate?utm_source=revoltapp")
+                //window.open("https://insrt.uk/donate?utm_source=revoltapp")
+                console.log("g")
               }
               description={t("app.home.donate_desc")}
               icon={<MdPayments />}
@@ -167,18 +168,18 @@ export function HomePage() {
             </CategoryButton>
           </SeparatedColumn>
           <SeparatedColumn>
-            <Show when={IS_REVOLT}>
+            <Show when={IS_UPRYZING}>
               <CategoryButton
                 onClick={() => navigate("/discover")}
                 description={t("app.home.discover_desc")}
-                icon={<MdExplore />}
+                icon={<MdExplore fill={theme!.colours.foreground} />}
               >
                 {t("app.home.discover")}
               </CategoryButton>
             </Show>
             <CategoryButton
               description={t("app.home.feedback_desc")}
-              icon={<MdRateReview {...iconSize(22)} />}
+              icon={<MdRateReview fill={theme!.colours.foreground} {...iconSize(22)} />}
             >
               {t("app.home.feedback")}
             </CategoryButton>
@@ -187,7 +188,7 @@ export function HomePage() {
                 modalController.push({ type: "settings", config: "user" })
               }
               description={t("app.home.settings-tooltip")}
-              icon={<MdSettings />}
+              icon={<MdSettings fill={theme!.colours.foreground} />}
             >
               {t("app.home.settings")}
             </CategoryButton>

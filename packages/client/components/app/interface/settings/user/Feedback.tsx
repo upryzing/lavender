@@ -22,7 +22,7 @@ export default function Feedback() {
   return (
     <Column gap="lg">
       <CategoryButtonGroup>
-        /*<Link
+        {/*<Link
           href="https://github.com/orgs/revoltchat/projects/6/views/4"
           target="_blank"
         >
@@ -35,7 +35,7 @@ export default function Feedback() {
             Roadmap
           </CategoryButton>
         </Link>
-        */<Link
+        */}<Link
           href="https://github.com/orgs/upryzing/discussions"
           target="_blank"
         >
@@ -62,7 +62,7 @@ export default function Feedback() {
           </CategoryButton>
         </Link>
         <Link
-          href="https://github.com/orgs/revoltchat/projects/3"
+          href="https://github.com/orgs/upryzing/projects/4"
           target="_blank"
         >
           <CategoryButton

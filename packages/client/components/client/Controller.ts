@@ -110,27 +110,59 @@ class Lifecycle {
       debug: import.meta.env.DEV,
     });
 
-    this.client.configuration = {
-      revolt: String(),
-      app: String(),
-      build: {} as never,
-      features: {
-        autumn: {
-          enabled: true,
-          url: CONFIGURATION.DEFAULT_MEDIA_URL,
+    let useBaseConfig = !CONFIGURATION.REQUEST_CONFIG;
+
+    if (!useBaseConfig) {
+      fetch(CONFIGURATION.DEFAULT_API_URL)
+        .then((response) => {
+          if (!response.ok) throw new Error(response.statusText);
+
+          return response.json();
+        })
+        .then((conf) => {
+          // TODO: swap these around (not in revolt land anymore)
+          if (!conf.features.january) {
+            conf.features.january = conf.features.dove;
+            delete conf.features.dove;
+          }
+
+          if (!conf.features.autumn) {
+            conf.features.autumn = conf.features.pigeon;
+            delete conf.features.pigeon;
+          }
+
+          this.client.configuration = conf;
+        })
+        .catch((error) => {
+          console.error(error);
+
+          useBaseConfig = true;
+        });
+    }
+
+    if (useBaseConfig) {
+      this.client.configuration = {
+        revolt: String(),
+        app: String(),
+        build: {} as never,
+        features: {
+          autumn: {
+            enabled: true,
+            url: CONFIGURATION.DEFAULT_MEDIA_URL,
+          },
+          january: {
+            enabled: true,
+            url: CONFIGURATION.DEFAULT_PROXY_URL,
+          },
+          captcha: {} as never,
+          email: true,
+          invite_only: CONFIGURATION.INVITE_ONLY,
+          voso: {} as never,
         },
-        january: {
-          enabled: true,
-          url: CONFIGURATION.DEFAULT_PROXY_URL,
-        },
-        captcha: {} as never,
-        email: true,
-        invite_only: CONFIGURATION.INVITE_ONLY,
-        voso: {} as never,
-      },
-      vapid: String(),
-      ws: CONFIGURATION.DEFAULT_WS_URL,
-    };
+        vapid: String(),
+        ws: CONFIGURATION.DEFAULT_WS_URL,
+      };
+    }
 
     this.client.events.on("state", this.onState);
     this.client.on("ready", this.onReady);
@@ -441,9 +473,9 @@ export default class ClientController {
         os = "iPadOS";
       }
 
-      friendly_name = `Revolt Web (${name} on ${os})`;
+      friendly_name = `Upryzing for Web (${name} on ${os})`;
     } else {
-      friendly_name = "Revolt Web (Unknown Device)";
+      friendly_name = "Upryzing for Web (Unknown Device)";
     }
 
     // Try to login with given credentials

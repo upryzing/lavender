@@ -187,7 +187,7 @@ export function Message(props: Props) {
             }
           >
             <NewUser>
-              <Tooltip content="New to Revolt" placement="top">
+              <Tooltip content={t("app.main.channel.new_to_upryzing")} placement="top">
                 <MdSpa {...iconSize(16)} />
               </Tooltip>
             </NewUser>

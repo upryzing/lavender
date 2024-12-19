@@ -41,13 +41,12 @@ export default function FlowHome() {
                   "align-items": "center",
                 }}
               >
-                <span>Find your community,</span>
+                <span>Your conversations,</span>
                 <br />
-                <span>connect with the world.</span>
+                <span>your way.</span>
               </b>
               <span style={{ "text-align": "center", opacity: "0.5" }}>
-                Revolt is one of the best ways to stay connected with your
-                friends and community, anywhere, anytime.
+                idk, text here
               </span>
             </Column>
 
