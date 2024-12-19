@@ -14,6 +14,7 @@ import {
   Typography,
   iconSize,
   styled,
+  useTheme,
 } from "@revolt/ui";
 
 import MdAddCircle from "@material-design-icons/svg/filled/add_circle.svg?component-solid";
@@ -98,6 +99,7 @@ const Image = styled("img")`
  * Home page
  */
 export function HomePage() {
+  const theme = useTheme();
   const t = useTranslation();
   const navigate = useNavigate();
   const client = useClient();
