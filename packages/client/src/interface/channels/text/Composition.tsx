@@ -23,6 +23,7 @@ import {
   MessageBox,
   MessageReplyPreview,
 } from "@revolt/ui";
+import { registerKeybindWithPriority, unregisterKeybindWithPriority } from "../../../shared/lib/priorityKeybind";
 
 interface Props {
   /**
@@ -288,8 +289,8 @@ export function MessageComposition(props: Props) {
   }
 
   // Bind onKeyDown to the document
-  onMount(() => document.addEventListener("keydown", onKeyDown));
-  onCleanup(() => document.removeEventListener("keydown", onKeyDown));
+  onMount(() => registerKeybindWithPriority("Escape", onKeyDown));
+  onCleanup(() => unregisterKeybindWithPriority(onKeyDown));
 
   /**
    * Handle files being added to the draft.
@@ -449,10 +450,10 @@ export function MessageComposition(props: Props) {
           props.channel.type === "SavedMessages"
             ? t("app.main.channel.message_saved")
             : props.channel.type === "DirectMessage"
-              ? t("app.main.channel.message_who", {
+            ? t("app.main.channel.message_who", {
                 person: props.channel.recipient?.username as string,
               })
-              : t("app.main.channel.message_where", {
+            : t("app.main.channel.message_where", {
                 channel_name: props.channel.name as string,
               })
         }
@@ -462,14 +463,14 @@ export function MessageComposition(props: Props) {
           client: client(),
           searchSpace: props.channel.server
             ? {
-              members: client().serverMembers.filter(
-                (member) => member.id.server === props.channel.serverId
-              ),
-              channels: props.channel.server.channels,
-            }
+                members: client().serverMembers.filter(
+                  (member) => member.id.server === props.channel.serverId
+                ),
+                channels: props.channel.server.channels,
+              }
             : props.channel.type === "Group"
-              ? { users: props.channel.recipients, channels: [] }
-              : { channels: [] },
+            ? { users: props.channel.recipients, channels: [] }
+            : { channels: [] },
         }}
         updateDraftSelection={(start, end) =>
           state.draft.setSelection(props.channel.id, start, end)

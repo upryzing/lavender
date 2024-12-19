@@ -5,8 +5,6 @@ import { Handler } from "mdast-util-to-hast";
 import { Plugin } from "unified";
 import { visit } from "unist-util-visit";
 
-import { CustomComponentProps } from "./remarkRegexComponent";
-
 const Spoiler = styled("span", "Spoiler")<{ shown: boolean }>`
   padding: 0 2px;
   border-radius: ${(props) => props.theme!.borderRadius.md};
@@ -14,8 +12,9 @@ const Spoiler = styled("span", "Spoiler")<{ shown: boolean }>`
   cursor: ${(props) => (props.shown ? "auto" : "pointer")};
   user-select: ${(props) => (props.shown ? "all" : "none")};
   color: ${(props) =>
-    props.shown ? props.theme!.colours.foreground : "transparent"};
-  background: ${(props) => (props.shown ? "var(--unset-bg)" : "#151515")};
+    props.shown ? props.theme!.colours.background : "transparent"};
+  background: ${(props) =>
+    props.shown ? props.theme!.colours.foreground : "#151515"};
 
   > * {
     opacity: ${(props) => (props.shown ? 1 : 0)};
@@ -23,7 +22,7 @@ const Spoiler = styled("span", "Spoiler")<{ shown: boolean }>`
   }
 `;
 
-export function RenderSpoiler(props: CustomComponentProps & { children: any }) {
+export function RenderSpoiler(props: { children: Element }) {
   const [shown, setShown] = createSignal(false);
 
   return (

@@ -1,4 +1,12 @@
-import { Component, JSX, Match, Switch, onCleanup, onMount } from "solid-js";
+import {
+  Component,
+  JSX,
+  Match,
+  Switch,
+  createEffect,
+  onCleanup,
+  onMount,
+} from "solid-js";
 
 import { Server } from "@upryzing/upryzing.js";
 
@@ -48,6 +56,12 @@ const Interface = (props: { children: JSX.Element }) => {
     );
   });
 
+  createEffect(() => {
+    if (!clientController.isLoggedIn()) {
+      console.info("WAITING... currently", clientController.lifecycle.state());
+    }
+  });
+
   return (
     <Switch fallback={<Preloader grow type="spinner" />}>
       <Match when={!clientController.isLoggedIn()}>
@@ -62,8 +76,7 @@ const Interface = (props: { children: JSX.Element }) => {
           }}
         >
           <Notice>
-            ⚠️ This is beta software. <b>Things will break!</b><br />
-            State:{" "}
+            ⚠️ This is beta software, things will break! State:{" "}
             <Switch>
               <Match
                 when={clientController.lifecycle.state() === State.Connecting}

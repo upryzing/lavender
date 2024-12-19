@@ -56,7 +56,7 @@ const MentionToggle = styled.a<{ mention: boolean }>`
 
   color: ${(props) =>
     props.theme!.colours[
-    `messaging-indicator-reply-${props.mention ? "enabled" : "disabled"}`
+      `messaging-indicator-reply-${props.mention ? "enabled" : "disabled"}`
     ]};
 `;
 

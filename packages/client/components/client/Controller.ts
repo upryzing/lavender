@@ -1,9 +1,7 @@
-/* eslint-disable require-jsdoc */
-// Above comment removes annoyingness
 import { Accessor, Setter, createSignal } from "solid-js";
 
-import { API, Client, ConnectionState } from "@upryzing/upryzing.js";
 import { detect } from "detect-browser";
+import { API, Client, ConnectionState } from "@upryzing/upryzing.js";
 
 import {
   CONFIGURATION,
@@ -30,7 +28,6 @@ export enum TransitionType {
   LoginUncached,
   LoginCached,
   SocketConnected,
-  SocketDropped,
   DeviceOffline,
   DeviceOnline,
   PermanentFailure,
@@ -38,7 +35,6 @@ export enum TransitionType {
   UserCreated,
   NoUser,
   Cancel,
-  Error,
   Dispose,
   Dismiss,
   Ready,
@@ -52,7 +48,7 @@ export type Transition =
       session: Session;
     }
   | {
-      type: TransitionType.Error | TransitionType.PermanentFailure;
+      type: TransitionType.PermanentFailure;
       error: string;
     }
   | {
@@ -61,7 +57,6 @@ export type Transition =
         | TransitionType.UserCreated
         | TransitionType.TemporaryFailure
         | TransitionType.SocketConnected
-        | TransitionType.SocketDropped
         | TransitionType.DeviceOffline
         | TransitionType.DeviceOnline
         | TransitionType.Cancel
@@ -82,6 +77,7 @@ class Lifecycle {
   client: Client;
 
   #connectionFailures = 0;
+  #permanentError: string | undefined;
   #retryTimeout: number | undefined;
 
   constructor() {
@@ -100,7 +96,7 @@ class Lifecycle {
     this.dispose();
   }
 
-  dispose() {
+  private dispose() {
     if (this.client) {
       this.client.events.removeAllListeners();
       this.client.removeAllListeners();
@@ -270,9 +266,11 @@ class Lifecycle {
           case TransitionType.NoUser:
             this.#enter(State.Onboarding);
             break;
-          case TransitionType.Error:
+          case TransitionType.PermanentFailure:
+          case TransitionType.TemporaryFailure:
             // TODO: relay error
             this.#enter(State.Error);
+            break;
         }
         break;
       case State.Onboarding:
@@ -301,7 +299,7 @@ class Lifecycle {
             this.#enter(State.Disconnected);
             break;
           case TransitionType.PermanentFailure:
-            // TODO: relay error
+            this.#permanentError = transition.error;
             this.#enter(State.Error);
             break;
           case TransitionType.Logout:
@@ -311,7 +309,7 @@ class Lifecycle {
         break;
       case State.Connected:
         switch (transition.type) {
-          case TransitionType.SocketDropped:
+          case TransitionType.TemporaryFailure:
             this.#enter(State.Disconnected);
             break;
           case TransitionType.Logout:
@@ -381,17 +379,31 @@ class Lifecycle {
     switch (state) {
       case ConnectionState.Disconnected:
         if (this.client.events.lastError) {
-          this.transition({
-            type: TransitionType.TemporaryFailure,
-            // TODO: handle permanent failure
-          });
-        } else {
-          this.transition({
-            type: TransitionType.SocketDropped,
-          });
+          if (this.client.events.lastError.type === "revolt") {
+            // if (this.client.events.lastError.data.type == 'InvalidSession') {
+
+            this.transition({
+              type: TransitionType.PermanentFailure,
+              error: this.client.events.lastError.data.type,
+            });
+
+            break;
+          }
         }
+
+        this.transition({
+          type: TransitionType.TemporaryFailure,
+        });
+
         break;
     }
+  }
+
+  /**
+   * Get the permanent error
+   */
+  get permanentError() {
+    return this.#permanentError!;
   }
 }
 
@@ -434,6 +446,10 @@ export default class ClientController {
       State.Offline,
       State.Reconnecting,
     ].includes(this.lifecycle.state());
+  }
+
+  isError() {
+    return this.lifecycle.state() === State.Error;
   }
 
   /**

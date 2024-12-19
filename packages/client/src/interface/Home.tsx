@@ -104,10 +104,10 @@ export function HomePage() {
   const navigate = useNavigate();
   const client = useClient();
 
-  // check if we're upryzing.app; if so, check if the user is in the Garden
-  const showGardenButton = IS_UPRYZING;
-  const isInGarden =
-    client()!.servers.get("01F7ZSBSFHQ8TA81725KQCSDDP") !== undefined;
+  // check if we're web.upryzing.app; if so, check if the user is in the Lounge
+  const showLoungeButton = IS_UPRYZING;
+  const isInLounge =
+    client()!.servers.get("01JESQYCPY76XFN67R79YGCWMR") !== undefined;
 
   return (
     // TODO: i18n
@@ -135,24 +135,24 @@ export function HomePage() {
                 })
               }
               description={t("app.home.group_desc")}
-              icon={<MdAddCircle fill={theme!.colours.foreground} />}
+              icon={<MdAddCircle />}
             >
               {t("app.home.group")}
             </CategoryButton>
             <Switch fallback={null}>
-              <Match when={showGardenButton && isInGarden}>
+              <Match when={showLoungeButton && isInLounge}>
                 <CategoryButton
-                  onClick={() => navigate("/server/01F7ZSBSFHQ8TA81725KQCSDDP")}
+                  onClick={() => navigate("/server/01JESQYCPY76XFN67R79YGCWMR")}
                   description={t("app.home.goto-testers_desc")}
-                  icon={<MdGroups3 fill={theme!.colours.foreground} />}
+                  icon={<MdGroups3 />}
                 >
                   {t("app.home.goto-testers")}
                 </CategoryButton>
               </Match>
-              <Match when={showGardenButton && !isInGarden}>
+              <Match when={showLoungeButton && !isInLounge}>
                 <CategoryButton
                   description={t("app.home.join-testers_desc")}
-                  icon={<MdGroups3 fill={theme!.colours.foreground} />}
+                  icon={<MdGroups3 />}
                 >
                   {t("app.home.join-testers")}
                 </CategoryButton>
@@ -160,10 +160,11 @@ export function HomePage() {
             </Switch>
             <CategoryButton
               onClick={() =>
-                window.open("https://insrt.uk/donate?utm_source=revoltapp")
+                //window.open("https://insrt.uk/donate?utm_source=revoltapp")
+                console.log("g")
               }
               description={t("app.home.donate_desc")}
-              icon={<MdPayments fill={theme!.colours.foreground} />}
+              icon={<MdPayments />}
             >
               {t("app.home.donate")}
             </CategoryButton>

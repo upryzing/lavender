@@ -1,12 +1,11 @@
 import HCaptcha, { HCaptchaFunctions } from "solid-hcaptcha";
-import { For, JSX, Show, Switch, Match, createSignal } from "solid-js";
+import { For, JSX, Match, Show, Switch, createSignal } from "solid-js";
 
 import { cva } from "styled-system/css";
 
 import { clientController, mapAnyError } from "@revolt/client";
 import { useTranslation } from "@revolt/i18n";
 import { Checkbox, Column, FormGroup, Input, Typography } from "@revolt/ui";
-import { autoComplete } from "@revolt/ui/directives";
 
 /**
  * Available field types
@@ -93,36 +92,36 @@ export function Fields(props: FieldProps) {
     <For each={props.fields}>
       {(field) => (
         <Show when={field != "invite" || inviteCodeNeeded}>
-          <FormGroup>
-            <Switch fallback={
-                <>
+        <FormGroup>
+          <Switch fallback={
+              <>
+                <Typography variant="label">
+                  {fieldConfiguration[field].name()}
+                </Typography>
+                <Input
+                  required
+                  {...fieldConfiguration[field]}
+                  name={field}
+                  // Following ignore is due to log-out not having a placeholder but log-out never gets here from the fallback
+                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                  // @ts-ignore
+                  placeholder={fieldConfiguration[field].placeholder()}
+                  submissionTried={failedValidation()}
+                  onInvalid={onInvalid}
+                />
+            </>
+          }>
+            <Match when={field == "log-out"}>
+                <label class={labelRow()}>
+                  <Checkbox name="log-out" />
                   <Typography variant="label">
-                    {fieldConfiguration[field].name()}
+                    {fieldConfiguration["log-out"].name()}
                   </Typography>
-                  <Input
-                    required
-                    {...fieldConfiguration[field]}
-                    name={field}
-                    // Following ignore is due to log-out not having a placeholder but log-out never gets here from the fallback
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                    // @ts-ignore
-                    placeholder={fieldConfiguration[field].placeholder()}
-                    submissionTried={failedValidation()}
-                    onInvalid={onInvalid}
-                  />
-              </>
-            }>
-              <Match when={field == "log-out"}>
-                  <label class={labelRow()}>
-                    <Checkbox name="log-out" />
-                    <Typography variant="label">
-                      {fieldConfiguration["log-out"].name()}
-                    </Typography>
-                  </label>
-              </Match>
-            </Switch>
-          </FormGroup>
-        </Show>
+                </label>
+            </Match>
+          </Switch>
+        </FormGroup>
+      </Show>
       )}
     </For>
   );
@@ -181,7 +180,7 @@ export function Form(props: Props) {
         {props.children}
         <Show when={error()}>
           <Typography variant="legacy-settings-description">
-            {t(`error.${error()}`, undefined, error())}
+            {t(`error.${error()}` as any, undefined, error())}
           </Typography>
         </Show>
       </Column>

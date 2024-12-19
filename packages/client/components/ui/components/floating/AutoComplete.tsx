@@ -96,7 +96,7 @@ export function AutoComplete(
 /**
  * Individual auto complete entry
  */
-const Entry = styled(Row) <{ selected: boolean }>`
+const Entry = styled(Row)<{ selected: boolean }>`
   cursor: pointer;
   padding: ${(props) => props.theme!.gap.sm} ${(props) => props.theme!.gap.md};
   background: ${(props) =>
