@@ -102,7 +102,6 @@ export function UserContextMenu(props: {
    * Add friend
    */
   function addFriend() {
-    console.log("Pre: " + props.user.username + "#" + props.user.discriminator)
     props.user.addFriend();
   }
 

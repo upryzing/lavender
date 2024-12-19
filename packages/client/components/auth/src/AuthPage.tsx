@@ -122,7 +122,7 @@ const Logo = styled("img", {
   },
 });
 
-let a = false;
+let a = true;
 
 /**
  * Authentication page

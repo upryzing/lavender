@@ -75,6 +75,9 @@ function MountTheme(props: { children: any }) {
   (window as any)._demo_setAccent = setAccent;
   (window as any)._demo_setDarkMode = setDarkMode;
 
+  // TMP: MY EYEESSSSSS, keeping this on
+  setDarkMode(true);
+
   const [theme, setTheme] = createStore(darkTheme(accent(), darkMode()));
 
   createEffect(
