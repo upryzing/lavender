@@ -1,4 +1,3 @@
-/* eslint-disable require-jsdoc */
 import { Match, Switch } from "solid-js";
 
 import { User } from "@upryzing/upryzing.js";

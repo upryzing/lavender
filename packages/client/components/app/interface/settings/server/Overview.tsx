@@ -109,7 +109,7 @@ export default function ServerOverview(props: ServerSettingsProps) {
             </FormGroup>
             <FormGroup>
               <CategoryButton
-                description="Server can be joined from Discover"
+                description="Space can be joined from Discover"
                 icon={<BiRegularGlobe size={24} />}
                 action={
                   <Checkbox

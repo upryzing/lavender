@@ -22,8 +22,7 @@ export default function Feedback() {
   return (
     <Column gap="lg">
       <CategoryButtonGroup>
-        {/* TODO: uncomment or delete once we're certain on what we're doing irt a roadmap 
-        <Link
+        /*<Link
           href="https://github.com/orgs/revoltchat/projects/6/views/4"
           target="_blank"
         >
@@ -35,10 +34,9 @@ export default function Feedback() {
           >
             Roadmap
           </CategoryButton>
-        </Link> 
-        */}
-        <Link
-          href="https://github.com/orgs/revoltchat/discussions"
+        </Link>
+        */<Link
+          href="https://github.com/orgs/upryzing/discussions"
           target="_blank"
         >
           <CategoryButton
@@ -64,7 +62,7 @@ export default function Feedback() {
           </CategoryButton>
         </Link>
         <Link
-          href="https://github.com/orgs/upryzing/projects/4"
+          href="https://github.com/orgs/revoltchat/projects/3"
           target="_blank"
         >
           <CategoryButton

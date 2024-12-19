@@ -1,5 +1,5 @@
 import {
-  Accessor,
+  type Accessor,
   Match,
   Show,
   Switch,
@@ -41,7 +41,7 @@ import MdVerifiedUser from "@material-design-icons/svg/outlined/verified_user.sv
 
 import { useSettingsNavigation } from "../Settings";
 
-import { UserSummary } from "./account";
+import { UserSummary } from "./account/index";
 
 /**
  * Account Page
@@ -285,7 +285,7 @@ function ManageAccount() {
   const client = useClient();
   const mfa = createMfaResource();
 
-  const stillOwnSpaces = createMemo(
+  const stillOwnServers = createMemo(
     () =>
       client().servers.filter((server) => server.owner?.self || false).length >
       0
@@ -327,8 +327,8 @@ function ManageAccount() {
         {t("app.settings.pages.account.manage.disable")}
       </CategoryButton>
       <CategoryButton
-        action={stillOwnSpaces() ? undefined : "chevron"}
-        disabled={mfa.isLoading || stillOwnSpaces()}
+        action={stillOwnServers() ? undefined : "chevron"}
+        disabled={mfa.isLoading || stillOwnServers()}
         onClick={deleteAccount}
         icon={
           <MdDelete {...iconSize(22)} fill={theme!.customColours.error.color} />
@@ -336,8 +336,8 @@ function ManageAccount() {
         description={t("app.settings.pages.account.manage.delete_description")}
       >
         {t(
-          stillOwnSpaces()
-            ? "app.settings.pages.account.manage.delete_still_own_spaces"
+          stillOwnServers()
+            ? "app.settings.pages.account.manage.delete_still_own_servers"
             : "app.settings.pages.account.manage.delete"
         )}
       </CategoryButton>

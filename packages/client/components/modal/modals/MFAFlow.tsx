@@ -75,38 +75,39 @@ const MFAFlow: PropGenerator<"mfa_flow"> = (props) => {
     actions: () =>
       selectedMethod()
         ? [
-          {
-            palette: "primary",
-            children: t("app.special.modals.actions.confirm"),
-            onClick: generateTicket,
-            confirmation: true,
-          },
-          {
-            palette: "plain",
-            children: t(
-              `app.special.modals.actions.${methods()!.length === 1 ? "cancel" : "back"
-              }`
-            ),
-            onClick: () => {
-              if (methods()!.length === 1) {
+            {
+              palette: "primary",
+              children: t("app.special.modals.actions.confirm"),
+              onClick: generateTicket,
+              confirmation: true,
+            },
+            {
+              palette: "plain",
+              children: t(
+                `app.special.modals.actions.${
+                  methods()!.length === 1 ? "cancel" : "back"
+                }`
+              ),
+              onClick: () => {
+                if (methods()!.length === 1) {
+                  props.callback();
+                  return true;
+                }
+
+                setSelected(undefined);
+              },
+            },
+          ]
+        : [
+            {
+              palette: "plain",
+              children: t("app.special.modals.actions.cancel"),
+              onClick: () => {
                 props.callback();
                 return true;
-              }
-
-              setSelected(undefined);
+              },
             },
-          },
-        ]
-        : [
-          {
-            palette: "plain",
-            children: t("app.special.modals.actions.cancel"),
-            onClick: () => {
-              props.callback();
-              return true;
-            },
-          },
-        ],
+          ],
     // If we are logging in or have selected a method,
     // don't allow the user to dismiss the modal by clicking off.
     // This is to just generally prevent annoying situations
@@ -119,7 +120,7 @@ const MFAFlow: PropGenerator<"mfa_flow"> = (props) => {
       <Switch fallback={<Preloader type="ring" />}>
         <Match when={selectedMethod()}>
           <Typography variant="label">
-            {t(`login.${selectedMethod()!.toLowerCase()}`)}
+            {t(`login.${selectedMethod()!.toLowerCase()}` as any)}
           </Typography>
           <Switch>
             <Match when={selectedMethod() === "Password"}>
@@ -174,7 +175,7 @@ const MFAFlow: PropGenerator<"mfa_flow"> = (props) => {
                   setResponse(undefined);
                 }}
               >
-                {t(`login.${method.toLowerCase()}`)}
+                {t(`login.${method.toLowerCase()}` as any)}
               </CategoryButton>
             )}
           </For>

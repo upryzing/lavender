@@ -114,7 +114,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
     }
 
     return t(
-      `app.settings.pages.${key.replaceAll("/", ".")}.title`,
+      `app.settings.pages.${key.replaceAll("/", ".")}.title` as any,
       undefined,
       key
     );
@@ -164,37 +164,33 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             },
             {
               id: "profile",
-              icon: <MdAccountCircle fill={theme!.colours.foreground} {...iconSize(20)} />,
+              icon: <MdAccountCircle {...iconSize(20)} />,
               title: t("app.settings.pages.profile.title"),
             },
             {
               id: "sessions",
-              icon: <MdVerifiedUser fill={theme!.colours.foreground} {...iconSize(20)} />,
+              icon: <MdVerifiedUser {...iconSize(20)} />,
               title: t("app.settings.pages.sessions.title"),
             },
           ],
         },
         {
-          title: "Upryzing",
+          title: "Revolt",
           entries: [
             {
               id: "bots",
-              icon: <MdSmartToy fill={theme!.colours.foreground} {...iconSize(20)} />,
+              icon: <MdSmartToy {...iconSize(20)} />,
               title: t("app.settings.pages.bots.title"),
             },
             {
               id: "feedback",
-              icon: <MdRateReview fill={theme!.colours.foreground} {...iconSize(20)} />,
+              icon: <MdRateReview {...iconSize(20)} />,
               title: t("app.settings.pages.feedback.title"),
             },
             {
               href: "https://insrt.uk/donate",
-              icon: <MdLocalCafe fill={theme!.customColours.warning.color} {...iconSize(20)} />,
-              title: (
-                <ColouredText colour={theme!.customColours.warning.color}>
-                  {t("app.settings.pages.donate.title")}
-                </ColouredText>
-              ),
+              icon: <MdLocalCafe {...iconSize(20)} />,
+              title: t("app.settings.pages.donate.title"),
             },
           ],
         },
@@ -236,7 +232,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             // },
             {
               id: "language",
-              icon: <MdLanguage fill={theme!.colours.foreground} {...iconSize(20)} />,
+              icon: <MdLanguage {...iconSize(20)} />,
               title: t("app.settings.pages.language.title"),
             },
             // {
@@ -252,7 +248,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             // },
             {
               id: "experiments",
-              icon: <MdScience fill={theme!.colours.foreground} {...iconSize(20)} />,
+              icon: <MdScience {...iconSize(20)} />,
               title: t("app.settings.pages.experiments.title"),
             },
           ],
@@ -266,8 +262,8 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             //   title: t("app.special.modals.changelogs.title"),
             // },
             {
-              href: "https://github.com/upryzing",
-              icon: <MdMemory fill={theme!.colours.foreground} {...iconSize(20)} />,
+              href: "https://github.com/revoltchat",
+              icon: <MdMemory {...iconSize(20)} />,
               title: t("app.settings.pages.source_code"),
             },
             {

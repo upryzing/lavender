@@ -24,7 +24,7 @@ export default function Native() {
             action={<Checkbox value onChange={(value) => void value} />}
             onClick={() => void 0}
             icon={<MdExitToApp {...iconSize(22)} />}
-            description="Launch Upryzing when you log into your computer."
+            description="Launch Revolt when you log into your computer."
           >
             Start with Computer
           </CategoryButton>
@@ -34,7 +34,7 @@ export default function Native() {
             action={<Checkbox value onChange={(value) => void value} />}
             onClick={() => void 0}
             icon={<MdCancelPresentation {...iconSize(22)} />}
-            description="Instead of closing, Upryzing will hide in your tray."
+            description="Instead of closing, Revolt will hide in your tray."
           >
             Minimise to Tray
           </CategoryButton>
@@ -46,7 +46,7 @@ export default function Native() {
             action={<Checkbox value onChange={(value) => void value} />}
             onClick={() => void 0}
             icon={<MdWebAsset {...iconSize(22)} />}
-            description="Let Upryzing use its own custom titlebar."
+            description="Let Revolt use its own custom titlebar."
           >
             Custom window frame
           </CategoryButton>
@@ -57,7 +57,7 @@ export default function Native() {
           icon={<MdDesktopWindows {...iconSize(22)} />}
           description="Version 1.0.0"
         >
-          Upryzing Desktop
+          Revolt Desktop
         </CategoryButton>
       </CategoryButtonGroup>
     </Column>

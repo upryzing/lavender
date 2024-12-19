@@ -324,7 +324,7 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
           xhr.open(
             "POST",
             `${client.configuration!.features.autumn.url}/attachments`,
-            true,
+            true
           );
 
           xhr.setRequestHeader("X-Session-Token", token);

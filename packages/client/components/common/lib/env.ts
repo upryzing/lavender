@@ -1,10 +1,5 @@
 export default {
   /**
-   * Determines whether or not Lavender will request the server's config
-   */
-  REQUEST_CONFIG: (import.meta.env.VITE_REQUEST_CONFIG as boolean) ?? true,
-
-  /**
    * What API server to connect to by default.
    */
   DEFAULT_API_URL:
@@ -46,8 +41,8 @@ export default {
   MAX_ATTACHMENTS: (import.meta.env.VITE_CFG_MAX_ATTACHMENTS as number) ?? 5,
 
   /**
-   * Determines whether or not an invite code is required on signing up.
-   */
+  * Determines whether or not an invite code is required on signing up.
+  */
   INVITE_ONLY: (import.meta.env.VITE_INVITE_ONLY as boolean) ?? false,
 
   /**

@@ -9,7 +9,7 @@
     "test:browser:regression": "pnpm --filter browser-test-runner exec playwright test regression",
     "test:browser:report": "pnpm --filter browser-test-runner exec playwright show-report",
     "lint": "eslint --ext .ts,.tsx components/ packages/",
-    "lint:fix": "pnpm lint --fix",
+    "lint:fix": "eslint --fix --ext .ts,.tsx packages/client",
     "dev:web": "pnpm --filter @upryzing/lavender dev",
     "dev:desktop": "pnpm --filter @upryzing/lavender-desktop tauri dev",
     "build:deps": "pnpm --filter @upryzing/upryzing.js build",
@@ -19,6 +19,9 @@
     "fmt": "prettier --write '**/*.{ts,tsx,json}'",
     "fmt:check": "prettier --check '**/*.{ts,tsx,json}'",
     "typecheck": "cd packages/client && pnpm run typecheck"
+  },
+  "devDependencies": {
+    "eslint": "^8.49.0"
   },
   "keywords": [],
   "engines": {

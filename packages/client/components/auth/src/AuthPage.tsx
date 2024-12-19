@@ -1,4 +1,4 @@
-import { BiLogosGithub, BiLogosMastodon } from "solid-icons/bi";
+import { BiLogosGithub, BiLogosMastodon, BiLogosTwitter } from "solid-icons/bi";
 import { JSX } from "solid-js";
 
 import { styled } from "styled-system/jsx";
@@ -10,7 +10,6 @@ import MdDarkMode from "@material-design-icons/svg/filled/dark_mode.svg?componen
 
 import background from "./background.jpg";
 import { FlowBase } from "./flows/Flow";
-
 /**
  * Authentication page layout
  */
@@ -137,7 +136,7 @@ export function AuthPage(props: { children: JSX.Element }) {
         <div />
         <Button
           size="icon"
-          onClick={() => {
+          onPress={() => {
             a = !a;
             (window as any)._demo_setDarkMode(a);
           }}
@@ -153,14 +152,16 @@ export function AuthPage(props: { children: JSX.Element }) {
       <Nav>
         <NavItems variant="stack">
           <NavItems>
-            <LinkWithIcon href="https://github.com/upryzing" target="_blank">
+            <LinkWithIcon href="https://github.com/revoltchat" target="_blank">
               <BiLogosGithub size={24} />
             </LinkWithIcon>
+            <LinkWithIcon href="https://twitter.com/revoltchat" target="_blank">
+              <BiLogosTwitter size={24} />
+            </LinkWithIcon>
             <LinkWithIcon
-              href="https://lea.pet/@upryzing"
+              href="https://mastodon.social/web/@revoltchat"
               target="_blank"
             >
-              {/* before you ask: if the package had a fedi icon I'd use it */}
               <BiLogosMastodon size={24} />
             </LinkWithIcon>
           </NavItems>

@@ -30,7 +30,6 @@ import MdNotificationsOff from "@material-design-icons/svg/filled/notifications_
 import MdShield from "@material-design-icons/svg/filled/shield.svg?component-solid";
 import MdSmartToy from "@material-design-icons/svg/filled/smart_toy.svg?component-solid";
 import MdSpa from "@material-design-icons/svg/filled/spa.svg?component-solid";
-import MdSchedule from "@material-design-icons/svg/filled/schedule.svg?component-solid";
 
 import { MessageContextMenu } from "../../../menus/MessageContextMenu";
 import {
@@ -103,6 +102,7 @@ export function Message(props: Props) {
       }
       avatar={
         <AvatarContainer
+          // @ts-expect-error this is a hack; replace with plain element & panda-css
           use:floating={floatingUserMenusFromMessage(props.message)}
         >
           <Avatar size={36} src={props.message.avatarURL} />
@@ -164,18 +164,15 @@ export function Message(props: Props) {
             </Tooltip>
           </Match>
           <Match when={props.message.webhook}>
-            <Tooltip content={t("app.main.channel.webhook")} placement="top">
+            <Tooltip
+              content={
+                "Webhook"
+
+                // TODO: missing i18n
+              }
+              placement="top"
+            >
               <MdCloud {...iconSize(16)} />
-            </Tooltip>
-          </Match>
-          <Match when={props.message.webhook}>
-            <Tooltip content={t("app.main.channel.webhook")} placement="top">
-              <MdCloud {...iconSize(16)} />
-            </Tooltip>
-          </Match>
-          <Match when={props.message.member?.timeout}>
-            <Tooltip content={`User has been timed out for ${dayjs(props.message.member?.timeout).toNow(true)}`} placement="top">
-              <MdSchedule {...iconSize(16)} />
             </Tooltip>
           </Match>
           <Match when={props.message.isSuppressed}>
@@ -190,7 +187,7 @@ export function Message(props: Props) {
             }
           >
             <NewUser>
-              <Tooltip content={t("app.main.channel.new_to_upryzing")} placement="top">
+              <Tooltip content="New to Revolt" placement="top">
                 <MdSpa {...iconSize(16)} />
               </Tooltip>
             </NewUser>
@@ -207,11 +204,10 @@ export function Message(props: Props) {
               </Tooltip>
             </NewUser>
           </Match>
-          {/* pronounce example
-          <Match when={props.message.authorId === "01EX2NCWQ0CHS3QJF0FEQS1GR4"}>
+          <Match when={props.message.authorId === "01JENZCKGRKNQEN0W3XXWTJQS7"}>
             <span />
-            <span>he/him &middot; </span>
-          </Match> */}
+            <span>she/her &middot; </span>
+          </Match>
         </Switch>
       }
       compact={
@@ -235,10 +231,10 @@ export function Message(props: Props) {
             menuGenerator={(user) =>
               user
                 ? floatingUserMenus(
-                  user!,
-                  // TODO: try to fetch on demand member
-                  props.message.server?.getMember(user!.id)
-                )
+                    user!,
+                    // TODO: try to fetch on demand member
+                    props.message.server?.getMember(user!.id)
+                  )
                 : {}
             }
             isServer={!!props.message.server}
@@ -260,7 +256,9 @@ export function Message(props: Props) {
           </For>
         </Show>
         <Reactions
-          reactions={props.message.reactions}
+          reactions={
+            props.message.reactions as never as Map<string, Set<string>>
+          }
           interactions={props.message.interactions}
           userId={client().user!.id}
           addReaction={react}

@@ -18,8 +18,6 @@ import MdFace from "@material-design-icons/svg/outlined/face.svg?component-solid
 import MdPersonAddAlt from "@material-design-icons/svg/outlined/person_add_alt.svg?component-solid";
 import MdPersonRemove from "@material-design-icons/svg/outlined/person_remove.svg?component-solid";
 import MdReport from "@material-design-icons/svg/outlined/report.svg?component-solid";
-import MdSchedule from "@material-design-icons/svg/outlined/schedule.svg?component-solid"
-import MdTimerOff from "@material-design-icons/svg/outlined/timer_off.svg?component-solid"
 
 import {
   ContextMenu,
@@ -101,23 +99,6 @@ export function UserContextMenu(props: {
   }
 
   /**
-   * Timeout the member for a specified amount
-   */
-  function timeoutMember() {
-    getController("modal").push({
-      type: "timeout_member",
-      member: props.member!
-    })
-  }
-
-  /**
-   * Clear the member's timeout
-   */
-  function clearTimeout() {
-    props.member!.edit({ remove: ["Timeout"] })
-  }
-
-  /**
    * Add friend
    */
   function addFriend() {
@@ -181,20 +162,22 @@ export function UserContextMenu(props: {
           props.member &&
           (props.user.self
             ? props.member!.server!.havePermission("ChangeNickname") ||
-            props.member!.server!.havePermission("ChangeAvatar")
+              props.member!.server!.havePermission("ChangeAvatar")
             : (props.member!.server!.havePermission("ManageNicknames") ||
-              props.member!.server!.havePermission("RemoveAvatars")) &&
-            props.member!.inferiorTo(props.member!.server!.member!))
+                props.member!.server!.havePermission("RemoveAvatars")) &&
+              props.member!.inferiorTo(props.member!.server!.member!))
         }
       >
         <ContextMenuButton icon={MdFace} onClick={editIdentity}>
           {t(
-            `app.context_menu.${props.user.self ? "edit_your_identity" : "edit_identity"
+            `app.context_menu.${
+              props.user.self ? "edit_your_identity" : "edit_identity"
             }`
           )}
         </ContextMenuButton>
       </Show>
       <Show when={props.member}>
+        {/** TODO: #287 timeout users */}
         <Show
           when={
             !props.user.self &&
@@ -223,36 +206,6 @@ export function UserContextMenu(props: {
             destructive
           >
             {t("app.context_menu.ban_member")}
-          </ContextMenuButton>
-        </Show>
-        <Show
-          when={
-            !props.user.self &&
-            props.member?.server?.havePermission("TimeoutMembers") &&
-            props.member.inferiorTo(props.member.server.member!) &&
-            !props.member.timeout
-          }>
-          <ContextMenuButton
-            icon={MdSchedule}
-            onClick={timeoutMember}
-            destructive
-          >
-            {t("app.context_menu.timeout_member")}
-          </ContextMenuButton>
-        </Show>
-        <Show
-          when={
-            !props.user.self &&
-            props.member?.server?.havePermission("TimeoutMembers") &&
-            props.member.inferiorTo(props.member.server.member!) &&
-            props.member.timeout
-          }>
-          <ContextMenuButton
-            icon={MdTimerOff}
-            onClick={clearTimeout}
-            destructive
-          >
-            {t("app.context_menu.clear_timeout")}
           </ContextMenuButton>
         </Show>
       </Show>

@@ -2,6 +2,6 @@ export { };
 
 declare global {
   interface Window {
-    __TAURI__: Object;
+    __TAURI__: object;
   }
 }
