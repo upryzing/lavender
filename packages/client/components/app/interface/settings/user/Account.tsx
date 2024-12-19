@@ -285,7 +285,7 @@ function ManageAccount() {
   const client = useClient();
   const mfa = createMfaResource();
 
-  const stillOwnServers = createMemo(
+  const stillOwnSpaces = createMemo(
     () =>
       client().servers.filter((server) => server.owner?.self || false).length >
       0
@@ -327,8 +327,8 @@ function ManageAccount() {
         {t("app.settings.pages.account.manage.disable")}
       </CategoryButton>
       <CategoryButton
-        action={stillOwnServers() ? undefined : "chevron"}
-        disabled={mfa.isLoading || stillOwnServers()}
+        action={stillOwnSpaces() ? undefined : "chevron"}
+        disabled={mfa.isLoading || stillOwnSpaces()}
         onClick={deleteAccount}
         icon={
           <MdDelete {...iconSize(22)} fill={theme!.customColours.error.color} />
@@ -336,8 +336,8 @@ function ManageAccount() {
         description={t("app.settings.pages.account.manage.delete_description")}
       >
         {t(
-          stillOwnServers()
-            ? "app.settings.pages.account.manage.delete_still_own_servers"
+          stillOwnSpaces()
+            ? "app.settings.pages.account.manage.delete_still_own_spaces"
             : "app.settings.pages.account.manage.delete"
         )}
       </CategoryButton>
