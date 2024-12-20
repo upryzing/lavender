@@ -229,10 +229,6 @@ export type Modals =
       type: "edit_keybind";
       action: KeybindAction;
       onSubmit: (sequence: KeyComboSequence) => void;
-    }
-  | {
-      type: "timeout_member";
-      member: ServerMember;
     };
 
 export type ModalProps<T extends Modals["type"]> = Modals & { type: T };

@@ -90,7 +90,8 @@ export function ChannelContextMenu(props: { channel: Channel }) {
    */
   function copyLink() {
     navigator.clipboard.writeText(
-      `${location.origin}${props.channel.server ? `/server/${props.channel.server?.id}` : ""
+      `${location.origin}${
+        props.channel.server ? `/server/${props.channel.server?.id}` : ""
       }/channel/${props.channel.id}`
     );
   }

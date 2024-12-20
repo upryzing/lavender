@@ -38,10 +38,9 @@ const CreateInvite: PropGenerator<"create_invite"> = (props) => {
       .createInvite()
       .then(({ _id }) =>
         setLink(
-          // IS_UPRYZING
-          //   ? `https://upryzing.app/invite/${_id}`
-          //   : 
-          `${window.location.protocol}//${window.location.host}/invite/${_id}`
+          IS_UPRYZING
+            ? `https://rvlt.gg/${_id}`
+            : `${window.location.protocol}//${window.location.host}/invite/${_id}`
         )
       )
       .catch((err) =>

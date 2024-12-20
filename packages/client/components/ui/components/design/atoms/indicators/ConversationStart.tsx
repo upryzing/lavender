@@ -29,7 +29,8 @@ export function ConversationStart(props: Props) {
       </Show>
       <Typography variant="conversation-start">
         {t(
-          `app.main.channel.start.${props.channel.type === "SavedMessages" ? "saved" : "group"
+          `app.main.channel.start.${
+            props.channel.type === "SavedMessages" ? "saved" : "group"
           }`
         )}
       </Typography>

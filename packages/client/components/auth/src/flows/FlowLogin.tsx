@@ -93,7 +93,7 @@ export default function FlowLogin() {
         }
       >
         <Match when={clientController.isLoggedIn()}>
-          <Navigate href="/web" />
+          <Navigate href="/app" />
         </Match>
         <Match when={clientController.lifecycle.state() === State.LoggingIn}>
           <Preloader type="ring" />
@@ -110,7 +110,7 @@ export default function FlowLogin() {
             <Row align justify="center">
               <Button
                 variant="plain"
-                onClick={() =>
+                onPress={() =>
                   clientController.lifecycle.transition({
                     type: TransitionType.Cancel,
                   })

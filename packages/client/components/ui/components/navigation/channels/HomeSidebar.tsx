@@ -86,11 +86,11 @@ export const HomeSidebar = (props: Props) => {
             </Typography>
           </SidebarTitle>
 
-          <a href="/web">
+          <a href="/app">
             <MenuButton
               size="normal"
               icon={<BiSolidHome size={24} />}
-              attention={location.pathname === "/web" ? "selected" : "normal"}
+              attention={location.pathname === "/app" ? "selected" : "normal"}
             >
               <ButtonTitle>{t("app.navigation.tabs.home")}</ButtonTitle>
             </MenuButton>
@@ -116,7 +116,6 @@ export const HomeSidebar = (props: Props) => {
                 size="normal"
                 attention={"normal"}
                 icon={<BiSolidNotepad size={24} />}
-                // eslint-disable-next-line solid/reactivity
                 onClick={() => props.openSavedNotes(navigate)}
               >
                 <ButtonTitle>{t("app.navigation.tabs.saved")}</ButtonTitle>
@@ -235,7 +234,7 @@ function Entry(
    */
   const status = () =>
     local.channel.recipient?.statusMessage((presence) =>
-      t(`app.status.${presence.toLowerCase()}`)
+      t(`app.status.${presence.toLowerCase()}` as any)
     );
 
   return (

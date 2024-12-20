@@ -93,7 +93,7 @@ export const ServerList = (props: Props) => {
     const nextIndex = currentServerIndex + byOffset;
 
     if (nextIndex === -1) {
-      return navigate("/web");
+      return navigate("/app");
     }
 
     // this will wrap the index around
@@ -137,7 +137,7 @@ export const ServerList = (props: Props) => {
               <Swoosh topItem />
             </PositionSwoosh>
           </Show> */}
-          <a href="/web">
+          <a href="/app">
             <Avatar size={42} fallback={<MdHome />} />
           </a>
         </EntryContainer>
@@ -152,7 +152,8 @@ export const ServerList = (props: Props) => {
           aria={props.user.username}
         >
           <EntryContainer>
-            <a href="/web">
+            {/* TODO: Make this open user status context menu */}
+            <a href="/app">
               <Avatar
                 size={42}
                 src={props.user.avatarURL}
@@ -166,7 +167,10 @@ export const ServerList = (props: Props) => {
         <For each={props.unreadConversations.slice(0, 9)}>
           {(conversation) => (
             <Tooltip placement="right" content={conversation.displayName}>
-              <EntryContainer use:floating={props.menuGenerator(conversation)}>
+              <EntryContainer
+                // @ts-expect-error this is a hack; replace with plain element & panda-css
+                use:floating={props.menuGenerator(conversation)}
+              >
                 <a href={`/channel/${conversation.id}`}>
                   <Avatar
                     size={42}
@@ -195,7 +199,7 @@ export const ServerList = (props: Props) => {
         </For>
         <Show when={props.unreadConversations.length > 9}>
           <EntryContainer>
-            <a href="/web">
+            <a href={`/`}>
               <Avatar
                 size={42}
                 fallback={<>+{props.unreadConversations.length - 9}</>}
@@ -213,7 +217,10 @@ export const ServerList = (props: Props) => {
               }
             >
               <Tooltip placement="right" content={item.name}>
-                <EntryContainer use:floating={props.menuGenerator(item)}>
+                <EntryContainer
+                  // @ts-expect-error this is a hack; replace with plain element & panda-css
+                  use:floating={props.menuGenerator(item)}
+                >
                   <Show when={props.selectedServer() === item.id}>
                     <PositionSwoosh>
                       <Swoosh />
