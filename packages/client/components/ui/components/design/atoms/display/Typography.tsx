@@ -26,7 +26,7 @@ export function generateTypography(
   variant: keyof DefaultTheme["typography"]
 ) {
   const { fontSize, fontWeight, lineHeight, margin, textTransform, colour } =
-    theme.typography[variant] ?? {};
+    theme !== undefined ? theme.typography[variant] : {};
 
   const styles = {
     fontSize,
