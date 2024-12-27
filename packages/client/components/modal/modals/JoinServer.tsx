@@ -4,7 +4,8 @@ import { useNavigate } from "@revolt/routing";
 import { createFormModal } from "../form";
 import { PropGenerator } from "../types";
 
-const RE_INVITE_URL = /(?:invite|rvlt.gg)\/([a-z0-9]+)/gi;
+// TODO: what in the god damn
+const RE_INVITE_URL = /(?:invite|web.upryzing.app)\/([a-z0-9]+)/gi;
 
 /**
  * Modal to join a server
@@ -24,7 +25,7 @@ const JoinServer: PropGenerator<"join_server"> = (props) => {
     data: {
       link: {
         field: "code",
-        placeholder: "rvlt.gg/wVEJDGVs",
+        placeholder: "web.upryzing.app/invite/rS9kg3z6",
       },
     },
     callback: async ({ link }) => {

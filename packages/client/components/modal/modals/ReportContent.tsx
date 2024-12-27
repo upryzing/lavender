@@ -46,9 +46,9 @@ const ReportContent: PropGenerator<"report_content"> = (props) => {
         /* TEMP TODO */ props.target instanceof User
           ? "user"
           : props.target instanceof Server
-            ? "server"
-            : "message"
-        }`,
+          ? "server"
+          : "message"
+      }`,
     },
     schema: {
       preview: "custom",
@@ -58,7 +58,10 @@ const ReportContent: PropGenerator<"report_content"> = (props) => {
     data: {
       preview: {
         element: (
-          <ContentContainer use:scrollable>
+          <ContentContainer
+            // @ts-expect-error this is a hack; replace with plain element & panda-css
+            use:scrollable
+          >
             {props.target instanceof User ? (
               <Column align="center">
                 <Avatar src={props.target.animatedAvatarURL} size={64} />
@@ -92,7 +95,7 @@ const ReportContent: PropGenerator<"report_content"> = (props) => {
             : CONTENT_REPORT_REASONS
           ).map((value) => ({
             name: t(
-              `app.special.modals.report.content_reason.${value}`,
+              `app.special.modals.report.content_reason.${value}` as any,
               {},
               value
             ),
@@ -113,18 +116,18 @@ const ReportContent: PropGenerator<"report_content"> = (props) => {
         content:
           props.target instanceof User
             ? {
-              type: "User",
-              id: props.target.id,
-              report_reason: category as API.UserReportReason,
-              message_id: props.contextMessage?.id,
-            }
+                type: "User",
+                id: props.target.id,
+                report_reason: category as API.UserReportReason,
+                message_id: props.contextMessage?.id,
+              }
             : props.target instanceof Server
-              ? {
+            ? {
                 type: "Server",
                 id: props.target.id,
                 report_reason: category as API.ContentReportReason,
               }
-              : {
+            : {
                 type: "Message",
                 id: props.target.id,
                 report_reason: category as API.ContentReportReason,

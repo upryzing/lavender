@@ -816,23 +816,23 @@ const Padding = styled.div`
  */
 type ListEntry =
   | {
-    // Message
-    t: 0;
-    message: MessageInterface;
-    tail: boolean;
-    highlight: boolean;
-  }
+      // Message
+      t: 0;
+      message: MessageInterface;
+      tail: boolean;
+      highlight: boolean;
+    }
   | {
-    // Message Divider
-    t: 1;
-    date?: string;
-    unread?: boolean;
-  }
+      // Message Divider
+      t: 1;
+      date?: string;
+      unread?: boolean;
+    }
   | {
-    // Blocked messages
-    t: 2;
-    count: number;
-  };
+      // Blocked messages
+      t: 2;
+      count: number;
+    };
 
 /**
  * Render individual list entry

@@ -114,7 +114,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
     }
 
     return t(
-      `app.settings.pages.${key.replaceAll("/", ".")}.title`,
+      `app.settings.pages.${key.replaceAll("/", ".")}.title` as any,
       undefined,
       key
     );
@@ -179,23 +179,14 @@ const Config: SettingsConfiguration<{ server: Server }> = {
           entries: [
             {
               id: "bots",
-              icon: <MdSmartToy fill={theme!.colours.foreground} {...iconSize(20)} />,
+              icon: <MdSmartToy {...iconSize(20)} />,
               title: t("app.settings.pages.bots.title"),
             },
             {
               id: "feedback",
-              icon: <MdRateReview fill={theme!.colours.foreground} {...iconSize(20)} />,
+              icon: <MdRateReview {...iconSize(20)} />,
               title: t("app.settings.pages.feedback.title"),
-            },
-            {
-              href: "https://insrt.uk/donate",
-              icon: <MdLocalCafe fill={theme!.customColours.warning.color} {...iconSize(20)} />,
-              title: (
-                <ColouredText colour={theme!.customColours.warning.color}>
-                  {t("app.settings.pages.donate.title")}
-                </ColouredText>
-              ),
-            },
+            }
           ],
         },
         {
@@ -267,7 +258,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             // },
             {
               href: "https://github.com/upryzing",
-              icon: <MdMemory fill={theme!.colours.foreground} {...iconSize(20)} />,
+              icon: <MdMemory {...iconSize(20)} />,
               title: t("app.settings.pages.source_code"),
             },
             {

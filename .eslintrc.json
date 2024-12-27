@@ -43,6 +43,7 @@
         "varsIgnorePattern": "^_"
       }
     ],
+    "solid/jsx-no-undef": [0],
     "require-jsdoc": [
       "warn",
       {

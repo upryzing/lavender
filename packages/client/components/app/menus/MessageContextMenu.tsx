@@ -91,7 +91,8 @@ export function MessageContextMenu(props: { message: Message }) {
    */
   function copyLink() {
     navigator.clipboard.writeText(
-      `${location.origin}${props.message.server ? `/server/${props.message.server?.id}` : ""
+      `${location.origin}${
+        props.message.server ? `/server/${props.message.server?.id}` : ""
       }/channel/${props.message.channelId}/${props.message.id}`
     );
   }

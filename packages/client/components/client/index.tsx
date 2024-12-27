@@ -37,8 +37,4 @@ export function useApi() {
   return clientController.api;
 }
 
-export const IS_UPRYZING =
-  import.meta.env.VITE_API_URL === "https://upryzing.app/api" ||
-  typeof import.meta.env.VITE_API_URL !== "string";
-
 export const IS_DEV = import.meta.env.DEV;

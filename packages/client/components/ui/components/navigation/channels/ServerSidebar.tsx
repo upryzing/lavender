@@ -300,7 +300,7 @@ function Category(
 /**
  * Category title styling
  */
-const CategoryBase = styled(Row) <{ open: boolean }>`
+const CategoryBase = styled(Row)<{ open: boolean }>`
   padding: 0 4px;
   cursor: pointer;
   user-select: none;

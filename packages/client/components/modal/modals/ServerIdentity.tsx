@@ -64,11 +64,11 @@ const ServerIdentity: PropGenerator<"server_identity"> = (props) => {
           await props.member.edit(
             nickname()
               ? {
-                nickname: nickname(),
-              }
+                  nickname: nickname(),
+                }
               : {
-                remove: ["Nickname"],
-              }
+                  remove: ["Nickname"],
+                }
           );
 
           return true;

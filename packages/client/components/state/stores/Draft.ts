@@ -266,7 +266,18 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
    * @param existingDraft The existing draft to send
    */
   async sendDraft(client: Client, channel: Channel, existingDraft?: DraftData) {
-    const draft = existingDraft ?? this.popDraft(channel.id);
+    const draft = existingDraft ?? this.getDraft(channel.id);
+
+    // Try sending the message
+    const { content, replies, files } = draft;
+
+    if (
+      (content === undefined || content?.trim() === "") &&
+      (files === undefined || files?.length == 0)
+    ) {
+      console.log("Invalid message, not sending");
+      return;
+    }
 
     // TODO: const idempotencyKey = ulid();
     const idempotencyKey = Math.random().toString();
@@ -279,8 +290,7 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
       } as UnsentMessage,
     ]);
 
-    // Try sending the message
-    const { content, replies, files } = draft;
+    this.clearDraft(channel.id);
 
     // Construct message object
     const attachments: string[] = [];
@@ -324,7 +334,7 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
           xhr.open(
             "POST",
             `${client.configuration!.features.autumn.url}/attachments`,
-            true,
+            true
           );
 
           xhr.setRequestHeader("X-Session-Token", token);
