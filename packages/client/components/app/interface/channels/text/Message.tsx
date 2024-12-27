@@ -273,7 +273,7 @@ export function Message(props: Props) {
  * New user indicator
  */
 const NewUser = styled.div`
-  color: ${(props) => props.theme!.customColours.success.color};
+  color: ${(props) => props.theme.customColours.success.color};
 `;
 
 /**
@@ -281,5 +281,5 @@ const NewUser = styled.div`
  */
 const AvatarContainer = styled.div`
   height: fit-content;
-  border-radius: ${(props) => props.theme!.borderRadius.full};
+  border-radius: ${(props) => props.theme.borderRadius.full};
 `;
