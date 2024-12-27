@@ -11,12 +11,7 @@ import RevoltSvg from "../../../../public/assets/wordmark_wide_500px.svg?compone
 const Logo = styled(RevoltSvg)`
   width: 100%;
   object-fit: contain;
-  fill: ${(props) => {
-    if (props.theme)
-      return props.theme.colours["messaging-message-box-foreground"]
-    else
-      return "#000000";
-  }};
+  fill: ${(props) => props.theme!.colours["messaging-message-box-foreground"]};
 `;
 
 /**
