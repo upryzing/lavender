@@ -1,12 +1,13 @@
 import { Match, Switch, createSignal, onMount } from "solid-js";
 
-import { IS_UPRYZING, mapAnyError } from "@revolt/client";
+import { mapAnyError } from "@revolt/client";
 import { useTranslation } from "@revolt/i18n";
 import { Column, styled } from "@revolt/ui";
 
 import { modalController } from "..";
 import { createFormModal } from "../form";
 import { PropGenerator } from "../types";
+import { CONFIGURATION } from "@revolt/common";
 
 /**
  * Code block which displays invite
@@ -38,8 +39,8 @@ const CreateInvite: PropGenerator<"create_invite"> = (props) => {
       .createInvite()
       .then(({ _id }) =>
         setLink(
-          IS_UPRYZING
-            ? `https://rvlt.gg/${_id}`
+          CONFIGURATION.IS_UPRYZING
+            ? `https://web.upryzing.app/invite/${_id}`
             : `${window.location.protocol}//${window.location.host}/invite/${_id}`
         )
       )

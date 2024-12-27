@@ -2,7 +2,7 @@ import { Match, Show, Switch } from "solid-js";
 
 import { cva } from "styled-system/css";
 
-import { IS_DEV, IS_UPRYZING, useClient } from "@revolt/client";
+import { IS_DEV, useClient } from "@revolt/client";
 import { useTranslation } from "@revolt/i18n";
 import { modalController } from "@revolt/modal";
 import { useNavigate } from "@revolt/routing";
@@ -28,6 +28,7 @@ import MdSettings from "@material-design-icons/svg/filled/settings.svg?component
 import RevoltSvg from "../../public/assets/wordmark_wide_500px.svg?component-solid";
 
 import { HeaderIcon } from "./common/CommonHeader";
+import { CONFIGURATION } from "@revolt/common";
 
 const Logo = styled(RevoltSvg)`
   width: 240px;
@@ -105,7 +106,7 @@ export function HomePage() {
   const client = useClient();
 
   // check if we're web.upryzing.app; if so, check if the user is in the Lounge
-  const showLoungeButton = IS_UPRYZING;
+  const showLoungeButton = CONFIGURATION.IS_UPRYZING;
   const isInLounge =
     client()!.servers.get("01JESQYCPY76XFN67R79YGCWMR") !== undefined;
 
@@ -160,7 +161,7 @@ export function HomePage() {
             </Switch>
             <CategoryButton
               onClick={() =>
-                //window.open("https://insrt.uk/donate?utm_source=revoltapp")
+                //window.open("https://wiki.revolt.chat/notes/project/financial-support/?utm_source=revoltapp")
                 console.log("g")
               }
               description={t("app.home.donate_desc")}
@@ -170,7 +171,7 @@ export function HomePage() {
             </CategoryButton>
           </SeparatedColumn>
           <SeparatedColumn>
-            <Show when={IS_UPRYZING}>
+            <Show when={CONFIGURATION.IS_UPRYZING}>
               <CategoryButton
                 onClick={() => navigate("/discover")}
                 description={t("app.home.discover_desc")}
