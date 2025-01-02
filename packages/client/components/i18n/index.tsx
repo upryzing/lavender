@@ -41,7 +41,7 @@ export async function fetchLanguage(key: Language): Promise<Dictionary> {
 }
 
 /**
- * set a language by the given key
+ * Set a language by the given key
  */
 export function setLanguage(key: Language) {
   startI18nTransition(() => _setLanguage(key));

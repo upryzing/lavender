@@ -41,12 +41,11 @@ export default function FlowHome() {
                   "align-items": "center",
                 }}
               >
-                <span>Your conversations,</span>
-                <br />
-                <span>your way.</span>
+                <span>Your conversations, your way.</span>
               </b>
               <span style={{ "text-align": "center", opacity: "0.5" }}>
-                idk, text here
+                Connect with Upryzing.
+                {/* [TODO] Add translations for multiple languages */}
               </span>
             </Column>
 
