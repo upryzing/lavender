@@ -115,7 +115,7 @@ export function HomePage() {
     <Base>
       <Header placement="primary">
         <HeaderIcon>
-          <MdHome {...iconSize(22)} />
+          <MdHome fill={theme.colours.foreground} {...iconSize(22)} />
         </HeaderIcon>
         Home
       </Header>
@@ -136,7 +136,7 @@ export function HomePage() {
                 })
               }
               description={t("app.home.group_desc")}
-              icon={<MdAddCircle />}
+              icon={<MdAddCircle fill={theme!.colours.foreground} />}
             >
               {t("app.home.group")}
             </CategoryButton>
@@ -145,7 +145,7 @@ export function HomePage() {
                 <CategoryButton
                   onClick={() => navigate("/server/01JESQYCPY76XFN67R79YGCWMR")}
                   description={t("app.home.goto-testers_desc")}
-                  icon={<MdGroups3 />}
+                  icon={<MdGroups3 fill={theme!.colours.foreground} />}
                 >
                   {t("app.home.goto-testers")}
                 </CategoryButton>
@@ -153,7 +153,7 @@ export function HomePage() {
               <Match when={showLoungeButton && !isInLounge}>
                 <CategoryButton
                   description={t("app.home.join-testers_desc")}
-                  icon={<MdGroups3 />}
+                  icon={<MdGroups3 fill={theme!.colours.foreground} />}
                 >
                   {t("app.home.join-testers")}
                 </CategoryButton>
@@ -165,7 +165,7 @@ export function HomePage() {
                 console.log("g")
               }
               description={t("app.home.donate_desc")}
-              icon={<MdPayments />}
+              icon={<MdPayments fill={theme!.colours.foreground} />}
             >
               {t("app.home.donate")}
             </CategoryButton>

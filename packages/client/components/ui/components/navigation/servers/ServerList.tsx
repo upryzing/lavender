@@ -8,6 +8,7 @@ import { styled } from "styled-system/jsx";
 
 import { KeybindAction } from "@revolt/keybinds";
 import { useNavigate } from "@revolt/routing";
+import { useTheme } from "@revolt/ui";
 
 import MdAdd from "@material-design-icons/svg/filled/add.svg?component-solid";
 import MdExplore from "@material-design-icons/svg/filled/explore.svg?component-solid";
@@ -70,6 +71,7 @@ interface Props {
 export const ServerList = (props: Props) => {
   const navigate = useNavigate();
   const keybinds = useKeybindActions();
+  const theme = useTheme();
 
   const navigateServer = (ev: KeyboardEvent, byOffset: number) => {
     ev.preventDefault();
@@ -138,7 +140,7 @@ export const ServerList = (props: Props) => {
             </PositionSwoosh>
           </Show> */}
           <a href="/app">
-            <Avatar size={42} fallback={<MdHome />} />
+            <Avatar size={42} fallback={<MdHome fill={theme.colours.foreground} />} />
           </a>
         </EntryContainer>
         <Tooltip
@@ -253,13 +255,13 @@ export const ServerList = (props: Props) => {
         <Tooltip placement="right" content={"Create or join a server"}>
           <EntryContainer>
             <a onClick={() => props.onCreateOrJoinServer()}>
-              <Avatar size={42} fallback={<MdAdd />} />
+              <Avatar size={42} fallback={<MdAdd fill={theme.colours.foreground} />} />
             </a>
           </EntryContainer>
         </Tooltip>
         <Tooltip placement="right" content={"Find new servers to join"}>
           <EntryContainer>
-            <Avatar size={42} fallback={<MdExplore />} />
+            <Avatar size={42} fallback={<MdExplore fill={theme.colours.foreground} />} />
           </EntryContainer>
         </Tooltip>
       </div>
@@ -269,7 +271,7 @@ export const ServerList = (props: Props) => {
       <Tooltip placement="right" content="Settings">
         <EntryContainer>
           <a href="/settings">
-            <Avatar size={42} fallback={<MdSettings />} interactive />
+            <Avatar size={42} fallback={<MdSettings fill={theme.colours.foreground} />} interactive />
           </a>
         </EntryContainer>
       </Tooltip>
