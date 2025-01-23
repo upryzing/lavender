@@ -115,7 +115,7 @@ export function Button(
       {...buttonProps}
       ref={ref}
       class={button(style)}
-      // @codegen directives props=rest include=floating
+    // @codegen directives props=rest include=floating
     >
       {rest.children}
     </button>

@@ -69,7 +69,6 @@ export default defineConfig({
     rollupOptions: {
       external: ["hast"],
     },
-    minify: false,
   },
   optimizeDeps: {
     exclude: ["solid-styled-components", "hast"],
