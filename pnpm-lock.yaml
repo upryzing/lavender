@@ -1,4 +1,4 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
 
 settings:
   autoInstallPeers: true
@@ -414,6 +414,8 @@ importers:
       typescript:
         specifier: ^5.4.2
         version: 5.6.3
+
+  packages/upryzing.js/lib/esm: {}
 
 packages:
 
@@ -4548,13 +4550,13 @@ packages:
       util-deprecate: 1.0.2
     dev: true
 
-  /@storybook/builder-vite@8.5.0-beta.7(storybook@8.3.5)(vite@5.4.8):
-    resolution: {integrity: sha512-D1HrfF34ASsrw4PBFgHBn66Xi5rkwOVsfW8ffVku8N3+pw2udjzwV8CuWYn1r5WJmGwjFQbUFt2+pi1zuWjkyQ==}
+  /@storybook/builder-vite@8.6.0-alpha.2(storybook@8.3.5)(vite@5.4.8):
+    resolution: {integrity: sha512-O5Ha7ub4dsXSbOo4/yBa9mBGuBp6puJHH47m528KXFiuaj4FgP0OHdD2ztbk3mMGTYl+HM8m8JuByPkBZm0RRg==}
     peerDependencies:
-      storybook: ^8.5.0-beta.7
+      storybook: ^8.6.0-alpha.2
       vite: ^4.0.0 || ^5.0.0 || ^6.0.0
     dependencies:
-      '@storybook/csf-plugin': 8.5.0-beta.7(storybook@8.3.5)
+      '@storybook/csf-plugin': 8.6.0-alpha.2(storybook@8.3.5)
       browser-assert: 1.2.1
       storybook: 8.3.5
       ts-dedent: 2.2.0
@@ -4600,10 +4602,10 @@ packages:
       unplugin: 1.16.0
     dev: true
 
-  /@storybook/csf-plugin@8.5.0-beta.7(storybook@8.3.5):
-    resolution: {integrity: sha512-GGlF8N8zHFSMier7kKIyPyLA6uEAfQvRXNlOBjZNTcDXQEyq+Ts9kjA7Ii7y41M8jQwzC15VKlwvib0iXGuMWw==}
+  /@storybook/csf-plugin@8.6.0-alpha.2(storybook@8.3.5):
+    resolution: {integrity: sha512-g5XY9SAe5hp8YzjBk6jHORt0Mn6YF4JI1upFFxTa+YjMMgx7R3tERN+rDoAIZcVTCTTqrjG0LhR8KhMVdY4yMA==}
     peerDependencies:
-      storybook: ^8.5.0-beta.7
+      storybook: ^8.6.0-alpha.2
     dependencies:
       storybook: 8.3.5
       unplugin: 1.16.0
@@ -11696,7 +11698,7 @@ packages:
     resolution: {integrity: sha512-dD+VMYC5fBBQNesVb+mjB0LOkZIf100SQFbjAt9/sDstNUvc5ce3yZwLYXzgcOc7jcSMkrBu/cZNRzEM4YIAyw==}
     engines: {node: ^14.18 || >=16}
     dependencies:
-      '@storybook/builder-vite': 8.5.0-beta.7(storybook@8.3.5)(vite@5.4.8)
+      '@storybook/builder-vite': 8.6.0-alpha.2(storybook@8.3.5)(vite@5.4.8)
     transitivePeerDependencies:
       - storybook
       - vite

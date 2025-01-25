@@ -9,5 +9,5 @@ let counter = 0;
  * @returns a unique identifier
  */
 export function insecureUniqueId() {
-  return Math.random().toString().substring(2) + new Date() + ++counter;
+  return Math.random().toString().substring(2) + Date.now() + ++counter;
 }
