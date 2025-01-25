@@ -304,7 +304,6 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
       // we could visually show this in chat like
       // on Discord mobile and allow individual
       // files to be cancelled
-      console.log(files);
       for (const fileId of files) {
         // Prepare for upload
         const body = new FormData();
@@ -369,7 +368,7 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
           (entry) => entry.idempotencyKey !== idempotencyKey
         )
       );
-      
+
       this.clearDraft(channel.id);
     } catch (err) {
       this.set(
@@ -378,9 +377,9 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
         this.getPendingMessages(channel.id).map((entry) =>
           entry.idempotencyKey === idempotencyKey
             ? {
-                ...entry,
-                status: "failed",
-              }
+              ...entry,
+              status: "failed",
+            }
             : entry
         )
       );
@@ -576,7 +575,6 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
         : undefined,
     };
 
-    console.log(this.fileCache);
 
     this.setDraft(channelId, (data) => ({
       files: [...(data.files ?? []), id],
@@ -614,7 +612,6 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
    * @returns Cached File
    */
   getFile(fileId: string) {
-    console.log(this.fileCache);
     return this.fileCache[fileId];
   }
 
