@@ -143,8 +143,9 @@ const Content = styled(Column)`
  * Accented wrapper for the category button icons
  */
 const IconWrapper = styled.div`
-  background: ${(props) =>
-    props.theme!.colours["component-categorybtn-background-icon"]};
+  /* Remove this if it doesn't end up getting used again later */
+  /* background: ${(props) =>
+    props.theme!.colours["component-categorybtn-background-icon"]}; */
 
   width: 36px;
   height: 36px;
@@ -154,9 +155,9 @@ const IconWrapper = styled.div`
   justify-content: center;
   border-radius: 50%;
 
-  svg {
-    color: ${(props) =>
-      props.theme!.colours["component-categorybtn-foreground-description"]};
+  svg:not([fill]) {
+    fill: ${(props) =>
+      props.theme!.colours["component-categorybtn-foreground"]};
   }
 `;
 
@@ -186,6 +187,7 @@ const Description = styled.span`
  * Container for action icons
  */
 const Action = styled.div`
+  fill: ${(props) => props.theme!.colours["component-categorybtn-foreground"]};
   width: 24px;
   height: 24px;
   flex-shrink: 0;
