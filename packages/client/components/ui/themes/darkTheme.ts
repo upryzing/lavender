@@ -199,7 +199,7 @@ export const darkTheme: (
       "component-scrollbar-background": "transparent",
       "component-scrollbar-foreground": materialColour("primary", 85),
       // Component: Category Button
-      "component-categorybtn-background": materialColour("background", 99),
+      "component-categorybtn-background": materialColour("background", 97),
       "component-categorybtn-background-icon": materialColour("primary", 90),
       "component-categorybtn-background-collapse": materialColour(
         "background",
@@ -207,7 +207,7 @@ export const darkTheme: (
       ),
       "component-categorybtn-background-hover": materialColour(
         "background",
-        100
+        95
       ),
       "component-categorybtn-background-active": materialColour(
         "background",

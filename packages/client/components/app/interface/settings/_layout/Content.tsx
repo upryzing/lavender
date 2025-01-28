@@ -106,22 +106,11 @@ const CloseAnchor = styled.a`
   justify-content: center;
 
   border-radius: ${(props) => props.theme!.borderRadius.full};
-  border: 3px solid ${(props) => props.theme!.colours["settings-close-anchor"]};
+  background: ${(props) => props.theme!.colours["settings-close-anchor"]}; 
   transition: ${(props) => props.theme!.transitions.fast} background-color;
 
   svg {
     transition: ${(props) => props.theme!.transitions.fast} background-color;
-    color: ${(props) =>
-      props.theme!.colours["settings-close-anchor"]} !important;
-  }
-
-  &:hover {
-    background: ${(props) => props.theme!.colours["settings-close-anchor"]};
-  }
-
-  &:hover svg {
-    color: ${(props) =>
-      props.theme!.colours["settings-close-anchor-hover"]} !important;
   }
 
   &:active {

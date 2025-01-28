@@ -136,6 +136,6 @@ const ProfileBadges = styled("div", {
     padding: "var(--gap-sm) var(--gap-sm)",
     borderRadius: "var(--borderRadius-md)",
 
-    background: "var(--colours-settings-background)",
+    fill: "var(--colours-settings-foreground)",
   },
 });
