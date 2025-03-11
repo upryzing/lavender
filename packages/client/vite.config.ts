@@ -71,7 +71,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ["solid-styled-components", "hast"],
+    exclude: ["hast"],
   },
   resolve: {
     alias: {

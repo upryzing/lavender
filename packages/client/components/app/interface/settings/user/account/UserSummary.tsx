@@ -1,4 +1,4 @@
-import { Accessor, Show } from "solid-js";
+import { Show } from "solid-js";
 
 import dayjs from "dayjs";
 import { User } from "@upryzing/upryzing.js";
@@ -20,11 +20,11 @@ export function UserSummary(props: {
   const bannerStyle = () =>
     props.bannerUrl
       ? {
-          "background-image": `linear-gradient(${theme.colours["user-banner-gradient"]}, ${theme.colours["user-banner-gradient"]}), url("${props.bannerUrl}")`,
-        }
+        "background-image": `linear-gradient(${theme.colours["user-banner-gradient"]}, ${theme.colours["user-banner-gradient"]}), url("${props.bannerUrl}")`,
+      }
       : {
-          background: `var(--colours-settings-background)`,
-        };
+        background: `var(--colours-settings-background)`,
+      };
 
   return (
     <CategoryButtonGroup>

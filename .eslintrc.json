@@ -55,6 +55,7 @@
           "FunctionExpression": true
         }
       }
-    ]
+    ],
+    "solid/jsx-no-undef": ["ignore"]
   }
 }

@@ -2,7 +2,7 @@ import { clientController } from "@revolt/client";
 import { CONFIGURATION } from "@revolt/common";
 import { useTranslation } from "@revolt/i18n";
 import { useNavigate } from "@revolt/routing";
-import { Button, Typography } from "@revolt/ui";
+import { Button, Text } from "@revolt/ui";
 
 import { FlowTitle } from "./Flow";
 import { setFlowCheckEmail } from "./FlowCheck";
@@ -39,9 +39,7 @@ export default function FlowReset() {
         <Fields fields={["email"]} />
         <Button type="submit">{t("login.reset")}</Button>
       </Form>
-      <Typography variant="legacy-settings-description">
-        <a href="/login/auth">{t("login.remembered")}</a>
-      </Typography>
+      <a href="/login/auth">{t("login.remembered")}</a>
       {import.meta.env.DEV && (
         <div
           style={{

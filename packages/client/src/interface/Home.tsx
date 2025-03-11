@@ -1,8 +1,7 @@
 import { Match, Show, Switch } from "solid-js";
 
-import { cva } from "styled-system/css";
-
 import { IS_DEV, useClient } from "@revolt/client";
+import { CONFIGURATION } from "@revolt/common";
 import { useTranslation } from "@revolt/i18n";
 import { modalController } from "@revolt/modal";
 import { useNavigate } from "@revolt/routing";
@@ -13,8 +12,7 @@ import {
   Header,
   Typography,
   iconSize,
-  styled,
-  useTheme,
+  typography,
 } from "@revolt/ui";
 
 import MdAddCircle from "@material-design-icons/svg/filled/add_circle.svg?component-solid";
@@ -28,21 +26,26 @@ import MdSettings from "@material-design-icons/svg/filled/settings.svg?component
 import RevoltSvg from "../../public/assets/wordmark_wide_500px.svg?component-solid";
 
 import { HeaderIcon } from "./common/CommonHeader";
-import { CONFIGURATION } from "@revolt/common";
+import { styled } from "styled-system/jsx";
+import { cva } from "styled-system/css";
 
-const Logo = styled(RevoltSvg)`
-  width: 240px;
-  fill: ${(props) => props.theme!.colours["foreground"]};
-`;
+const Logo = styled(RevoltSvg, {
+  base: {
+    width: "240px",
+    fill: "var(--colours-foreground)",
+  },
+});
 
 /**
  * Base layout of the home page (i.e. the header/background)
  */
-const Base = styled("div")`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-`;
+const Base = styled("div", {
+  base: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+  },
+});
 
 /**
  * Layout of the content as a whole
@@ -64,37 +67,40 @@ const content = cva({
 /**
  * Layout of the buttons
  */
-const Buttons = styled("div")`
-  display: flex;
-
-  padding: ${(props) => props.theme!.gap.md};
-
-  border-radius: ${(props) => props.theme!.borderRadius.lg};
-  background: ${(props) => props.theme!.colours["sidebar-channels-background"]};
-`;
+const Buttons = styled("div", {
+  base: {
+    display: "flex",
+    gap: "var(--gap-md)",
+    padding: "var(--gap-md)",
+    borderRadius: "var(--borderRadius-lg)",
+    background: "var(--colours-sidebar-channels-background)",
+  },
+});
 
 /**
  * Make sure the columns are separated
  */
-const SeparatedColumn = styled(Column)`
-  justify-content: stretch;
-  margin-inline: 0.25em;
-  width: 260px;
-
-  > * {
-    flex-grow: 1;
-  }
-`;
+const SeparatedColumn = styled(Column, {
+  base: {
+    justifyContent: "stretch",
+    marginInline: "0.25em",
+    width: "260px",
+    "& > *": {
+      flexGrow: 1,
+    },
+  },
+});
 
 /**
  * Make sure the image is separated from the welcome text
  */
-const Image = styled("img")`
-  margin-top: 0.5em;
-  height: 36px;
-
-  filter: ${(props) => props.theme!.effects.invert.black};
-`;
+const Image = styled("img", {
+  base: {
+    marginTop: "0.5em",
+    height: "36px",
+    filter: "var(--effects-invert-black)",
+  },
+});
 
 /**
  * Home page
@@ -121,9 +127,9 @@ export function HomePage() {
       </Header>
       <div use:scrollable={{ class: content() }}>
         <Column>
-          <Typography variant="home-page-title">
+          <span class={typography({ class: "headline" })}>
             {t("app.special.modals.onboarding.welcome")}
-          </Typography>
+          </span>
           <Logo />
         </Column>
         <Buttons>
@@ -171,7 +177,7 @@ export function HomePage() {
             </CategoryButton>
           </SeparatedColumn>
           <SeparatedColumn>
-            <Show when={CONFIGURATION.IS_UPRYZING}>
+            <Show when={CONFIGURATION.IS_REVOLT}>
               <CategoryButton
                 onClick={() => navigate("/discover")}
                 description={t("app.home.discover_desc")}

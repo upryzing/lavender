@@ -5,7 +5,16 @@ import { cva } from "styled-system/css";
 
 import { clientController, mapAnyError } from "@revolt/client";
 import { useTranslation } from "@revolt/i18n";
-import { Checkbox, Column, FormGroup, Input, Typography } from "@revolt/ui";
+import {
+  Checkbox,
+  Checkbox2,
+  Column,
+  FormGroup,
+  Text,
+  TextField,
+  Typography,
+} from "@revolt/ui";
+import { styled } from "styled-system/jsx";
 
 /**
  * Available field types
@@ -47,23 +56,8 @@ const useFieldConfiguration = () => {
       name: () => t("login.username"),
       placeholder: () => t("login.enter.username"),
     },
-    invite: {
-      minLength: 2,
-      type: "text",
-      autocomplete: "none",
-      name: () => t("login.invite"),
-      placeholder: () => t("login.enter.invite"),
-    }
   };
 };
-
-const labelRow = cva({
-  base: {
-    gap: "var(--gap-sm)",
-    display: "flex",
-    alignItems: "center",
-  },
-});
 
 interface FieldProps {
   /**
@@ -92,8 +86,8 @@ export function Fields(props: FieldProps) {
     <For each={props.fields}>
       {(field) => (
         <Show when={field != "invite" || inviteCodeNeeded}>
-        <FormGroup>
-          <Switch fallback={
+          <FormGroup>
+            <Switch fallback={
               <>
                 <Typography variant="label">
                   {fieldConfiguration[field].name()}
@@ -109,19 +103,19 @@ export function Fields(props: FieldProps) {
                   submissionTried={failedValidation()}
                   onInvalid={onInvalid}
                 />
-            </>
-          }>
-            <Match when={field == "log-out"}>
+              </>
+            }>
+              <Match when={field == "log-out"}>
                 <label class={labelRow()}>
                   <Checkbox name="log-out" />
                   <Typography variant="label">
                     {fieldConfiguration["log-out"].name()}
                   </Typography>
                 </label>
-            </Match>
-          </Switch>
-        </FormGroup>
-      </Show>
+              </Match>
+            </Switch>
+          </FormGroup>
+        </Show>
       )}
     </For>
   );
@@ -176,12 +170,12 @@ export function Form(props: Props) {
 
   return (
     <form onSubmit={onSubmit}>
-      <Column>
+      <Column gap="lg">
         {props.children}
         <Show when={error()}>
-          <Typography variant="legacy-settings-description">
+          <Text class="label" size="small">
             {t(`error.${error()}` as any, undefined, error())}
-          </Typography>
+          </Text>
         </Show>
       </Column>
       <Show when={props.captcha}>

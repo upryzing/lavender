@@ -4,12 +4,51 @@
   "version": "0.1.0",
   "identifier": "app.upryzing.desktop",
   "build": {
-    "frontendDist": "../../client/dist",
-    "devUrl": "http://localhost:5173",
-    "beforeDevCommand": "cd ../.. && pnpm dev:web",
-    "beforeBuildCommand": "cd ../.. && pnpm build:web"
+    "beforeDevCommand": "pnpm --filter client dev --port 6173",
+    "frontendDist": "../handoff",
+    "devUrl": "http://localhost:6173"
   },
+  "bundle": {
+    "active": true,
+    "category": "SocialNetworking",
+    "copyright": "",
+    "targets": "all",
+    "externalBin": [],
+    "icon": [
+      "../../client/assets/icons/favicon-16x16.png",
+      "../../client/assets/icons/android-chrome-512x512.png",
+      "../../client/assets/icons/icon.icns",
+      "../../client/assets/logo_round.png",
+      "../../client/assets/icons/icon.ico"
+    ],
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": ""
+    },
+    "longDescription": "User-first, privacy focused chat platform.",
+    "macOS": {
+      "entitlements": null,
+      "exceptionDomain": "",
+      "frameworks": [],
+      "providerShortName": null,
+      "signingIdentity": null
+    },
+    "resources": [],
+    "shortDescription": "User-first, privacy focused chat platform.",
+    "linux": {
+      "deb": {
+        "depends": []
+      }
+    }
+  },
+  "productName": "Revolt",
+  "mainBinaryName": "Revolt",
+  "version": "0.1.0",
+  "identifier": "chat.revolt.app",
+  "plugins": {},
   "app": {
+    "withGlobalTauri": false,
     "windows": [
       {
         "title": "Upryzing",
@@ -20,8 +59,13 @@
         "decorations": true
       }
     ],
-    "security": { 
+    "security": {
       "csp": null
+    },
+    "trayIcon": {
+      "iconPath": "../../client/assets/icons/tray/trayIcon.png",
+      "iconAsTemplate": true,
+      "title": "Revolt"
     }
   },
   "bundle": {

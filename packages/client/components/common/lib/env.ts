@@ -10,6 +10,10 @@ export default {
   REQUEST_CONFIG: (import.meta.env.VITE_REQUEST_CONFIG as boolean) ?? true,
 
   /**
+   * Whether to emit additional debug information
+   */
+  DEBUG: import.meta.env.DEV || true,
+  /**
    * What API server to connect to by default.
    */
   DEFAULT_API_URL,
