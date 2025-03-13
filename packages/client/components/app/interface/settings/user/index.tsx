@@ -163,12 +163,12 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             },
             {
               id: "profile",
-              icon: <MdAccountCircle fill={theme!.colours.foreground} {...iconSize(20)} />,
+              icon: <MdAccountCircle {...iconSize(20)} />,
               title: t("app.settings.pages.profile.title"),
             },
             {
               id: "sessions",
-              icon: <MdVerifiedUser fill={theme!.colours.foreground} {...iconSize(20)} />,
+              icon: <MdVerifiedUser {...iconSize(20)} />,
               title: t("app.settings.pages.sessions.title"),
             },
           ],
@@ -178,12 +178,12 @@ const Config: SettingsConfiguration<{ server: Server }> = {
           entries: [
             {
               id: "bots",
-              icon: <MdSmartToy fill={theme!.colours.foreground} {...iconSize(20)} />,
+              icon: <MdSmartToy {...iconSize(20)} />,
               title: t("app.settings.pages.bots.title"),
             },
             {
               id: "feedback",
-              icon: <MdRateReview fill={theme!.colours.foreground} {...iconSize(20)} />,
+              icon: <MdRateReview {...iconSize(20)} />,
               title: t("app.settings.pages.feedback.title"),
             }
           ],
@@ -226,7 +226,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             // },
             {
               id: "language",
-              icon: <MdLanguage fill={theme!.colours.foreground} {...iconSize(20)} />,
+              icon: <MdLanguage {...iconSize(20)} />,
               title: t("app.settings.pages.language.title"),
             },
             // {
@@ -242,7 +242,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             // },
             {
               id: "experiments",
-              icon: <MdScience fill={theme!.colours.foreground} {...iconSize(20)} />,
+              icon: <MdScience {...iconSize(20)} />,
               title: t("app.settings.pages.experiments.title"),
             },
           ],
@@ -257,7 +257,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
             // },
             {
               href: "https://github.com/upryzing",
-              icon: <MdMemory fill={theme!.colours.foreground} {...iconSize(20)} />,
+              icon: <MdMemory {...iconSize(20)} />,
               title: t("app.settings.pages.source_code"),
             },
             {

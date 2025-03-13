@@ -3,7 +3,6 @@ import { Match, Show, Switch, createMemo, splitProps } from "solid-js";
 import { styled } from "styled-system/jsx";
 
 import { VirtualContainer } from "@minht11/solid-virtual-container";
-import { Channel } from "revolt.js";
 import { Channel } from "@upryzing/upryzing.js";
 
 import { ChannelContextMenu, UserContextMenu } from "@revolt/app";

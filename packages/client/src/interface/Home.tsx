@@ -106,7 +106,6 @@ const Image = styled("img", {
  * Home page
  */
 export function HomePage() {
-  const theme = useTheme();
   const t = useTranslation();
   const navigate = useNavigate();
   const client = useClient();
@@ -181,14 +180,14 @@ export function HomePage() {
               <CategoryButton
                 onClick={() => navigate("/discover")}
                 description={t("app.home.discover_desc")}
-                icon={<MdExplore fill={theme!.colours.foreground} />}
+                icon={<MdExplore />}
               >
                 {t("app.home.discover")}
               </CategoryButton>
             </Show>
             <CategoryButton
               description={t("app.home.feedback_desc")}
-              icon={<MdRateReview fill={theme!.colours.foreground} {...iconSize(22)} />}
+              icon={<MdRateReview {...iconSize(22)} />}
             >
               {t("app.home.feedback")}
             </CategoryButton>
@@ -197,7 +196,7 @@ export function HomePage() {
                 modalController.push({ type: "settings", config: "user" })
               }
               description={t("app.home.settings-tooltip")}
-              icon={<MdSettings fill={theme!.colours.foreground} />}
+              icon={<MdSettings />}
             >
               {t("app.home.settings")}
             </CategoryButton>

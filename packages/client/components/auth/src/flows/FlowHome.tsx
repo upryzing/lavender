@@ -1,14 +1,12 @@
 import { Match, Show, Switch } from "solid-js";
-import { Match, Show, Switch } from "solid-js";
 
 import { clientController } from "@revolt/client";
-import { TransitionType } from "@revolt/client/Controller";
 import { TransitionType } from "@revolt/client/Controller";
 import { useTranslation } from "@revolt/i18n";
 import { Navigate } from "@revolt/routing";
 import { Button, Column } from "@revolt/ui";
 
-import RevoltSvg from "../../../../public/assets/wordmark_wide_500px.svg?component-solid";
+import Logo from "../../../../public/assets/wordmark_wide_500px.svg?component-solid";
 import { cva } from "styled-system/css";
 
 const logo = cva({
@@ -99,19 +97,6 @@ export default function FlowHome() {
               </Button>
             </Match>
           </Switch>
-          <Column>
-            <a href="/login/auth">
-              <Column>
-                <Button>Log In</Button>
-              </Column>
-            </a>
-            <a href="/login/create">
-              <Column>
-                <Button variant="secondary">Sign Up</Button>
-              </Column>
-            </a>
-          </Column>
-        </Column>
     </>
       }
     >

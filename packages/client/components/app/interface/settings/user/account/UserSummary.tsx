@@ -5,10 +5,16 @@ import { User } from "@upryzing/upryzing.js";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
-import { Avatar, Button, CategoryButtonGroup, iconSize, useTheme } from "@revolt/ui";
+import { Avatar, Button, CategoryButtonGroup, iconSize } from "@revolt/ui";
 
 import MdCakeFill from "@material-design-icons/svg/filled/cake.svg?component-solid";
 import MdEdit from "@material-design-icons/svg/outlined/edit.svg?component-solid";
+
+const banner = cva({
+    base: {
+        background: "var(--colours-settings-background)"
+    }
+})
 
 export function UserSummary(props: {
   user: User;
@@ -16,19 +22,10 @@ export function UserSummary(props: {
   bannerUrl?: string;
   onEdit?: () => void;
 }) {
-  const theme = useTheme();
-  const bannerStyle = () =>
-    props.bannerUrl
-      ? {
-        "background-image": `linear-gradient(${theme.colours["user-banner-gradient"]}, ${theme.colours["user-banner-gradient"]}), url("${props.bannerUrl}")`,
-      }
-      : {
-        background: `var(--colours-settings-background)`,
-      };
 
   return (
     <CategoryButtonGroup>
-      <AccountBox style={bannerStyle()}>
+      <AccountBox style={banner()}>
         <ProfileDetails>
           <Avatar src={props.user.animatedAvatarURL} size={58} />
           <Username>

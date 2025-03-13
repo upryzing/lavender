@@ -4,8 +4,6 @@ import { Channel, Server, User } from "@upryzing/upryzing.js";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
-import { Channel, Server, User } from "revolt.js";
-
 import { KeybindAction } from "@revolt/keybinds";
 import { useNavigate } from "@revolt/routing";
 
