@@ -251,11 +251,11 @@ export const ServerList = (props: Props) => {
             <Avatar size={42} fallback={<MdAdd />} />
           </a>
         </Tooltip>
-        <Tooltip placement="right" content={"Find new servers to join"}>
+        {/* <Tooltip placement="right" content={"Find new servers to join"}>
           <div class={entryContainer()}>
             <Avatar size={42} fallback={<MdExplore />} />
           </div>
-        </Tooltip>
+        </Tooltip> */}
       </div>
       <Shadow>
         <div />

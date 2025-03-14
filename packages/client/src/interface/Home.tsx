@@ -176,7 +176,7 @@ export function HomePage() {
             </CategoryButton>
           </SeparatedColumn>
           <SeparatedColumn>
-            <Show when={CONFIGURATION.IS_REVOLT}>
+            {/* <Show when={CONFIGURATION.IS_REVOLT}>
               <CategoryButton
                 onClick={() => navigate("/discover")}
                 description={t("app.home.discover_desc")}
@@ -184,7 +184,7 @@ export function HomePage() {
               >
                 {t("app.home.discover")}
               </CategoryButton>
-            </Show>
+            </Show> */}
             <CategoryButton
               description={t("app.home.feedback_desc")}
               icon={<MdRateReview {...iconSize(22)} />}
