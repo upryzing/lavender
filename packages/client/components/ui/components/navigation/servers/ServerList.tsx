@@ -136,7 +136,7 @@ export const ServerList = (props: Props) => {
             </PositionSwoosh>
           </Show> */}
         <a class={entryContainer()} href="/app">
-          <Avatar size={42} fallback={<MdHome />} />
+          <Avatar size={42} fallback={<MdHome fill="var(--colours-component-avatar-fallback-foreground)" />} />
         </a>
         <Tooltip
           placement="right"
@@ -248,7 +248,7 @@ export const ServerList = (props: Props) => {
             class={entryContainer()}
             onClick={() => props.onCreateOrJoinServer()}
           >
-            <Avatar size={42} fallback={<MdAdd />} />
+            <Avatar size={42} fallback={<MdAdd fill="var(--colours-component-avatar-fallback-foreground)" />} />
           </a>
         </Tooltip>
         {/* <Tooltip placement="right" content={"Find new servers to join"}>
@@ -268,7 +268,7 @@ export const ServerList = (props: Props) => {
             modalController.push({ type: "settings", config: "user" });
           }}
         >
-          <Avatar size={42} fallback={<MdSettings />} interactive />
+          <Avatar size={42} fallback={<MdSettings fill="var(--colours-component-avatar-fallback-foreground)" />} interactive />
         </a>
       </Tooltip>
     </ServerListBase>

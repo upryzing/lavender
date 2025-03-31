@@ -169,7 +169,7 @@ const IconWrapper = styled("div", {
     borderRadius: "50%",
 
     "& svg": {
-      color: "var(--colours-component-categorybtn-foreground-description)",
+      fill: "var(--colours-component-categorybtn-foreground-description)",
     },
   },
 });

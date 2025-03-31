@@ -59,7 +59,8 @@ export function UserSummary(props: {
                   },
                 }}
               >
-                <MdCakeFill {...iconSize(18)} />
+                {/* TODO)) Change colour to something more... appropriate... */}
+                <MdCakeFill fill="var(--colours-settings-foreground)" {...iconSize(18)} />
               </span>
             </ProfileBadges>
           </BottomBar>

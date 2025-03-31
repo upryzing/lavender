@@ -9,8 +9,8 @@ import { useSettingsNavigation } from "../Settings";
 
 import {
   SidebarButton,
-  SidebarButtonContent,
-  SidebarButtonTitle,
+  SidebarButtonContent, SidebarButtonIcon,
+  SidebarButtonTitle
 } from "./SidebarButton";
 import { styled } from "styled-system/jsx";
 
@@ -66,7 +66,9 @@ export function SettingsSidebar(props: {
                             >
                               <Ripple />
                               <SidebarButtonTitle>
-                                {entry.icon}
+                                <SidebarButtonIcon>
+                                  {entry.icon}
+                                </SidebarButtonIcon>
                                 <SidebarButtonContent>
                                   <OverflowingText>
                                     {entry.title}
@@ -110,7 +112,7 @@ const Base = styled("div", {
     paddingLeft: "8px",
     justifyContent: "flex-end",
 
-    color: "var(--colours-settings-foreground)",
+    color: "var(--colours-settings-foreground)"
   },
 });
 
