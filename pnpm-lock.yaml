@@ -329,15 +329,9 @@ importers:
       '@upryzing/api':
         specifier: 0.1.0
         version: 0.1.0
-      eventemitter3:
-        specifier: ^5.0.1
-        version: 5.0.1
-      isomorphic-ws:
-        specifier: ^5.0.0
-        version: 5.0.0(ws@8.18.1)
-      long:
-        specifier: ^5.2.3
-        version: 5.3.1
+      '@vladfrangu/async_event_emitter':
+        specifier: ^2.4.6
+        version: 2.4.6
       revolt-api:
         specifier: 0.7.16
         version: 0.7.16
@@ -347,9 +341,6 @@ importers:
       ulid:
         specifier: ^2.3.0
         version: 2.3.0
-      ws:
-        specifier: ^8.16.0
-        version: 8.18.1
     devDependencies:
       '@mxssfd/typedoc-theme':
         specifier: ^1.1.3
@@ -360,9 +351,6 @@ importers:
       '@types/node':
         specifier: ^18.19.24
         version: 18.19.80
-      '@types/ws':
-        specifier: ^8.5.10
-        version: 8.18.0
       '@typescript-eslint/eslint-plugin':
         specifier: ^5.62.0
         version: 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.8.2))(eslint@8.57.1)(typescript@5.8.2)
@@ -390,17 +378,12 @@ importers:
       tsc-watch:
         specifier: ^6.0.4
         version: 6.2.1(typescript@5.8.2)
-      typed-emitter:
-        specifier: ^2.1.0
-        version: 2.1.0
       typedoc:
         specifier: ^0.25.1
         version: 0.25.13(typescript@5.8.2)
       typescript:
         specifier: ^5.4.2
         version: 5.8.2
-
-  packages/upryzing.js/lib/esm: {}
 
 packages:
 
@@ -2318,10 +2301,10 @@ packages:
       react-dom:
         optional: true
 
-  '@storybook/builder-vite@9.0.0-alpha.3':
-    resolution: {integrity: sha512-N38osNsQUj8JtboHWJtGoQoltw6pzfPKBnLJlfX8CpaOFdLnT5KNkmDQBG15wbmJhBMfCt4pChhD1qnBxzsNjg==}
+  '@storybook/builder-vite@9.0.0-alpha.11':
+    resolution: {integrity: sha512-yAboTqP1lxZiy7id5o8V2oyaPl7rkRgKzNArDI8nO5Qamie9cOwgORP6r0pOExw6PM/ClskSJRFOCrE5uoHN8Q==}
     peerDependencies:
-      storybook: ^9.0.0-alpha.3
+      storybook: ^9.0.0-alpha.11
       vite: ^4.0.0 || ^5.0.0 || ^6.0.0
 
   '@storybook/components@8.6.4':
@@ -2337,10 +2320,10 @@ packages:
     peerDependencies:
       storybook: ^8.3.5
 
-  '@storybook/csf-plugin@9.0.0-alpha.3':
-    resolution: {integrity: sha512-irWsW9+CeGLVVSK4t5ZCZwzWKkR052MGB5ni51ckI6aIJYhaeckxj5ufLkqzcCvCkL9vtn2KGhncQdP4BQfF7A==}
+  '@storybook/csf-plugin@9.0.0-alpha.11':
+    resolution: {integrity: sha512-SxLvKUlcJkpBTRP4/PHNlRZWPFrTmOWDpr3ZKdIhEkEC+KI97+SWNNps3SlV2BX4gDUl4JekFGrCH+ekbmJ7OQ==}
     peerDependencies:
-      storybook: ^9.0.0-alpha.3
+      storybook: ^9.0.0-alpha.11
 
   '@storybook/csf@0.1.13':
     resolution: {integrity: sha512-7xOOwCLGB3ebM87eemep89MYRFTko+D8qE7EdAAq74lgdqRR5cOUtYWJLjO2dLtP94nqoOdHJo6MdLLKzg412Q==}
@@ -2649,9 +2632,6 @@ packages:
   '@types/uuid@9.0.8':
     resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
 
-  '@types/ws@8.18.0':
-    resolution: {integrity: sha512-8svvI3hMyvN0kKCJMvTJP/x6Y/EoQbepff882wL+Sn5QsXb3etnamgrJq4isrBxSJj5L2AuXcI0+bgkoAXGUJw==}
-
   '@typescript-eslint/eslint-plugin@5.62.0':
     resolution: {integrity: sha512-TiZzBSJja/LbhNPvk6yc0JrX9XqhQ0hdh6M2svYfsHGejaKFIAGd9MQ+ERIMzLGlN/kZoYIgdxFV0PuljTKXag==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -2765,6 +2745,10 @@ packages:
 
   '@vitest/utils@2.1.9':
     resolution: {integrity: sha512-v0psaMSkNJ3A2NMrUEHFRzJtDPFn+/VWZ5WxImB21T9fjucJRmS7xCS3ppEnARb9y11OAzaD+P2Ps+b+BGX5iQ==}
+
+  '@vladfrangu/async_event_emitter@2.4.6':
+    resolution: {integrity: sha512-RaI5qZo6D2CVS6sTHFKg1v5Ohq/+Bo2LZ5gzUEwZ/WkHhwtGTCB/sVLw8ijOkAUxasZ+WshN/Rzj4ywsABJ5ZA==}
+    engines: {node: '>=v14.0.0', npm: '>=7.0.0'}
 
   '@vue/compiler-core@3.4.19':
     resolution: {integrity: sha512-gj81785z0JNzRcU0Mq98E56e4ltO1yf8k5PQ+tV/7YHnbZkrM0fyFyuttnN8ngJZjbpofWE/m4qjKBiLl8Ju4w==}
@@ -3573,9 +3557,6 @@ packages:
   event-stream@3.3.4:
     resolution: {integrity: sha512-QHpkERcGsR0T7Qm3HNJSyXKEEj8AHNxkY3PK8TS2KJvQ7NiSHe3DDpwVKKtoYprL/AreyzFBeIkBIWChAqn60g==}
 
-  eventemitter3@5.0.1:
-    resolution: {integrity: sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==}
-
   expect-type@1.2.0:
     resolution: {integrity: sha512-80F22aiJ3GLyVnS/B3HzgR6RelZVumzj9jkL0Rhz4h0xYbNW9PjlQz5h3J/SShErbXBc295vseR4/MIbVmUbeA==}
     engines: {node: '>=12.0.0'}
@@ -4114,11 +4095,6 @@ packages:
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
-  isomorphic-ws@5.0.0:
-    resolution: {integrity: sha512-muId7Zzn9ywDsyXgTIafTry2sV3nySZeUDe6YedVd1Hvuuep5AsIlqK+XefWpYTyJG5e503F2xIuT2lcU6rCSw==}
-    peerDependencies:
-      ws: '*'
-
   istanbul-lib-coverage@3.2.2:
     resolution: {integrity: sha512-O8dpsF+r0WV/8MNRKfnmrtCWhuKjxrq2w+jpzBL5UZKTi2LeVWnWOmWRxFlesJONmc+wLAGvKQZEOanko0LFTg==}
     engines: {node: '>=8'}
@@ -4392,9 +4368,6 @@ packages:
 
   lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
-
-  long@5.3.1:
-    resolution: {integrity: sha512-ka87Jz3gcx/I7Hal94xaN2tZEOPoUOEVftkQqZx2EeQRN7LGdfLlI3FvZ+7WDplm+vK2Urx9ULrvSowtdCieng==}
 
   longest-streak@3.1.0:
     resolution: {integrity: sha512-9Ri+o0JYgehTaVBBDoMqIl8GXtbWg711O3srftcHhZ0dqnETqLaoIK0x17fUw9rFSlK/0NlsKe0Ahhyl5pXE2g==}
@@ -5182,9 +5155,6 @@ packages:
   run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
 
-  rxjs@7.8.2:
-    resolution: {integrity: sha512-dhKf903U/PQZY6boNNtAGdWbG85WAbjT/1xYoZIC7FAY0yWapOBQVsVrDl58W86//e1VpMNBtRV4MaXfdMySFA==}
-
   safe-array-concat@1.1.3:
     resolution: {integrity: sha512-AURm5f0jYEOydBj7VQlVvDrjeFgthDdEF5H1dP+6mNpoXOMo1quQqJ4wvJDyRZ9+pO3kGWoOdmV08cSv2aJV6Q==}
     engines: {node: '>=0.4'}
@@ -5698,9 +5668,6 @@ packages:
   typed-array-length@1.0.7:
     resolution: {integrity: sha512-3KS2b+kL7fsuk/eJZ7EQdnEmQoaho/r6KUef7hxvltNA5DR8NAUM+8wJMbJyZ4G9/7i3v5zPBIMN5aybAh2/Jg==}
     engines: {node: '>= 0.4'}
-
-  typed-emitter@2.1.0:
-    resolution: {integrity: sha512-g/KzbYKbH5C2vPkaXGu8DJlHrGKHLsM25Zg9WuC9pMGfuvT+X25tZQWo5fK1BjBm8+UrVE9LDCvaY0CQk+fXDA==}
 
   typedoc@0.25.13:
     resolution: {integrity: sha512-pQqiwiJ+Z4pigfOnnysObszLiU3mVLWAExSPf+Mu06G/qsc3wzbuM56SZQvONhHLncLUhYzOVkjFFpFfL5AzhQ==}
@@ -8343,9 +8310,9 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@storybook/builder-vite@9.0.0-alpha.3(storybook@8.3.5)(vite@5.4.14(@types/node@20.17.24)(lightningcss@1.25.1)(terser@5.39.0))':
+  '@storybook/builder-vite@9.0.0-alpha.11(storybook@8.3.5)(vite@5.4.14(@types/node@20.17.24)(lightningcss@1.25.1)(terser@5.39.0))':
     dependencies:
-      '@storybook/csf-plugin': 9.0.0-alpha.3(storybook@8.3.5)
+      '@storybook/csf-plugin': 9.0.0-alpha.11(storybook@8.3.5)
       browser-assert: 1.2.1
       storybook: 8.3.5
       ts-dedent: 2.2.0
@@ -8380,7 +8347,7 @@ snapshots:
       storybook: 8.3.5
       unplugin: 1.16.1
 
-  '@storybook/csf-plugin@9.0.0-alpha.3(storybook@8.3.5)':
+  '@storybook/csf-plugin@9.0.0-alpha.11(storybook@8.3.5)':
     dependencies:
       storybook: 8.3.5
       unplugin: 1.16.1
@@ -8722,10 +8689,6 @@ snapshots:
 
   '@types/uuid@9.0.8': {}
 
-  '@types/ws@8.18.0':
-    dependencies:
-      '@types/node': 20.17.24
-
   '@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.8.2))(eslint@8.57.1)(typescript@5.8.2)':
     dependencies:
       '@eslint-community/regexpp': 4.12.1
@@ -8898,6 +8861,8 @@ snapshots:
       '@vitest/pretty-format': 2.1.9
       loupe: 3.1.3
       tinyrainbow: 1.2.0
+
+  '@vladfrangu/async_event_emitter@2.4.6': {}
 
   '@vue/compiler-core@3.4.19':
     dependencies:
@@ -9861,8 +9826,6 @@ snapshots:
       stream-combiner: 0.0.4
       through: 2.3.8
 
-  eventemitter3@5.0.1: {}
-
   expect-type@1.2.0: {}
 
   express@4.21.2:
@@ -10467,10 +10430,6 @@ snapshots:
 
   isexe@2.0.0: {}
 
-  isomorphic-ws@5.0.0(ws@8.18.1):
-    dependencies:
-      ws: 8.18.1
-
   istanbul-lib-coverage@3.2.2: {}
 
   istanbul-lib-report@3.0.1:
@@ -10738,8 +10697,6 @@ snapshots:
   lodash.uniq@4.5.0: {}
 
   lodash@4.17.21: {}
-
-  long@5.3.1: {}
 
   longest-streak@3.1.0: {}
 
@@ -11788,11 +11745,6 @@ snapshots:
     dependencies:
       queue-microtask: 1.2.3
 
-  rxjs@7.8.2:
-    dependencies:
-      tslib: 2.8.1
-    optional: true
-
   safe-array-concat@1.1.3:
     dependencies:
       call-bind: 1.0.8
@@ -12059,7 +12011,7 @@ snapshots:
 
   storybook-solidjs-vite@1.0.0-beta.2(storybook@8.3.5)(vite@5.4.14(@types/node@20.17.24)(lightningcss@1.25.1)(terser@5.39.0)):
     dependencies:
-      '@storybook/builder-vite': 9.0.0-alpha.3(storybook@8.3.5)(vite@5.4.14(@types/node@20.17.24)(lightningcss@1.25.1)(terser@5.39.0))
+      '@storybook/builder-vite': 9.0.0-alpha.11(storybook@8.3.5)(vite@5.4.14(@types/node@20.17.24)(lightningcss@1.25.1)(terser@5.39.0))
     transitivePeerDependencies:
       - storybook
       - vite
@@ -12368,10 +12320,6 @@ snapshots:
       is-typed-array: 1.1.15
       possible-typed-array-names: 1.1.0
       reflect.getprototypeof: 1.0.10
-
-  typed-emitter@2.1.0:
-    optionalDependencies:
-      rxjs: 7.8.2
 
   typedoc@0.25.13(typescript@5.8.2):
     dependencies:
