@@ -1,5 +1,6 @@
 import { Accessor, Show } from "solid-js";
 
+import { styled } from "styled-system/jsx";
 import { decodeTime } from "ulid";
 
 import { dayjs, useTranslation } from "@revolt/i18n";
@@ -10,7 +11,6 @@ import MdClose from "@material-design-icons/svg/filled/close.svg?component-solid
 import { Ripple, iconSize } from "../../..";
 
 import { FloatingIndicator } from "./FloatingIndicator";
-import { styled } from "styled-system/jsx";
 
 interface Props {
   /**

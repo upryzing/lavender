@@ -1,5 +1,7 @@
 import { Accessor, For, Setter, Show, createMemo, onMount } from "solid-js";
 
+import { styled } from "styled-system/jsx";
+
 import { Column, OverflowingText, Ripple } from "@revolt/ui";
 
 // import MdError from "@material-design-icons/svg/filled/error.svg?component-solid";
@@ -9,10 +11,10 @@ import { useSettingsNavigation } from "../Settings";
 
 import {
   SidebarButton,
-  SidebarButtonContent, SidebarButtonIcon,
-  SidebarButtonTitle
+  SidebarButtonContent,
+  SidebarButtonIcon,
+  SidebarButtonTitle,
 } from "./SidebarButton";
-import { styled } from "styled-system/jsx";
 
 /**
  * Settings Sidebar Layout
@@ -112,7 +114,7 @@ const Base = styled("div", {
     paddingLeft: "8px",
     justifyContent: "flex-end",
 
-    color: "var(--colours-settings-foreground)"
+    color: "var(--colours-settings-foreground)",
   },
 });
 

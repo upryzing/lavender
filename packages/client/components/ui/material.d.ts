@@ -1,3 +1,5 @@
+import type { ComponentProps } from "solid-js";
+
 import type { Badge } from "mdui/components/badge";
 import type { Checkbox } from "mdui/components/checkbox";
 import type { List } from "mdui/components/list";
@@ -9,8 +11,6 @@ import type { Tab } from "mdui/components/tab";
 import type { TabPanel } from "mdui/components/tab-panel";
 import type { Tabs } from "mdui/components/tabs";
 import type { TextField } from "mdui/components/text-field";
-
-import type { ComponentProps } from "solid-js";
 
 declare module "solid-js" {
   namespace JSX {

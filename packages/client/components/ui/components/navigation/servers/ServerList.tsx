@@ -1,10 +1,12 @@
 import { Accessor, For, Show, onCleanup, onMount } from "solid-js";
 import { JSX } from "solid-js";
+
 import { Channel, Server, User } from "@upryzing/upryzing.js";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
 import { KeybindAction } from "@revolt/keybinds";
+import { modalController } from "@revolt/modal";
 import { useNavigate } from "@revolt/routing";
 
 import MdAdd from "@material-design-icons/svg/filled/add.svg?component-solid";
@@ -23,7 +25,6 @@ import {
 import { Tooltip } from "../../floating";
 
 import { Swoosh } from "./Swoosh";
-import { modalController } from "@revolt/modal";
 
 interface Props {
   /**
@@ -136,7 +137,12 @@ export const ServerList = (props: Props) => {
             </PositionSwoosh>
           </Show> */}
         <a class={entryContainer()} href="/app">
-          <Avatar size={42} fallback={<MdHome fill="var(--colours-component-avatar-fallback-foreground)" />} />
+          <Avatar
+            size={42}
+            fallback={
+              <MdHome fill="var(--colours-component-avatar-fallback-foreground)" />
+            }
+          />
         </a>
         <Tooltip
           placement="right"
@@ -248,7 +254,12 @@ export const ServerList = (props: Props) => {
             class={entryContainer()}
             onClick={() => props.onCreateOrJoinServer()}
           >
-            <Avatar size={42} fallback={<MdAdd fill="var(--colours-component-avatar-fallback-foreground)" />} />
+            <Avatar
+              size={42}
+              fallback={
+                <MdAdd fill="var(--colours-component-avatar-fallback-foreground)" />
+              }
+            />
           </a>
         </Tooltip>
         {/* <Tooltip placement="right" content={"Find new servers to join"}>
@@ -268,7 +279,13 @@ export const ServerList = (props: Props) => {
             modalController.push({ type: "settings", config: "user" });
           }}
         >
-          <Avatar size={42} fallback={<MdSettings fill="var(--colours-component-avatar-fallback-foreground)" />} interactive />
+          <Avatar
+            size={42}
+            fallback={
+              <MdSettings fill="var(--colours-component-avatar-fallback-foreground)" />
+            }
+            interactive
+          />
         </a>
       </Tooltip>
     </ServerListBase>

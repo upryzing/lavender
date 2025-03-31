@@ -32,7 +32,7 @@ export default function FlowCreate() {
       email,
       password,
       captcha,
-      invite
+      invite,
     });
 
     // FIXME: should tell client if email was sent

@@ -122,7 +122,7 @@ export function Button(
         "role" | "tabIndex" | "aria-selected"
       >,
     "onClick"
-  >,
+  >
 ) {
   const [passthrough, propsRest] = splitProps(props, [
     "aria-selected",
@@ -140,7 +140,7 @@ export function Button(
       {...buttonProps}
       ref={ref}
       class={button(style)}
-    // @codegen directives props=rest include=floating
+      // @codegen directives props=rest include=floating
     >
       <Ripple />
       {rest.children}

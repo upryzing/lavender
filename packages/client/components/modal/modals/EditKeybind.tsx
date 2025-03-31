@@ -1,6 +1,8 @@
 import { BiRegularReset } from "solid-icons/bi";
 import { createSignal, onMount } from "solid-js";
 
+import { styled } from "styled-system/jsx";
+
 import { useTranslation } from "@revolt/i18n";
 import {
   KEYBINDING_MODIFIER_KEYS,
@@ -9,7 +11,6 @@ import {
 import { Button, KeySequence } from "@revolt/ui";
 
 import { PropGenerator } from "../types";
-import { styled } from "styled-system/jsx";
 
 const Container = styled("div", {
   base: {

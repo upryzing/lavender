@@ -1,13 +1,13 @@
 import { API, Server, User } from "@upryzing/upryzing.js";
+import { cva } from "styled-system/css";
+import { styled } from "styled-system/jsx";
 
 import { Message } from "@revolt/app";
 import { useTranslation } from "@revolt/i18n";
 import { Avatar, Column, Initials } from "@revolt/ui";
-import { styled } from "styled-system/jsx";
 
 import { createFormModal } from "../form";
 import { PropGenerator } from "../types";
-import { cva } from "styled-system/css";
 
 const CONTENT_REPORT_REASONS: API.ContentReportReason[] = [
   "Illegal",

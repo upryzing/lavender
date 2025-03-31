@@ -1,5 +1,7 @@
 import { Match, Switch, createSignal, onMount } from "solid-js";
 
+import { styled } from "styled-system/jsx";
+
 import { mapAnyError } from "@revolt/client";
 import { CONFIGURATION } from "@revolt/common";
 import { useTranslation } from "@revolt/i18n";
@@ -7,7 +9,6 @@ import { useTranslation } from "@revolt/i18n";
 import { modalController } from "..";
 import { createFormModal } from "../form";
 import { PropGenerator } from "../types";
-import { styled } from "styled-system/jsx";
 
 /**
  * Code block which displays invite

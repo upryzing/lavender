@@ -1,7 +1,12 @@
 import type { SolidOptions } from "solid-dnd-directive";
 
 import type { Placement } from "@floating-ui/dom";
-import type { Channel, Client, ServerMember, User } from "@upryzing/upryzing.js";
+import type {
+  Channel,
+  Client,
+  ServerMember,
+  User,
+} from "@upryzing/upryzing.js";
 
 declare global {
   interface Window {
@@ -120,7 +125,7 @@ declare module "solid-js" {
         | {
             client?: Client;
             onKeyDown?: (
-              event: KeyboardEvent & { currentTarget: HTMLTextAreaElement },
+              event: KeyboardEvent & { currentTarget: HTMLTextAreaElement }
             ) => void;
             searchSpace?: {
               users?: User[];

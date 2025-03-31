@@ -1,5 +1,7 @@
 import { Match, Show, Switch } from "solid-js";
 
+import { cva } from "styled-system/css";
+
 import { clientController } from "@revolt/client";
 import { TransitionType } from "@revolt/client/Controller";
 import { useTranslation } from "@revolt/i18n";
@@ -7,7 +9,6 @@ import { Navigate } from "@revolt/routing";
 import { Button, Column } from "@revolt/ui";
 
 import Logo from "../../../../public/assets/wordmark_wide_500px.svg?component-solid";
-import { cva } from "styled-system/css";
 
 const logo = cva({
   base: {
@@ -78,7 +79,8 @@ export default function FlowHome() {
               <Switch fallback={"an unknown error occurred"}>
                 <Match
                   when={
-                    clientController.lifecycle.permanentError === "InvalidSession"
+                    clientController.lifecycle.permanentError ===
+                    "InvalidSession"
                   }
                 >
                   <h1>You were logged out!</h1>
@@ -97,31 +99,31 @@ export default function FlowHome() {
               </Button>
             </Match>
           </Switch>
-    </>
+        </>
       }
     >
-  <Match when={clientController.isError()}>
-    <Switch fallback={"an unknown error occurred"}>
-      <Match
-        when={
-          clientController.lifecycle.permanentError === "InvalidSession"
-        }
-      >
-        <h1>You were logged out!</h1>
+      <Match when={clientController.isError()}>
+        <Switch fallback={"an unknown error occurred"}>
+          <Match
+            when={
+              clientController.lifecycle.permanentError === "InvalidSession"
+            }
+          >
+            <h1>You were logged out!</h1>
+          </Match>
+        </Switch>
+
+        <Button
+          variant="secondary"
+          onPress={() =>
+            clientController.lifecycle.transition({
+              type: TransitionType.Dismiss,
+            })
+          }
+        >
+          OK
+        </Button>
       </Match>
     </Switch>
-
-    <Button
-      variant="secondary"
-      onPress={() =>
-        clientController.lifecycle.transition({
-          type: TransitionType.Dismiss,
-        })
-      }
-    >
-      OK
-    </Button>
-  </Match>
-    </Switch >
   );
 }

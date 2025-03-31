@@ -4,8 +4,9 @@ import { applyTheme } from "@material/material-color-utilities";
 import { setColorScheme } from "mdui/functions/setColorScheme.js";
 import { setTheme } from "mdui/functions/setTheme.js";
 
-import { DefaultTheme } from "./styled";
 import { typography } from "./components";
+import { DefaultTheme } from "./styled";
+
 export type { DefaultTheme } from "./styled";
 
 export * from "./components";

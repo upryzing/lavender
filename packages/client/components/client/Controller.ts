@@ -1,7 +1,7 @@
 import { Accessor, Setter, createSignal } from "solid-js";
 
-import { detect } from "detect-browser";
 import { API, Client, ConnectionState } from "@upryzing/upryzing.js";
+import { detect } from "detect-browser";
 
 import {
   CONFIGURATION,

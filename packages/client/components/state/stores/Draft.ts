@@ -379,9 +379,9 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
         this.getPendingMessages(channel.id).map((entry) =>
           entry.idempotencyKey === idempotencyKey
             ? {
-              ...entry,
-              status: "failed",
-            }
+                ...entry,
+                status: "failed",
+              }
             : entry
         )
       );
@@ -576,7 +576,6 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
         ? URL.createObjectURL(file)
         : undefined,
     };
-
 
     this.setDraft(channelId, (data) => ({
       files: [...(data.files ?? []), id],

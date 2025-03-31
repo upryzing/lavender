@@ -1,8 +1,8 @@
 import { BiRegularAt, BiSolidXCircle } from "solid-icons/bi";
 import { Show } from "solid-js";
-import { styled } from "styled-system/jsx";
 
 import type { Message } from "@upryzing/upryzing.js";
+import { styled } from "styled-system/jsx";
 
 import { useTranslation } from "@revolt/i18n";
 

@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
 
-import dayjs from "dayjs";
 import { User } from "@upryzing/upryzing.js";
+import dayjs from "dayjs";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
@@ -11,10 +11,10 @@ import MdCakeFill from "@material-design-icons/svg/filled/cake.svg?component-sol
 import MdEdit from "@material-design-icons/svg/outlined/edit.svg?component-solid";
 
 const banner = cva({
-    base: {
-        background: "var(--colours-settings-background)"
-    }
-})
+  base: {
+    background: "var(--colours-settings-background)",
+  },
+});
 
 export function UserSummary(props: {
   user: User;
@@ -22,7 +22,6 @@ export function UserSummary(props: {
   bannerUrl?: string;
   onEdit?: () => void;
 }) {
-
   return (
     <CategoryButtonGroup>
       <AccountBox style={banner()}>
@@ -60,7 +59,10 @@ export function UserSummary(props: {
                 }}
               >
                 {/* TODO)) Change colour to something more... appropriate... */}
-                <MdCakeFill fill="var(--colours-settings-foreground)" {...iconSize(18)} />
+                <MdCakeFill
+                  fill="var(--colours-settings-foreground)"
+                  {...iconSize(18)}
+                />
               </span>
             </ProfileBadges>
           </BottomBar>

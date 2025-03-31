@@ -23,7 +23,11 @@ import {
   MessageBox,
   MessageReplyPreview,
 } from "@revolt/ui";
-import { registerKeybindWithPriority, unregisterKeybindWithPriority } from "../../../shared/lib/priorityKeybind";
+
+import {
+  registerKeybindWithPriority,
+  unregisterKeybindWithPriority,
+} from "../../../shared/lib/priorityKeybind";
 
 interface Props {
   /**

@@ -8,6 +8,7 @@ import {
 import { Match, Show, Switch } from "solid-js";
 
 import { Channel } from "@upryzing/upryzing.js";
+import { styled } from "styled-system/jsx";
 
 import { useTranslation } from "@revolt/i18n";
 import { TextWithEmoji } from "@revolt/markdown";
@@ -19,13 +20,12 @@ import {
   NonBreakingText,
   OverflowingText,
   Spacer,
-  typography,
   Typography,
   UserStatus,
+  typography,
 } from "@revolt/ui";
 
 import { HeaderIcon } from "../common/CommonHeader";
-import { styled } from "styled-system/jsx";
 
 interface Props {
   /**

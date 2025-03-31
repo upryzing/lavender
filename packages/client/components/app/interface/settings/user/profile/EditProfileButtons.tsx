@@ -5,6 +5,7 @@ import { User } from "@upryzing/upryzing.js";
 import { useClient } from "@revolt/client";
 import { createOwnProfileResource } from "@revolt/client/resources";
 import { modalController } from "@revolt/modal";
+import { state } from "@revolt/state";
 import {
   CategoryButton,
   CategoryButtonGroup,
@@ -18,7 +19,6 @@ import MdDelete from "@material-design-icons/svg/outlined/delete.svg?component-s
 import MdReplaceImage from "@material-design-icons/svg/outlined/edit.svg?component-solid";
 import MdEditNote from "@material-design-icons/svg/outlined/edit_note.svg?component-solid";
 import MdImage from "@material-design-icons/svg/outlined/image.svg?component-solid";
-import { state } from "@revolt/state";
 
 export function EditProfileButtons(props: { user: User }) {
   const client = useClient();
@@ -44,8 +44,8 @@ export function EditProfileButtons(props: { user: User }) {
               method: "POST",
               body,
               headers: {
-                "X-Session-Token": (token)
-              }
+                "X-Session-Token": token,
+              },
             }
           ).then((res) => res.json());
 

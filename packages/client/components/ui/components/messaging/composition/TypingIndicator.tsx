@@ -1,12 +1,12 @@
 import { For, Match, Show, Switch } from "solid-js";
-import { styled } from "styled-system/jsx";
 
 import { User } from "@upryzing/upryzing.js";
+import { styled } from "styled-system/jsx";
 
 import { useTranslation } from "@revolt/i18n";
 import { useUsers } from "@revolt/markdown/users";
 
-import { Avatar, OverflowingText, typography, Typography } from "../../design";
+import { Avatar, OverflowingText, Typography, typography } from "../../design";
 
 interface Props {
   /**

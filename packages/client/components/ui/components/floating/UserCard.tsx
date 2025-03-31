@@ -1,8 +1,15 @@
 import { JSX, createMemo } from "solid-js";
 import { For, Show } from "solid-js";
+
+import { createQuery } from "@tanstack/solid-query";
+import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
+import { UserContextMenu } from "@revolt/app";
 import { getController } from "@revolt/common";
+import { useTranslation } from "@revolt/i18n";
+
+import MdMoreVert from "@material-design-icons/svg/filled/more_vert.svg?component-solid";
 
 import {
   Avatar,
@@ -10,18 +17,12 @@ import {
   ColouredText,
   Row,
   Text,
-  typography,
-  Username,
   UserStatus,
   UserStatusGraphic,
+  Username,
+  typography,
 } from "../design";
-import { createQuery } from "@tanstack/solid-query";
-import { useTranslation } from "@revolt/i18n";
-import { cva } from "styled-system/css";
 import { Ripple } from "../material";
-
-import MdMoreVert from "@material-design-icons/svg/filled/more_vert.svg?component-solid";
-import { UserContextMenu } from "@revolt/app";
 
 /**
  * Base element for the card

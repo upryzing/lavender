@@ -132,7 +132,7 @@ export function UserContextMenu(props: {
   function openAdminPanel() {
     window.open(
       `https://admin.revolt.chat/panel/inspect/user/${props.user.id}`,
-      "_blank",
+      "_blank"
     );
   }
 
@@ -180,7 +180,7 @@ export function UserContextMenu(props: {
           {t(
             `app.context_menu.${
               props.user.self ? "edit_your_identity" : "edit_identity"
-            }`,
+            }`
           )}
         </ContextMenuButton>
       </Show>
@@ -282,7 +282,7 @@ export function UserContextMenu(props: {
 export function floatingUserMenus(
   user: User,
   member?: ServerMember,
-  contextMessage?: Message,
+  contextMessage?: Message
 ): JSX.Directives["floating"] & object {
   return {
     userCard: {

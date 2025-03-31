@@ -1,7 +1,7 @@
 import { For, Show, createMemo } from "solid-js";
-import { styled } from "styled-system/jsx";
 
 import { API } from "@upryzing/upryzing.js";
+import { styled } from "styled-system/jsx";
 
 import { useTranslation } from "@revolt/i18n";
 import { Emoji } from "@revolt/markdown";

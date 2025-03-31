@@ -1,5 +1,8 @@
 import { Match, Show, Switch } from "solid-js";
 
+import { cva } from "styled-system/css";
+import { styled } from "styled-system/jsx";
+
 import { IS_DEV, useClient } from "@revolt/client";
 import { CONFIGURATION } from "@revolt/common";
 import { useTranslation } from "@revolt/i18n";
@@ -26,8 +29,6 @@ import MdSettings from "@material-design-icons/svg/filled/settings.svg?component
 import RevoltSvg from "../../public/assets/wordmark_wide_500px.svg?component-solid";
 
 import { HeaderIcon } from "./common/CommonHeader";
-import { styled } from "styled-system/jsx";
-import { cva } from "styled-system/css";
 
 const Logo = styled(RevoltSvg, {
   base: {

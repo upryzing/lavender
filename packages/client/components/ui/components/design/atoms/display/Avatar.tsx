@@ -109,11 +109,12 @@ const FallbackBase = styled("div", {
     contrast: {
       true: {
         color: "var(--colours-component-avatar-fallback-contrast-foreground)",
-        background: "var(--colours-component-avatar-fallback-contrast-background)"
+        background:
+          "var(--colours-component-avatar-fallback-contrast-background)",
       },
       false: {
         color: "var(--colours-component-avatar-fallback-foreground)",
-        background: "var(--colours-component-avatar-fallback-background)"
+        background: "var(--colours-component-avatar-fallback-background)",
       },
     },
   },

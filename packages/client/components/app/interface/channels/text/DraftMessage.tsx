@@ -34,8 +34,8 @@ export function DraftMessage(props: Props) {
         props.draft.status === "sending"
           ? "Sending..."
           : props.draft.status === "failed"
-            ? "Failed to send" // add icons here
-            : "Unsent message" // add icons here
+          ? "Failed to send" // add icons here
+          : "Unsent message" // add icons here
       }
       sendStatus={props.draft.status === "sending" ? "sending" : "failed"}
       username={<Username username={userInfo().username} />}

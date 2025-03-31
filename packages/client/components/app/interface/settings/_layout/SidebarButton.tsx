@@ -61,6 +61,6 @@ export const SidebarButtonContent = styled("div", {
 
 export const SidebarButtonIcon = styled("div", {
   base: {
-    fill: "var(--colours-settings-foreground)"
+    fill: "var(--colours-settings-foreground)",
   },
 });
