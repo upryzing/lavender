@@ -115,13 +115,13 @@ const CloseAnchor = styled("a", {
     transition: "var(--transitions-fast) background-color",
     "& svg": {
       transition: "var(--transitions-fast) background-color",
-      color: "var(--colours-settings-close-anchor) !important",
+      fill: "var(--colours-settings-close-anchor) !important",
     },
     "&:hover": {
       background: "var(--colours-settings-close-anchor)",
     },
     "&:hover svg": {
-      color: "var(--colours-settings-close-anchor-hover) !important",
+      fill: "var(--colours-settings-close-anchor-hover) !important",
     },
     "&:active": {
       transform: "translateY(2px)",
