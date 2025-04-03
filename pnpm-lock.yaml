@@ -382,8 +382,6 @@ importers:
         specifier: ^5.4.2
         version: 5.8.2
 
-  packages/upryzing.js/lib/esm: {}
-
 packages:
 
   '@adobe/css-tools@4.4.2':

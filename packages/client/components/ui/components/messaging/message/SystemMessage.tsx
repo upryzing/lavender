@@ -1,5 +1,4 @@
 import { JSX, Match, Switch } from "solid-js";
-import { styled } from "styled-system/jsx";
 
 import {
   ChannelEditSystemMessage,
@@ -11,10 +10,12 @@ import {
   UserModeratedSystemMessage,
   UserSystemMessage,
 } from "@upryzing/upryzing.js";
+import { cva } from "styled-system/css";
+import { styled } from "styled-system/jsx";
+
+import { RenderMention } from "@revolt/markdown/plugins/mentions";
 
 import { Typography } from "../../design";
-import { cva } from "styled-system/css";
-import { RenderMention } from "@revolt/markdown/plugins/mentions";
 
 interface Props {
   /**

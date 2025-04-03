@@ -7,6 +7,7 @@ import {
   hexFromArgb,
   themeFromSourceColor,
 } from "@material/material-color-utilities";
+
 import { DefaultTheme } from "../styled";
 
 /**
@@ -385,7 +386,7 @@ export const darkTheme: (
       "settings-sidebar-foreground": materialColour("onSecondary", 20),
       "settings-sidebar-button-hover": materialColour("secondary", 90),
       "settings-sidebar-button-active": materialColour("secondary", 82),
-      
+
       // Temporary Colours
       "temp-1": materialColour("secondary", 85),
     },

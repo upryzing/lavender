@@ -15,8 +15,9 @@ import {
   splitProps,
 } from "solid-js";
 
-import isEqual from "lodash.isequal";
 import { Channel, Message as MessageInterface } from "@upryzing/upryzing.js";
+import isEqual from "lodash.isequal";
+import { styled } from "styled-system/jsx";
 
 import { useClient } from "@revolt/client";
 import { dayjs } from "@revolt/i18n";
@@ -27,7 +28,6 @@ import {
   ListView,
   MessageDivider,
 } from "@revolt/ui";
-import { styled } from "styled-system/jsx";
 
 import { Message } from "./Message";
 

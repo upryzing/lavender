@@ -1,10 +1,10 @@
 import { useFloating } from "solid-floating-ui";
 import { For, JSX, Ref, Show, createEffect, createSignal, on } from "solid-js";
 import { Portal } from "solid-js/web";
-import { styled } from "styled-system/jsx";
+import { Motion, Presence } from "solid-motionone";
 
 import { autoUpdate, flip, offset, shift } from "@floating-ui/dom";
-import { Motion, Presence } from "solid-motionone";
+import { styled } from "styled-system/jsx";
 
 import { scrollable } from "../../directives";
 import { Column, Input } from "../design";

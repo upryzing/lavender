@@ -1,3 +1,5 @@
+import { styled } from "styled-system/jsx";
+
 import { useTranslation } from "@revolt/i18n";
 import {
   CategoryButton,
@@ -5,7 +7,6 @@ import {
   Column,
   iconSize,
 } from "@revolt/ui";
-import { styled } from "styled-system/jsx";
 
 import MdBugReport from "@material-design-icons/svg/outlined/bug_report.svg?component-solid";
 import MdExitToApp from "@material-design-icons/svg/outlined/exit_to_app.svg?component-solid";
@@ -35,7 +36,8 @@ export default function Feedback() {
             Roadmap
           </CategoryButton>
         </Link>
-        */}<Link
+        */}
+        <Link
           href="https://github.com/orgs/upryzing/discussions"
           target="_blank"
         >

@@ -1,5 +1,7 @@
 import { Accessor, For, Setter, Show, createMemo, onMount } from "solid-js";
 
+import { styled } from "styled-system/jsx";
+
 import { Column, OverflowingText, Ripple } from "@revolt/ui";
 
 // import MdError from "@material-design-icons/svg/filled/error.svg?component-solid";
@@ -10,9 +12,9 @@ import { useSettingsNavigation } from "../Settings";
 import {
   SidebarButton,
   SidebarButtonContent,
+  SidebarButtonIcon,
   SidebarButtonTitle,
 } from "./SidebarButton";
-import { styled } from "styled-system/jsx";
 
 /**
  * Settings Sidebar Layout
@@ -66,7 +68,9 @@ export function SettingsSidebar(props: {
                             >
                               <Ripple />
                               <SidebarButtonTitle>
-                                {entry.icon}
+                                <SidebarButtonIcon>
+                                  {entry.icon}
+                                </SidebarButtonIcon>
                                 <SidebarButtonContent>
                                   <OverflowingText>
                                     {entry.title}

@@ -1,7 +1,7 @@
 import { For, JSX, Match, Show, Switch } from "solid-js";
-import { styled } from "styled-system/jsx";
 
 import { ServerMember } from "@upryzing/upryzing.js";
+import { styled } from "styled-system/jsx";
 
 import { CustomEmoji, UnicodeEmoji } from "@revolt/markdown/emoji";
 

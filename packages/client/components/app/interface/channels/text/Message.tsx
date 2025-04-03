@@ -1,6 +1,11 @@
 import { For, Match, Show, Switch, onMount } from "solid-js";
 
-import { Message as MessageInterface, WebsiteEmbed } from "@upryzing/upryzing.js";
+import {
+  Message as MessageInterface,
+  WebsiteEmbed,
+} from "@upryzing/upryzing.js";
+import { cva } from "styled-system/css";
+import { styled } from "styled-system/jsx";
 import { decodeTime } from "ulid";
 
 import { useClient } from "@revolt/client";
@@ -23,22 +28,19 @@ import {
   iconSize,
 } from "@revolt/ui";
 
-import { styled } from "styled-system/jsx";
-
 import MdCloud from "@material-design-icons/svg/filled/cloud.svg?component-solid";
 import MdLink from "@material-design-icons/svg/filled/link.svg?component-solid";
 import MdNotificationsOff from "@material-design-icons/svg/filled/notifications_off.svg?component-solid";
+import MdSchedule from "@material-design-icons/svg/filled/schedule.svg?component-solid";
 import MdShield from "@material-design-icons/svg/filled/shield.svg?component-solid";
 import MdSmartToy from "@material-design-icons/svg/filled/smart_toy.svg?component-solid";
 import MdSpa from "@material-design-icons/svg/filled/spa.svg?component-solid";
-import MdSchedule from "@material-design-icons/svg/filled/schedule.svg?component-solid";
 
 import { MessageContextMenu } from "../../../menus/MessageContextMenu";
 import {
   floatingUserMenus,
   floatingUserMenusFromMessage,
 } from "../../../menus/UserContextMenu";
-import { cva } from "styled-system/css";
 
 /**
  * Regex for matching URLs
@@ -179,7 +181,12 @@ export function Message(props: Props) {
             </Tooltip>
           </Match>
           <Match when={props.message.member?.timeout}>
-            <Tooltip content={`User has been timed out for ${dayjs(props.message.member?.timeout).toNow(true)}`} placement="top">
+            <Tooltip
+              content={`User has been timed out for ${dayjs(
+                props.message.member?.timeout
+              ).toNow(true)}`}
+              placement="top"
+            >
               <MdSchedule {...iconSize(16)} />
             </Tooltip>
           </Match>
@@ -195,7 +202,10 @@ export function Message(props: Props) {
             }
           >
             <NewUser>
-              <Tooltip content={t("app.main.channel.new_to_upryzing")} placement="top">
+              <Tooltip
+                content={t("app.main.channel.new_to_upryzing")}
+                placement="top"
+              >
                 <MdSpa {...iconSize(16)} />
               </Tooltip>
             </NewUser>
@@ -207,7 +217,10 @@ export function Message(props: Props) {
             }
           >
             <NewUser>
-              <Tooltip content={t("app.main.channel.new_to_space")} placement="top">
+              <Tooltip
+                content={t("app.main.channel.new_to_space")}
+                placement="top"
+              >
                 <MdSpa {...iconSize(16)} />
               </Tooltip>
             </NewUser>
@@ -239,10 +252,10 @@ export function Message(props: Props) {
             menuGenerator={(user) =>
               user
                 ? floatingUserMenus(
-                  user!,
-                  // TODO: try to fetch on demand member
-                  props.message.server?.getMember(user!.id)
-                )
+                    user!,
+                    // TODO: try to fetch on demand member
+                    props.message.server?.getMember(user!.id)
+                  )
                 : {}
             }
             isServer={!!props.message.server}

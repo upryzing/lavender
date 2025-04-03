@@ -185,7 +185,7 @@ const Config: SettingsConfiguration<{ server: Server }> = {
               id: "feedback",
               icon: <MdRateReview {...iconSize(20)} />,
               title: t("app.settings.pages.feedback.title"),
-            }
+            },
           ],
         },
         {

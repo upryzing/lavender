@@ -1,6 +1,10 @@
 import { Match, Show, Switch } from "solid-js";
+
+import {
+  TextEmbed as TextEmbedClass,
+  WebsiteEmbed,
+} from "@upryzing/upryzing.js";
 import { styled } from "styled-system/jsx";
-import { TextEmbed as TextEmbedClass, WebsiteEmbed } from "@upryzing/upryzing.js";
 
 import { Markdown } from "@revolt/markdown";
 

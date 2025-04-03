@@ -17,9 +17,9 @@ import {
   onCleanup,
   onMount,
 } from "solid-js";
-import { styled } from "styled-system/jsx";
 
 import type { API, Channel, Server, ServerFlags } from "@upryzing/upryzing.js";
+import { styled } from "styled-system/jsx";
 
 import { getController } from "@revolt/common";
 import { useTranslation } from "@revolt/i18n";
@@ -33,7 +33,7 @@ import MdSettings from "@material-design-icons/svg/filled/settings.svg?component
 import { iconSize } from "../../..";
 import { useKeybindActions } from "../../context/Keybinds";
 import { Header } from "../../design/atoms/display/Header";
-import { typography, Typography } from "../../design/atoms/display/Typography";
+import { Typography, typography } from "../../design/atoms/display/Typography";
 import { MenuButton } from "../../design/atoms/inputs/MenuButton";
 import { Column, OverflowingText, Row } from "../../design/layout";
 import { Tooltip } from "../../floating";

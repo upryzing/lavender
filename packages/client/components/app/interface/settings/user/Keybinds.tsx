@@ -6,6 +6,8 @@ import {
 import { BiRegularReset } from "solid-icons/bi";
 import { For, Match, Switch, createMemo, createSignal } from "solid-js";
 
+import { styled } from "styled-system/jsx";
+
 import { getController } from "@revolt/common";
 import { useTranslation } from "@revolt/i18n";
 import { KeybindAction } from "@revolt/keybinds";
@@ -20,7 +22,6 @@ import {
   Input,
   KeySequence,
 } from "@revolt/ui";
-import { styled } from "styled-system/jsx";
 
 const categories: Record<string, KeybindAction[]> = {
   navigation: [

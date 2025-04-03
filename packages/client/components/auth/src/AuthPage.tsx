@@ -1,4 +1,10 @@
-import { BiLogos500px, BiLogosGithub, BiLogosHtml5, BiLogosMastodon, BiLogosTwitter } from "solid-icons/bi";
+import {
+  BiLogos500px,
+  BiLogosGithub,
+  BiLogosHtml5,
+  BiLogosMastodon,
+  BiLogosTwitter,
+} from "solid-icons/bi";
 import { JSX } from "solid-js";
 
 import { styled } from "styled-system/jsx";
@@ -10,6 +16,7 @@ import MdDarkMode from "@material-design-icons/svg/filled/dark_mode.svg?componen
 
 import background from "./background.jpg";
 import { FlowBase } from "./flows/Flow";
+
 /**
  * Authentication page layout
  */
@@ -155,11 +162,14 @@ export function AuthPage(props: { children: JSX.Element }) {
             <LinkWithIcon href="https://github.com/upryzing" target="_blank">
               <BiLogosGithub size={24} />
             </LinkWithIcon>
-            <LinkWithIcon href="https://bsky.app/profile/upryzing.app" target="_blank">
+            <LinkWithIcon
+              href="https://bsky.app/profile/upryzing.app"
+              target="_blank"
+            >
               <BiLogosTwitter size={24} />
               {
-              // eslint-disable-next-line spellcheck/spell-checker
-              /* No bsky icon in solid-icons */
+                // eslint-disable-next-line spellcheck/spell-checker
+                /* No bsky icon in solid-icons */
               }
             </LinkWithIcon>
             <LinkWithIcon href="https://lea.pet/@upryzing" target="_blank">

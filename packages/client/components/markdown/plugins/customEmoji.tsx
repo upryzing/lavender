@@ -1,6 +1,7 @@
 import { Match, Switch, createSignal, onMount } from "solid-js";
 
 import { Handler } from "mdast-util-to-hast";
+import { cva } from "styled-system/css";
 import { Plugin } from "unified";
 import { visit } from "unist-util-visit";
 
@@ -8,7 +9,6 @@ import { useClient } from "@revolt/client";
 import { Avatar, Column, Row } from "@revolt/ui";
 
 import { CustomEmoji, Emoji, RE_CUSTOM_EMOJI } from "../emoji";
-import { cva } from "styled-system/css";
 
 /**
  * Render a custom emoji

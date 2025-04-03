@@ -1,5 +1,6 @@
 import { BiRegularCheck, BiSolidPalette } from "solid-icons/bi";
 import { For, Show, createSignal, splitProps } from "solid-js";
+
 import { styled } from "styled-system/jsx";
 
 interface Props {

@@ -1,12 +1,13 @@
 import { BiRegularBlock } from "solid-icons/bi";
 import { JSX, Match, Show, Switch, onMount } from "solid-js";
+
+import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
 import { useTranslation } from "@revolt/i18n";
 
 import { typography } from "../../design/atoms/display/Typography";
 import { InlineIcon, Row } from "../../design/layout";
-import { cva } from "styled-system/css";
 
 interface Props {
   /**

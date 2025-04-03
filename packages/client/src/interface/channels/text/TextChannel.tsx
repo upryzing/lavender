@@ -8,6 +8,7 @@ import {
   onMount,
 } from "solid-js";
 
+import { styled } from "styled-system/jsx";
 import { decodeTime, ulid } from "ulid";
 
 import { DraftMessages, Messages } from "@revolt/app";
@@ -33,8 +34,6 @@ import { ChannelPageProps } from "../ChannelPage";
 
 import { MessageComposition } from "./Composition";
 import { MemberSidebar } from "./MemberSidebar";
-
-import { styled } from "styled-system/jsx";
 
 /**
  * Channel component

@@ -1,7 +1,8 @@
 import { For, createSignal } from "solid-js";
 
-import { useTranslation } from "@revolt/i18n";
 import { styled } from "styled-system/jsx";
+
+import { useTranslation } from "@revolt/i18n";
 
 import { modalController } from "..";
 import { PropGenerator } from "../types";

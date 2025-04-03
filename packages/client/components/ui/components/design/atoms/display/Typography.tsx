@@ -1,5 +1,6 @@
 import { splitProps } from "solid-js";
 import type { JSX } from "solid-js/jsx-runtime";
+
 import { cva } from "styled-system/css";
 
 type TypographyProps = {

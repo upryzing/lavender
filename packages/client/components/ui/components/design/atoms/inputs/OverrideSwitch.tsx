@@ -1,5 +1,6 @@
 import { BiRegularCheck, BiRegularX } from "solid-icons/bi";
 import { createSignal, splitProps } from "solid-js";
+
 import { styled } from "styled-system/jsx";
 
 type State = "Allow" | "Neutral" | "Deny";

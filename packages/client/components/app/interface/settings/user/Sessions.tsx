@@ -16,6 +16,7 @@ import {
 } from "solid-js";
 
 import { Session } from "@upryzing/upryzing.js";
+import { styled } from "styled-system/jsx";
 
 import { useClient } from "@revolt/client";
 import { getController } from "@revolt/common";
@@ -31,7 +32,6 @@ import {
 
 import MdAutoMode from "@material-design-icons/svg/outlined/auto_mode.svg?component-solid";
 import MdLogout from "@material-design-icons/svg/outlined/logout.svg?component-solid";
-import { styled } from "styled-system/jsx";
 
 /**
  * Sessions

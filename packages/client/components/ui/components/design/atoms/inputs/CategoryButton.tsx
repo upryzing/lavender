@@ -1,4 +1,5 @@
 import { For, JSX, Match, Show, Switch } from "solid-js";
+
 import { styled } from "styled-system/jsx";
 
 import { Ripple, iconSize } from "@revolt/ui";
@@ -172,7 +173,7 @@ const IconWrapper = styled("div", {
     borderRadius: "50%",
 
     "& svg": {
-      color: "var(--colours-component-categorybtn-foreground-description)",
+      fill: "var(--colours-component-categorybtn-foreground-description)",
     },
   },
 });

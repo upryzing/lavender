@@ -1,5 +1,6 @@
 import { JSX } from "solid-js";
 
+import { CONFIGURATION } from "@revolt/common";
 import { Modal } from "@revolt/ui";
 
 import { ActiveModal, modalController } from "..";
@@ -44,7 +45,6 @@ import server_info from "./ServerInfo";
 import settings from "./Settings";
 import sign_out_sessions from "./SignOutSessions";
 import signed_out from "./SignedOut";
-import { CONFIGURATION } from "@revolt/common";
 
 const Modals: Record<AllModals["type"], PropGenerator<any>> = {
   add_friend,

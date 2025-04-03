@@ -1,9 +1,11 @@
 import { Show, createSignal, splitProps } from "solid-js";
 import { createStore } from "solid-js/store";
 
+import { styled } from "styled-system/jsx";
+
 import { mapAnyError } from "@revolt/client";
 import { useTranslation } from "@revolt/i18n";
-import { Column, Form, typography, Typography } from "@revolt/ui";
+import { Column, Form, Typography, typography } from "@revolt/ui";
 import type {
   Action,
   Props as ModalProps,
@@ -17,8 +19,6 @@ import type {
 
 import { modalController } from ".";
 import { Modals, PropGenerator } from "./types";
-
-import { styled } from "styled-system/jsx";
 
 type Props<T extends FormTemplate> = Omit<
   FormProps<T>,

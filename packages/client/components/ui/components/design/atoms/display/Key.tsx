@@ -5,6 +5,7 @@ import {
   FaSolidArrowUp,
 } from "solid-icons/fa";
 import { Component, JSXElement, createMemo } from "solid-js";
+
 import { styled } from "styled-system/jsx";
 
 import { useTranslation } from "@revolt/i18n";

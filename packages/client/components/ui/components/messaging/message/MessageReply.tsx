@@ -1,10 +1,12 @@
 import { BiSolidFile } from "solid-icons/bi";
 import { Match, Switch } from "solid-js";
 import { Show } from "solid-js";
-import { styled } from "styled-system/jsx";
 
 import { type Message, RE_SPOILER } from "revolt.js";
+import { cva } from "styled-system/css";
+import { styled } from "styled-system/jsx";
 
+import { floatingUserMenusFromMessage } from "@revolt/app/menus/UserContextMenu";
 import { useClient } from "@revolt/client";
 import { useTranslation } from "@revolt/i18n";
 import { TextWithEmoji } from "@revolt/markdown";
@@ -18,8 +20,6 @@ import {
   Username,
 } from "../../design";
 import { Text } from "../../design/atoms/display/Typography";
-import { floatingUserMenusFromMessage } from "@revolt/app/menus/UserContextMenu";
-import { cva } from "styled-system/css";
 
 interface Props {
   /**

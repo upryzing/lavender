@@ -8,9 +8,9 @@ import {
   createMemo,
   createResource,
   createSignal,
+  lazy,
   on,
   onMount,
-  lazy,
 } from "solid-js";
 import { createStore } from "solid-js/store";
 import { render } from "solid-js/web";
@@ -21,6 +21,7 @@ import { Navigate, Route, Router } from "@solidjs/router";
 import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
 import { isTauri } from "@tauri-apps/api/core";
 import { getCurrentWindow } from "@tauri-apps/api/window";
+import "mdui/mdui.css";
 
 import FlowCheck from "@revolt/auth/src/flows/FlowCheck";
 import FlowConfirmReset from "@revolt/auth/src/flows/FlowConfirmReset";
@@ -54,7 +55,7 @@ import "@revolt/ui/styles";
 import AuthPage from "./Auth";
 import Interface from "./Interface";
 import "./index.css";
-import 'mdui/mdui.css';
+import { ConfirmDelete } from "./interface/ConfirmDelete";
 import { DevelopmentPage } from "./interface/Development";
 import { Friends } from "./interface/Friends";
 import { HomePage } from "./interface/Home";
@@ -62,7 +63,6 @@ import { ServerHome } from "./interface/ServerHome";
 import { ChannelPage } from "./interface/channels/ChannelPage";
 import "./sentry";
 import { registerKeybindsWithPriority } from "./shared/lib/priorityKeybind";
-import { ConfirmDelete } from "./interface/ConfirmDelete";
 
 attachDevtoolsOverlay();
 

@@ -1,18 +1,18 @@
-import { createEffect, For, onMount } from "solid-js";
+import { For, createEffect, onMount } from "solid-js";
 import { SetStoreFunction, createStore } from "solid-js/store";
 
 import type { MFA, MFATicket } from "@upryzing/upryzing.js";
 
 import { registerController } from "@revolt/common";
 
-import "../ui/styled.d.ts";
-
-import { RenderModal } from "./modals";
-import { Modals } from "./types";
 import {
   registerKeybindWithPriority,
   unregisterKeybindWithPriority,
 } from "../../src/shared/lib/priorityKeybind";
+import "../ui/styled.d.ts";
+
+import { RenderModal } from "./modals";
+import { Modals } from "./types";
 
 export type ActiveModal = {
   /**

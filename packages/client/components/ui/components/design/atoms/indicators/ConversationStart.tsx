@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
-import { styled } from "styled-system/jsx";
 
 import { Channel } from "@upryzing/upryzing.js";
+import { styled } from "styled-system/jsx";
 
 import { useTranslation } from "@revolt/i18n";
 

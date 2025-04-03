@@ -1,9 +1,9 @@
 import { BiSolidHome, BiSolidNotepad, BiSolidUserDetail } from "solid-icons/bi";
 import { Match, Show, Switch, createMemo, splitProps } from "solid-js";
-import { styled } from "styled-system/jsx";
 
 import { VirtualContainer } from "@minht11/solid-virtual-container";
 import { Channel } from "@upryzing/upryzing.js";
+import { styled } from "styled-system/jsx";
 
 import { ChannelContextMenu, UserContextMenu } from "@revolt/app";
 import { useClient } from "@revolt/client";
