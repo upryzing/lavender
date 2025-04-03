@@ -96,6 +96,9 @@ export function CategoryButton(props: Props) {
  */
 const Base = styled("a", {
   base: {
+    // for <Ripple />:
+    position: "relative",
+
     gap: "16px",
     padding: "13px",
     borderRadius: "var(--borderRadius-md)",

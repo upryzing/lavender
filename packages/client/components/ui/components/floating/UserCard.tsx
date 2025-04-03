@@ -44,7 +44,9 @@ const base = cva({
 
 const Banner = styled("div", {
   base: {
+    // for <Ripple />:
     position: "relative",
+
     userSelect: "none",
     cursor: "pointer",
 
@@ -93,7 +95,9 @@ const Actions = styled("div", {
 
 const ProfileCard = styled("div", {
   base: {
+    // for <Ripple />:
     position: "relative",
+
     userSelect: "none",
     cursor: "pointer",
 

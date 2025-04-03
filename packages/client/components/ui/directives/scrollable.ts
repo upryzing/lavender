@@ -101,7 +101,7 @@ export function scrollable(
     el.style.paddingTop = props.offsetTop + "px";
   }
 
-  console.error(
+  console.log(
     baseStyles({
       direction: props.direction,
       showOnHover: props.showOnHover,
