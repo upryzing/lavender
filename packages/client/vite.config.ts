@@ -1,4 +1,5 @@
-import devtools from "@solid-devtools/transform";
+import devtools from "solid-devtools/vite";
+
 import { readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
