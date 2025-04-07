@@ -28,6 +28,7 @@ import edit_display_name from "./EditDisplayName";
 import edit_email from "./EditEmail";
 import edit_keybind from "./EditKeybind";
 import edit_password from "./EditPassword";
+import edit_pronouns from "./EditPronouns";
 import edit_username from "./EditUsername";
 import error from "./Error";
 import image_viewer from "./ImageViewer";
@@ -68,6 +69,7 @@ const Modals: Record<AllModals["type"], PropGenerator<any>> = {
   edit_display_name,
   edit_email,
   edit_password,
+  edit_pronouns,
   edit_username,
   error,
   image_viewer,

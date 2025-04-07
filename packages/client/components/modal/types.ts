@@ -40,6 +40,10 @@ export type Modals =
       user: User;
     }
   | {
+      type: "edit_pronouns";
+      user: User;
+    }
+  | {
       type: "rename_session";
       session: Session;
     }
