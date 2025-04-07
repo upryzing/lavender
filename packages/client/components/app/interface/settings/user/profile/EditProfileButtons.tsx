@@ -39,7 +39,7 @@ export function EditProfileButtons(props: { user: User }) {
           const token = state.auth.getSession()?.token ?? "";
 
           const data = await fetch(
-            `${client().configuration?.features.autumn.url}/${tag}`,
+            `${client().configuration?.features.pigeon.url}/${tag}`,
             {
               method: "POST",
               body,

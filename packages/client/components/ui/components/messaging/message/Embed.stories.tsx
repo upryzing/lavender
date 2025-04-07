@@ -14,11 +14,11 @@ const client = new Client();
 
 client.configuration = {
   features: {
-    autumn: {
+    pigeon: {
       enabled: true,
       url: "http://local.revolt.chat:5273",
     },
-    january: {
+    dove: {
       enabled: false,
     },
   },

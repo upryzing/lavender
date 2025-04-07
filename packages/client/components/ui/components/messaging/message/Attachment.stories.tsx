@@ -11,7 +11,7 @@ const client = new Client();
 
 client.configuration = {
   features: {
-    autumn: {
+    pigeon: {
       enabled: true,
       url: "http://local.revolt.chat:5273",
     },
@@ -20,10 +20,10 @@ client.configuration = {
 
 export const attachments: {
   [key in
-    | "audio"
-    | "text"
-    | "file"
-    | `${"tall" | "wide"}_${"image" | "video"}`]: API.File;
+  | "audio"
+  | "text"
+  | "file"
+  | `${"tall" | "wide"}_${"image" | "video"}`]: API.File;
 } = {
   tall_image: {
     tag: "attachments",

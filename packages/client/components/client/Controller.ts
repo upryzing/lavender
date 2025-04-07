@@ -120,15 +120,14 @@ class Lifecycle {
           return response.json();
         })
         .then((conf) => {
-          // TODO: swap these around (not in revolt land anymore)
-          if (!conf.features.january) {
-            conf.features.january = conf.features.dove;
-            delete conf.features.dove;
+          if (!conf.features.dove) {
+            conf.features.dove = conf.features.january;
+            delete conf.features.january;
           }
 
-          if (!conf.features.autumn) {
-            conf.features.autumn = conf.features.pigeon;
-            delete conf.features.pigeon;
+          if (!conf.features.pigeon) {
+            conf.features.pigeon = conf.features.autumn;
+            delete conf.features.autumn;
           }
 
           this.client.configuration = conf;
@@ -146,13 +145,13 @@ class Lifecycle {
         app: String(),
         build: {} as never,
         features: {
-          autumn: {
-            enabled: true,
-            url: CONFIGURATION.DEFAULT_MEDIA_URL,
-          },
-          january: {
+          dove: {
             enabled: true,
             url: CONFIGURATION.DEFAULT_PROXY_URL,
+          },
+          pigeon: {
+            enabled: true,
+            url: CONFIGURATION.DEFAULT_MEDIA_URL,
           },
           captcha: {} as never,
           email: true,
