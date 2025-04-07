@@ -39,7 +39,7 @@ export function EditProfileButtons(props: { user: User }) {
           const token = state.auth.getSession()?.token ?? "";
 
           const data = await fetch(
-            `${client().configuration?.features.autumn.url}/${tag}`,
+            `${client().configuration?.features.pigeon.url}/${tag}`,
             {
               method: "POST",
               body,
@@ -86,6 +86,19 @@ export function EditProfileButtons(props: { user: User }) {
         }
       >
         Display Name
+      </CategoryButton>
+      <CategoryButton
+        description="Set your pronouns"
+        icon={<MdBadge {...iconSize(22)} />}
+        action="chevron"
+        onClick={() =>
+          modalController.push({
+            type: "edit_pronouns",
+            user: props.user,
+          })
+        }
+      >
+        Pronouns
       </CategoryButton>
       <Switch
         fallback={

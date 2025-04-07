@@ -1,12 +1,14 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "upryzing-desktop",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "identifier": "app.upryzing.desktop",
+  "mainBinaryName": "Upryzing",
   "build": {
-    "beforeDevCommand": "pnpm --filter client dev --port 6173",
-    "frontendDist": "../handoff",
-    "devUrl": "http://localhost:6173"
+    "beforeBuildCommand": "cd ../.. && pnpm build:web",
+    "beforeDevCommand": "cd ../.. && pnpm dev:web --port 5173",
+    "devUrl": "http://localhost:5173",
+    "frontendDist": "../../client/dist"
   },
   "bundle": {
     "active": true,
@@ -26,7 +28,7 @@
       "digestAlgorithm": "sha256",
       "timestampUrl": ""
     },
-    "longDescription": "User-first, privacy focused chat platform.",
+    "longDescription": "Your conversations, your way.",
     "macOS": {
       "entitlements": null,
       "exceptionDomain": "",
@@ -35,17 +37,13 @@
       "signingIdentity": null
     },
     "resources": [],
-    "shortDescription": "User-first, privacy focused chat platform.",
+    "shortDescription": "Your conversations, your way.",
     "linux": {
       "deb": {
         "depends": []
       }
     }
   },
-  "productName": "Revolt",
-  "mainBinaryName": "Revolt",
-  "version": "0.1.0",
-  "identifier": "chat.revolt.app",
   "plugins": {},
   "app": {
     "withGlobalTauri": false,
@@ -65,18 +63,7 @@
     "trayIcon": {
       "iconPath": "../../client/assets/icons/tray/trayIcon.png",
       "iconAsTemplate": true,
-      "title": "Revolt"
+      "title": "Upryzing"
     }
-  },
-  "bundle": {
-    "active": true,
-    "targets": "all",
-    "icon": [
-      "icons/32x32.png",
-      "icons/128x128.png",
-      "icons/128x128@2x.png",
-      "icons/icon.icns",
-      "icons/icon.ico"
-    ]
   }
 }

@@ -330,7 +330,7 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
 
           xhr.open(
             "POST",
-            `${client.configuration!.features.autumn.url}/attachments`,
+            `${client.configuration!.features.pigeon.url}/attachments`,
             true
           );
 
