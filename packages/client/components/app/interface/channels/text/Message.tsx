@@ -225,9 +225,18 @@ export function Message(props: Props) {
               </Tooltip>
             </NewUser>
           </Match>
-          <Match when={props.message.authorId === "01JENZCKGRKNQEN0W3XXWTJQS7"}>
+          <Match
+            when={
+              props.message.author &&
+              Array.isArray(props.message.author.pronouns) &&
+              props.message.author.pronouns.length > 0
+            }
+          >
             <span />
-            <span>she/her &middot; </span>
+            <span>
+              {props.message.author?.pronouns?.join(" · ")}
+              {" • "}
+            </span>
           </Match>
         </Switch>
       }
