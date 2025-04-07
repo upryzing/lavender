@@ -16,6 +16,7 @@ import {
 import MdBadge from "@material-design-icons/svg/outlined/badge.svg?component-solid";
 import MdCrop169 from "@material-design-icons/svg/outlined/crop_16_9.svg?component-solid";
 import MdDelete from "@material-design-icons/svg/outlined/delete.svg?component-solid";
+import MdDiversity from "@material-design-icons/svg/outlined/diversity_1.svg?component-solid";
 import MdReplaceImage from "@material-design-icons/svg/outlined/edit.svg?component-solid";
 import MdEditNote from "@material-design-icons/svg/outlined/edit_note.svg?component-solid";
 import MdImage from "@material-design-icons/svg/outlined/image.svg?component-solid";
@@ -86,6 +87,19 @@ export function EditProfileButtons(props: { user: User }) {
         }
       >
         Display Name
+      </CategoryButton>
+      <CategoryButton
+        description="Set your pronouns"
+        icon={<MdDiversity {...iconSize(22)} />}
+        action="chevron"
+        onClick={() =>
+          modalController.push({
+            type: "edit_pronouns",
+            user: props.user,
+          })
+        }
+      >
+        Pronouns
       </CategoryButton>
       <Switch
         fallback={
