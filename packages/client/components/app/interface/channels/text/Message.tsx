@@ -228,7 +228,7 @@ export function Message(props: Props) {
           {/* this section of code is fucking horrible man what the fuck why does the ts lsp not know that a variable is CLEARLY not undefined if we can use it after the when= */}
           <Match when={props.message.author && Array.isArray(props.message.author.pronouns) && props.message.author.pronouns.length > 0}>
             <span />
-            <span>{props.message.author?.pronouns?.[0]} {(props.message.author?.pronouns?.length as number) > 1 ? `| ${props.message.author?.pronouns?.[1]}` : ""} &middot; </span>
+            <span>{props.message.author?.pronouns?.[0]} {(props.message.author?.pronouns?.length as number) > 1 ? `• ${props.message.author?.pronouns?.[1]}` : ""} &middot; </span>
           </Match>
         </ Switch>
       }
