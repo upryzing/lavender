@@ -16,7 +16,9 @@ export default defineConfig({
   base,
   plugins: [
     Inspect(),
-    devtools(),
+    devtools({
+      autoname: true,
+    }),
     codegenPlugin(),
     solidPlugin(),
     solidSvg({
