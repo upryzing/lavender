@@ -7,8 +7,8 @@ const EditPronouns: PropGenerator<"edit_pronouns"> = (props) => {
   const t = useTranslation();
 
   /**
-   * Apply new display name
-   * @param newPronouns Display name
+   * Apply new pronouns
+   * @param newPronouns New pronouns to be sent to server. If omitted, clears server pronouns
    */
   async function applyPronouns(newPronouns?: string[]) {
     if (newPronouns && newPronouns.length > 0) {
@@ -25,16 +25,62 @@ const EditPronouns: PropGenerator<"edit_pronouns"> = (props) => {
       title: t("app.special.modals.account.change.pronouns"),
     },
     schema: {
-      // TODO: list it up
-      pronouns: "text",
+      firstPronoun: "text",
+      secondPronoun: "text",
+      thirdPronoun: "text",
+      fourthPronoun: "text",
     },
     data: {
-      pronouns: {
-        field: "Pronouns",
+      firstPronoun: {
+        field: "First Pronouns",
         placeholder: "they/them...",
+        maxLength: 15,
+      },
+      secondPronoun: {
+        field: "Second Pronouns",
+        placeholder: "they/them...",
+        maxLength: 15,
+      },
+      thirdPronoun: {
+        field: "Third Pronouns",
+        placeholder: "they/them...",
+        maxLength: 15,
+      },
+      fourthPronoun: {
+        field: "Fourth Pronouns",
+        placeholder: "they/them...",
+        maxLength: 15,
       },
     },
-    callback: ({ pronouns }) => applyPronouns([pronouns]),
+    callback: ({
+      firstPronoun,
+      secondPronoun,
+      thirdPronoun,
+      fourthPronoun,
+    }) => {
+      const pronounInput = [
+        firstPronoun,
+        secondPronoun,
+        thirdPronoun,
+        fourthPronoun,
+      ];
+      var pronounsArray: string[] = [];
+
+      for (var count in pronounInput) {
+        var val = pronounInput[count];
+
+        console.log(val);
+        if (val.length > 0) pronounsArray.push(val);
+      }
+
+      console.log(pronounsArray);
+
+      if (pronounsArray.length == 0) {
+        return applyPronouns();
+      }
+
+      return applyPronouns(pronounsArray);
+    },
     submit: {
       children: t("app.special.modals.actions.update"),
     },
