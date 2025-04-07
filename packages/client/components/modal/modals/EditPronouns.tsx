@@ -22,7 +22,7 @@ const EditPronouns: PropGenerator<"edit_pronouns"> = (props) => {
 
   return createFormModal({
     modalProps: {
-      title: t("app.special.modals.account.change.display_name"),
+      title: t("app.special.modals.account.change.pronouns"),
     },
     schema: {
       // TODO: list it up

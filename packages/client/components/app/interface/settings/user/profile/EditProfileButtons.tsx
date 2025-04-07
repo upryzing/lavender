@@ -14,6 +14,7 @@ import {
 } from "@revolt/ui";
 
 import MdBadge from "@material-design-icons/svg/outlined/badge.svg?component-solid";
+import MdDiversity from "@material-design-icons/svg/outlined/diversity_1.svg?component-solid";
 import MdCrop169 from "@material-design-icons/svg/outlined/crop_16_9.svg?component-solid";
 import MdDelete from "@material-design-icons/svg/outlined/delete.svg?component-solid";
 import MdReplaceImage from "@material-design-icons/svg/outlined/edit.svg?component-solid";
@@ -89,7 +90,7 @@ export function EditProfileButtons(props: { user: User }) {
       </CategoryButton>
       <CategoryButton
         description="Set your pronouns"
-        icon={<MdBadge {...iconSize(22)} />}
+        icon={<MdDiversity {...iconSize(22)} />}
         action="chevron"
         onClick={() =>
           modalController.push({
