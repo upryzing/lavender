@@ -225,7 +225,6 @@ export function Message(props: Props) {
               </Tooltip>
             </NewUser>
           </Match>
-          {/* this section of code is fucking horrible man what the fuck why does the ts lsp not know that a variable is CLEARLY not undefined if we can use it after the when= */}
           <Match
             when={
               props.message.author &&
@@ -235,11 +234,8 @@ export function Message(props: Props) {
           >
             <span />
             <span>
-              {props.message.author?.pronouns?.[0]}
-              {(props.message.author?.pronouns?.length as number) > 1
-                ? ` • ${props.message.author?.pronouns?.[1]}`
-                : ""}{" "}
-              &middot;{" "}
+              {props.message.author?.pronouns?.join(' · ')}
+              {" • "}
             </span>
           </Match>
         </Switch>
@@ -265,10 +261,10 @@ export function Message(props: Props) {
             menuGenerator={(user) =>
               user
                 ? floatingUserMenus(
-                    user!,
-                    // TODO: try to fetch on demand member
-                    props.message.server?.getMember(user!.id)
-                  )
+                  user!,
+                  // TODO: try to fetch on demand member
+                  props.message.server?.getMember(user!.id)
+                )
                 : {}
             }
             isServer={!!props.message.server}
