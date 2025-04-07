@@ -15,7 +15,7 @@ const EditPronouns: PropGenerator<"edit_pronouns"> = (props) => {
       await props.user.edit({ pronouns: newPronouns });
     } else {
       await props.user.edit({
-        remove: ["DisplayName"],
+        remove: ["Pronouns"],
       });
     }
   }
