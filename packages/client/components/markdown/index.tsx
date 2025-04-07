@@ -1,8 +1,8 @@
 import { createEffect, createResource, createSignal, on } from "solid-js";
 
+import rehypeShiki from "@shikijs/rehype";
 import "katex/dist/katex.min.css";
 import { html } from "property-information";
-import rehypeShiki from "@shikijs/rehype";
 import rehypeKatex from "rehype-katex";
 import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
@@ -132,7 +132,7 @@ const pipeline = unified()
     errorColor: "var(--customColours-error-color)",
   })
   .use(rehypeShiki, {
-    theme: 'github-dark',
+    theme: "github-dark",
   });
 
 export interface MarkdownProps {
@@ -150,7 +150,6 @@ export interface MarkdownProps {
 export { TextWithEmoji } from "./emoji/TextWithEmoji";
 export { Emoji } from "./emoji/Emoji";
 
-
 /**
  * Remark renderer component
  */
@@ -167,16 +166,16 @@ export function Markdown(props: MarkdownProps) {
 
     let hastNode = await pipeline.run(parsedFile, file);
 
-    console.log(hastNode.children)
+    console.log(hastNode.children);
 
     if (hastNode.type !== "root") {
       throw new TypeError("Expected a `root` node");
     }
 
     // @ts-expect-error i know. i know. this is fucking terrible. but shiki does some fuckery where the node is nothing and the *child* is the root. i have no clue why
-    if (hastNode.children[0].type === 'root') {
-      hastNode = hastNode.children[0]
-    };
+    if (hastNode.children[0].type === "root") {
+      hastNode = hastNode.children[0];
+    }
 
     injectEmojiSize(props, hastNode as any);
 
@@ -197,7 +196,7 @@ export function Markdown(props: MarkdownProps) {
   // Render once immediately
   const [content, setContent] = createSignal(props.content);
 
-  const [children] = createResource(content, render)
+  const [children] = createResource(content, render);
 
   // If it ever updates, re-render the whole tree:
   createEffect(
