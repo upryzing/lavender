@@ -310,6 +310,10 @@ importers:
         version: 16.4.7
 
   packages/desktop:
+    dependencies:
+      '@tauri-apps/plugin-log':
+        specifier: ^2.3.1
+        version: 2.4.0
     devDependencies:
       '@tauri-apps/cli':
         specifier: ^2.0.2
@@ -2262,10 +2266,10 @@ packages:
       react-dom:
         optional: true
 
-  '@storybook/builder-vite@9.0.0-alpha.17':
-    resolution: {integrity: sha512-Xz7QXErLIc4B+yU26l8eEXQ5Ikv8h+purD8FRVHjaNvx9pnK0GeOXpmXzvybDqP21F6CY2f03AKuz1BZaYsMnQ==}
+  '@storybook/builder-vite@9.0.0-beta.7':
+    resolution: {integrity: sha512-pjyIvWEOKuBBseYrbgItzvacpkGH6kdXMt8LEQwIqfU0l6tt3RQhmCFidv6BYTt9caPDmVi9ap1YRoIycoEM0A==}
     peerDependencies:
-      storybook: ^9.0.0-alpha.17
+      storybook: ^9.0.0-beta.7
       vite: ^5.0.0 || ^6.0.0
 
   '@storybook/components@8.6.12':
@@ -2286,10 +2290,10 @@ packages:
     peerDependencies:
       storybook: ^8.6.12
 
-  '@storybook/csf-plugin@9.0.0-alpha.17':
-    resolution: {integrity: sha512-5as8EF6Nabo5Oi0h8/XOTy3SgQIgYRMb+u3RixUYKfItDmKbh99n1/Bqhvs7350HIIopvjRkm8AoAC6c4WpQcw==}
+  '@storybook/csf-plugin@9.0.0-beta.7':
+    resolution: {integrity: sha512-jXSpfaouJvPO4R77cV2Fc6EztztXCQks1H70dmiR/PQKh4lqUxpOARFALQO8tKmMAPo+1EsNqB02bIelmdmflA==}
     peerDependencies:
-      storybook: ^9.0.0-alpha.17
+      storybook: ^9.0.0-beta.7
 
   '@storybook/global@5.0.0':
     resolution: {integrity: sha512-FcOqPAXACP0I3oJ/ws6/rrPT9WGhu915Cg8D02a9YxLo0DE9zI+a9A5gRGvmQ09fiWPukqI8ZAEoQEdWUKMQdQ==}
@@ -2417,6 +2421,9 @@ packages:
     resolution: {integrity: sha512-xewcw/ZsCqgilTy2h7+pp2Baxoy7zLR2wXOV7SZLzkb6SshHVbm1BFAjn8iFATURRW85KLzl6wSGJ2dQHjVHqw==}
     engines: {node: '>= 10'}
     hasBin: true
+
+  '@tauri-apps/plugin-log@2.4.0':
+    resolution: {integrity: sha512-j7yrDtLNmayCBOO2esl3aZv9jSXy2an8MDLry3Ys9ZXerwUg35n1Y2uD8HoCR+8Ng/EUgx215+qOUfJasjYrHw==}
 
   '@testing-library/dom@10.4.0':
     resolution: {integrity: sha512-pemlzrSESWbdAloYml3bAJMEfNh1Z7EduzqPKprCH5S341frlpYnUEW0H72dLxa6IsYr+mPno20GiSm+h9dEdQ==}
@@ -7940,9 +7947,9 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@storybook/builder-vite@9.0.0-alpha.17(storybook@8.6.12(prettier@3.2.5))(vite@5.4.14(@types/node@20.17.24)(lightningcss@1.25.1)(terser@5.39.0))':
+  '@storybook/builder-vite@9.0.0-beta.7(storybook@8.6.12(prettier@3.2.5))(vite@5.4.14(@types/node@20.17.24)(lightningcss@1.25.1)(terser@5.39.0))':
     dependencies:
-      '@storybook/csf-plugin': 9.0.0-alpha.17(storybook@8.6.12(prettier@3.2.5))
+      '@storybook/csf-plugin': 9.0.0-beta.7(storybook@8.6.12(prettier@3.2.5))
       browser-assert: 1.2.1
       storybook: 8.6.12(prettier@3.2.5)
       ts-dedent: 2.2.0
@@ -7978,7 +7985,7 @@ snapshots:
       storybook: 8.6.12(prettier@3.2.5)
       unplugin: 1.16.1
 
-  '@storybook/csf-plugin@9.0.0-alpha.17(storybook@8.6.12(prettier@3.2.5))':
+  '@storybook/csf-plugin@9.0.0-beta.7(storybook@8.6.12(prettier@3.2.5))':
     dependencies:
       storybook: 8.6.12(prettier@3.2.5)
       unplugin: 1.16.1
@@ -8093,6 +8100,10 @@ snapshots:
       '@tauri-apps/cli-win32-arm64-msvc': 2.3.1
       '@tauri-apps/cli-win32-ia32-msvc': 2.3.1
       '@tauri-apps/cli-win32-x64-msvc': 2.3.1
+
+  '@tauri-apps/plugin-log@2.4.0':
+    dependencies:
+      '@tauri-apps/api': 2.4.1
 
   '@testing-library/dom@10.4.0':
     dependencies:
@@ -11291,7 +11302,7 @@ snapshots:
 
   storybook-solidjs-vite@1.0.0-beta.2(storybook@8.6.12(prettier@3.2.5))(vite@5.4.14(@types/node@20.17.24)(lightningcss@1.25.1)(terser@5.39.0)):
     dependencies:
-      '@storybook/builder-vite': 9.0.0-alpha.17(storybook@8.6.12(prettier@3.2.5))(vite@5.4.14(@types/node@20.17.24)(lightningcss@1.25.1)(terser@5.39.0))
+      '@storybook/builder-vite': 9.0.0-beta.7(storybook@8.6.12(prettier@3.2.5))(vite@5.4.14(@types/node@20.17.24)(lightningcss@1.25.1)(terser@5.39.0))
     transitivePeerDependencies:
       - storybook
       - vite
