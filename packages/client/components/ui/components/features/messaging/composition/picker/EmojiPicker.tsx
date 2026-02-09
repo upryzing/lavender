@@ -8,7 +8,7 @@ import {
 } from "solid-js";
 
 import { VirtualContainer } from "@minht11/solid-virtual-container";
-import { Emoji, Server } from "stoat.js";
+import { Emoji, Server } from "@upryzing/upryzing.js";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
@@ -28,40 +28,40 @@ import {
 
 type Item =
   | {
-      /**
-       * Server header
-       */
-      t: 0;
-      server: Server;
-    }
+    /**
+     * Server header
+     */
+    t: 0;
+    server: Server;
+  }
   | {
-      /**
-       * Spacing element
-       */
-      t: 1;
-    }
+    /**
+     * Spacing element
+     */
+    t: 1;
+  }
   | {
-      /**
-       * Custom emoji
-       */
-      t: 2;
-      emoji: Emoji;
-    }
+    /**
+     * Custom emoji
+     */
+    t: 2;
+    emoji: Emoji;
+  }
   | {
-      /**
-       * Title header
-       */
-      t: 3;
-      title: string;
-    }
+    /**
+     * Title header
+     */
+    t: 3;
+    title: string;
+  }
   | {
-      /**
-       * Unicode emoji
-       */
-      t: 4;
-      name: string;
-      text: string;
-    };
+    /**
+     * Unicode emoji
+     */
+    t: 4;
+    name: string;
+    text: string;
+  };
 
 const COLUMNS = 10;
 

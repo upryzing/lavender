@@ -7,7 +7,7 @@ import {
   ViewUpdate,
   WidgetType,
 } from "@codemirror/view";
-import { Channel, ServerMember, ServerRole, User } from "stoat.js";
+import { Channel, ServerMember, ServerRole, User } from "@upryzing/upryzing.js";
 
 import { useClient } from "@revolt/client";
 import {

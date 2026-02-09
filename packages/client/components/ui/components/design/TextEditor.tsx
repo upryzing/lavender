@@ -34,7 +34,7 @@ import { keymap } from "prosemirror-keymap";
 import { Node } from "prosemirror-model";
 import { EditorState, EditorStateConfig, Selection } from "prosemirror-state";
 import { EditorView } from "prosemirror-view";
-import { Channel, ServerMember, ServerRole, User } from "stoat.js";
+import { Channel, ServerMember, ServerRole, User } from "@upryzing/upryzing.js";
 import { css, cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
@@ -109,35 +109,35 @@ interface AutoCompleteView {
   // query: string;
   selected: number;
   result:
-    | {
-        type: "emoji";
-        matches: MatchEmoji[];
-      }
-    | {
-        type: "user";
-        matches: MatchUser[];
-      }
-    | {
-        type: "role";
-        matches: ServerRole[];
-      }
-    | {
-        type: "channel";
-        matches: Channel[];
-      };
+  | {
+    type: "emoji";
+    matches: MatchEmoji[];
+  }
+  | {
+    type: "user";
+    matches: MatchUser[];
+  }
+  | {
+    type: "role";
+    matches: ServerRole[];
+  }
+  | {
+    type: "channel";
+    matches: Channel[];
+  };
 }
 
 type MatchEmoji =
   | {
-      type: "unicode";
-      codepoint: string;
-      name: string;
-    }
+    type: "unicode";
+    codepoint: string;
+    name: string;
+  }
   | {
-      type: "custom";
-      id: string;
-      name: string;
-    };
+    type: "custom";
+    id: string;
+    name: string;
+  };
 
 type MatchUser = User | ServerMember;
 
@@ -294,15 +294,15 @@ export function TextEditor(props: Props) {
               matches.push(
                 id.length === 26
                   ? {
-                      type: "custom",
-                      id,
-                      name: emote.name,
-                    }
+                    type: "custom",
+                    id,
+                    name: emote.name,
+                  }
                   : {
-                      type: "unicode",
-                      codepoint: emojiMapping[id as keyof typeof emojiMapping],
-                      name: emote.name,
-                    },
+                    type: "unicode",
+                    codepoint: emojiMapping[id as keyof typeof emojiMapping],
+                    name: emote.name,
+                  },
               );
             }
           }
@@ -403,169 +403,169 @@ export function TextEditor(props: Props) {
   // eslint-disable-next-line solid/reactivity
   const autoCompletePlugin = props.autoCompleteSearchSpace
     ? // (AC3.) define the triggers
-      autocomplete({
-        triggers: [
-          { name: "channel", trigger: "#" },
-          { name: "user", trigger: "@" },
-          { name: "role", trigger: "%" },
-          { name: "emoji", trigger: ":" },
-        ],
-        reducer(action) {
-          const name = action.type?.name;
-          switch (action.kind) {
-            case ActionKind.open:
-              updateAutoComplete(name!, action.filter);
-              return true;
-            case ActionKind.close:
-              updateAutoComplete(name!);
-              return false;
-            case ActionKind.up:
-              setAutoComplete((ac) =>
-                ac
-                  ? {
-                      ...ac,
-                      selected:
-                        (ac.selected - 1 + ac.result.matches.length) %
-                        ac.result.matches.length,
-                    }
-                  : undefined,
-              );
-              return true;
-            case ActionKind.down:
-              setAutoComplete((ac) =>
-                ac
-                  ? {
-                      ...ac,
-                      selected: (ac.selected + 1) % ac.result.matches.length,
-                    }
-                  : undefined,
-              );
-              return true;
-            case ActionKind.enter: {
-              // (AC4.) define how to insert the new node
-              const ac = autoComplete();
-              switch (ac?.result?.type) {
-                case "emoji": {
-                  const match = ac.result.matches[ac.selected];
+    autocomplete({
+      triggers: [
+        { name: "channel", trigger: "#" },
+        { name: "user", trigger: "@" },
+        { name: "role", trigger: "%" },
+        { name: "emoji", trigger: ":" },
+      ],
+      reducer(action) {
+        const name = action.type?.name;
+        switch (action.kind) {
+          case ActionKind.open:
+            updateAutoComplete(name!, action.filter);
+            return true;
+          case ActionKind.close:
+            updateAutoComplete(name!);
+            return false;
+          case ActionKind.up:
+            setAutoComplete((ac) =>
+              ac
+                ? {
+                  ...ac,
+                  selected:
+                    (ac.selected - 1 + ac.result.matches.length) %
+                    ac.result.matches.length,
+                }
+                : undefined,
+            );
+            return true;
+          case ActionKind.down:
+            setAutoComplete((ac) =>
+              ac
+                ? {
+                  ...ac,
+                  selected: (ac.selected + 1) % ac.result.matches.length,
+                }
+                : undefined,
+            );
+            return true;
+          case ActionKind.enter: {
+            // (AC4.) define how to insert the new node
+            const ac = autoComplete();
+            switch (ac?.result?.type) {
+              case "emoji": {
+                const match = ac.result.matches[ac.selected];
 
-                  let tr = action.view.state.tr.deleteRange(
+                let tr = action.view.state.tr.deleteRange(
+                  action.range.from,
+                  action.range.to,
+                );
+
+                if (match.type == "unicode") {
+                  tr = tr.insert(
                     action.range.from,
-                    action.range.to,
-                  );
-
-                  if (match.type == "unicode") {
-                    tr = tr.insert(
-                      action.range.from,
-                      schema.nodes.rfm_unicode_emoji.createAndFill({
-                        id: match.codepoint,
-                        pack: applicationState.settings.getValue(
+                    schema.nodes.rfm_unicode_emoji.createAndFill({
+                      id: match.codepoint,
+                      pack: applicationState.settings.getValue(
+                        "appearance:unicode_emoji",
+                      ),
+                      src: unicodeEmojiUrl(
+                        applicationState.settings.getValue(
                           "appearance:unicode_emoji",
                         ),
-                        src: unicodeEmojiUrl(
-                          applicationState.settings.getValue(
-                            "appearance:unicode_emoji",
-                          ),
-                          match.codepoint,
-                        ),
-                      })!,
-                    );
-                  } else {
-                    tr = tr.insert(
-                      action.range.from,
-                      schema.nodes.rfm_custom_emoji.createAndFill({
-                        id: match.id,
-                        src: `https://cdn.revoltusercontent.com/emojis/${match.id}`,
-                      })!,
-                    );
-                  }
-
-                  action.view.dispatch(tr);
-
-                  return true;
-                }
-                case "user": {
-                  const match = ac.result.matches[ac.selected];
-
-                  let tr = action.view.state.tr.deleteRange(
-                    action.range.from,
-                    action.range.to,
-                  );
-
-                  tr = tr.insert(
-                    action.range.from,
-                    schema.nodes.rfm_user_mention.createAndFill({
-                      id:
-                        match instanceof ServerMember
-                          ? match.id.user
-                          : match.id,
-                      username: match.displayName,
-                      avatar: match.animatedAvatarURL,
+                        match.codepoint,
+                      ),
                     })!,
                   );
-
-                  action.view.dispatch(tr);
-
-                  return true;
-                }
-                case "role": {
-                  const match = ac.result.matches[ac.selected];
-
-                  let tr = action.view.state.tr.deleteRange(
-                    action.range.from,
-                    action.range.to,
-                  );
-
+                } else {
                   tr = tr.insert(
                     action.range.from,
-                    schema.nodes.rfm_role_mention.createAndFill({
+                    schema.nodes.rfm_custom_emoji.createAndFill({
                       id: match.id,
-                      name: match.name,
+                      src: `https://cdn.revoltusercontent.com/emojis/${match.id}`,
                     })!,
                   );
-
-                  action.view.dispatch(tr);
-
-                  return true;
                 }
-                case "channel": {
-                  const match = ac.result.matches[ac.selected];
 
-                  let tr = action.view.state.tr.deleteRange(
-                    action.range.from,
-                    action.range.to,
-                  );
+                action.view.dispatch(tr);
 
-                  tr = tr.insert(
-                    action.range.from,
-                    schema.nodes.rfm_channel_mention.createAndFill({
-                      id: match.id,
-                      name: match.name,
-                    })!,
-                  );
-
-                  action.view.dispatch(tr);
-
-                  return true;
-                }
+                return true;
               }
+              case "user": {
+                const match = ac.result.matches[ac.selected];
 
-              return false;
+                let tr = action.view.state.tr.deleteRange(
+                  action.range.from,
+                  action.range.to,
+                );
+
+                tr = tr.insert(
+                  action.range.from,
+                  schema.nodes.rfm_user_mention.createAndFill({
+                    id:
+                      match instanceof ServerMember
+                        ? match.id.user
+                        : match.id,
+                    username: match.displayName,
+                    avatar: match.animatedAvatarURL,
+                  })!,
+                );
+
+                action.view.dispatch(tr);
+
+                return true;
+              }
+              case "role": {
+                const match = ac.result.matches[ac.selected];
+
+                let tr = action.view.state.tr.deleteRange(
+                  action.range.from,
+                  action.range.to,
+                );
+
+                tr = tr.insert(
+                  action.range.from,
+                  schema.nodes.rfm_role_mention.createAndFill({
+                    id: match.id,
+                    name: match.name,
+                  })!,
+                );
+
+                action.view.dispatch(tr);
+
+                return true;
+              }
+              case "channel": {
+                const match = ac.result.matches[ac.selected];
+
+                let tr = action.view.state.tr.deleteRange(
+                  action.range.from,
+                  action.range.to,
+                );
+
+                tr = tr.insert(
+                  action.range.from,
+                  schema.nodes.rfm_channel_mention.createAndFill({
+                    id: match.id,
+                    name: match.name,
+                  })!,
+                );
+
+                action.view.dispatch(tr);
+
+                return true;
+              }
             }
-            default:
-              updateAutoComplete(name!, action.filter);
-              return false;
+
+            return false;
           }
-        },
-      })
+          default:
+            updateAutoComplete(name!, action.filter);
+            return false;
+        }
+      },
+    })
     : [];
 
   function selectAutoCompleteItem(selected: number) {
     setAutoComplete((ac) =>
       ac
         ? {
-            ...ac,
-            selected,
-          }
+          ...ac,
+          selected,
+        }
         : undefined,
     );
   }

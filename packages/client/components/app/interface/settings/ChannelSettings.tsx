@@ -6,7 +6,7 @@ import {
 } from "solid-icons/bi";
 
 import { Trans, useLingui } from "@lingui-solid/solid/macro";
-import { Channel } from "stoat.js";
+import { Channel } from "@upryzing/upryzing.js";
 
 import { useClient } from "@revolt/client";
 import { TextWithEmoji } from "@revolt/markdown";

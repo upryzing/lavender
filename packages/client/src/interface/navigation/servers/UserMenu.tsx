@@ -13,7 +13,7 @@ import { Motion, Presence } from "solid-motionone";
 
 import { autoUpdate, offset, shift } from "@floating-ui/dom";
 import { Trans, useLingui } from "@lingui-solid/solid/macro";
-import { API } from "stoat.js";
+import { API } from "@upryzing/upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import {

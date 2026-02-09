@@ -10,7 +10,7 @@ import {
 } from "solid-js";
 
 import { useLingui } from "@lingui-solid/solid/macro";
-import type { API, Channel, Server, ServerFlags } from "stoat.js";
+import type { API, Channel, Server, ServerFlags } from "@upryzing/upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { KeybindAction, createKeybind } from "@revolt/keybinds";
@@ -76,15 +76,15 @@ type CategoryData = Omit<API.Category, "channels"> & { channels: Channel[] };
 
 type OrderingEvent =
   | {
-      type: "categories";
-      ids: string[];
-    }
+    type: "categories";
+    ids: string[];
+  }
   | {
-      type: "category";
-      id: string;
-      channelIds: string[];
-      moved: boolean;
-    };
+    type: "category";
+    id: string;
+    channelIds: string[];
+    moved: boolean;
+  };
 
 /**
  * Display server information and channels
@@ -327,9 +327,9 @@ function Category(
     noOrdering: Accessor<boolean>;
     handleOrdering: (event: OrderingEvent) => void;
   } & Pick<Props, "menuGenerator"> & {
-      dragDisabled: Accessor<boolean>;
-      setDragDisabled: Setter<boolean>;
-    },
+    dragDisabled: Accessor<boolean>;
+    setDragDisabled: Setter<boolean>;
+  },
 ) {
   const state = useState();
   const isOpen = () => state.layout.getSectionState(props.category.id, true);

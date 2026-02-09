@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
 
 import { Trans, useLingui } from "@lingui-solid/solid/macro";
-import { User } from "stoat.js";
+import { User } from "@upryzing/upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { Text, typography } from "../../design";

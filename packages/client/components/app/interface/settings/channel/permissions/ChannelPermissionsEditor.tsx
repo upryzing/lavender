@@ -6,7 +6,7 @@ import {
   Channel,
   DEFAULT_PERMISSION_DIRECT_MESSAGE,
   Server,
-} from "stoat.js";
+} from "@upryzing/upryzing.js";
 import { css } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
@@ -126,288 +126,288 @@ export function ChannelPermissionsEditor(props: Props) {
     title: string;
     description: Partial<Record<Context | "Any", string>>;
   }[] = [
-    {
-      heading: t`Admin`,
-      key: "ManageChannel",
-      value: 1n ** 0n,
-      title: t`Manage Channel`,
-      description: {
-        Group: t`Edit group name and description`,
-        Any: t`Edit and delete channel`,
+      {
+        heading: t`Admin`,
+        key: "ManageChannel",
+        value: 1n ** 0n,
+        title: t`Manage Channel`,
+        description: {
+          Group: t`Edit group name and description`,
+          Any: t`Edit and delete channel`,
+        },
       },
-    },
-    {
-      key: "ManageServer",
-      value: 2n ** 1n,
-      title: t`Manage Server`,
-      description: {
-        Server: t`Edit the server's information and settings`,
+      {
+        key: "ManageServer",
+        value: 2n ** 1n,
+        title: t`Manage Server`,
+        description: {
+          Server: t`Edit the server's information and settings`,
+        },
       },
-    },
-    {
-      key: "ManagePermissions",
-      value: 2n ** 2n,
-      title: t`Manage Permissions`,
-      description: {
-        Group: t`Whether other users can edit these settings`,
-        TextChannel: t`Edit channel-specific role and default permissions`,
-        Server: t`Edit any permissions on the server`,
+      {
+        key: "ManagePermissions",
+        value: 2n ** 2n,
+        title: t`Manage Permissions`,
+        description: {
+          Group: t`Whether other users can edit these settings`,
+          TextChannel: t`Edit channel-specific role and default permissions`,
+          Server: t`Edit any permissions on the server`,
+        },
       },
-    },
-    {
-      key: "ManageRole",
-      value: 2n ** 3n,
-      title: t`Manage Roles`,
-      description: {
-        Server: t`Create and edit server roles`,
+      {
+        key: "ManageRole",
+        value: 2n ** 3n,
+        title: t`Manage Roles`,
+        description: {
+          Server: t`Create and edit server roles`,
+        },
       },
-    },
-    {
-      key: "ManageCustomisation",
-      value: 2n ** 4n,
-      title: t`Manage Customisation`,
-      description: {
-        Server: t`Create server emoji`,
+      {
+        key: "ManageCustomisation",
+        value: 2n ** 4n,
+        title: t`Manage Customisation`,
+        description: {
+          Server: t`Create server emoji`,
+        },
       },
-    },
-    {
-      heading: t`Members`,
-      key: "KickMembers",
-      value: 2n ** 6n,
-      title: t`Kick Members`,
-      description: {
-        Server: t`Kick lower-ranking members from the server`,
+      {
+        heading: t`Members`,
+        key: "KickMembers",
+        value: 2n ** 6n,
+        title: t`Kick Members`,
+        description: {
+          Server: t`Kick lower-ranking members from the server`,
+        },
       },
-    },
-    {
-      key: "BanMembers",
-      value: 2n ** 7n,
-      title: t`Ban Members`,
-      description: {
-        Server: t`Ban lower-ranking members from the server`,
+      {
+        key: "BanMembers",
+        value: 2n ** 7n,
+        title: t`Ban Members`,
+        description: {
+          Server: t`Ban lower-ranking members from the server`,
+        },
       },
-    },
-    {
-      key: "TimeoutMembers",
-      value: 2n ** 8n,
-      title: t`Timeout Members`,
-      description: {
-        Server: t`Temporarily prevent lower-ranking members from interacting`,
+      {
+        key: "TimeoutMembers",
+        value: 2n ** 8n,
+        title: t`Timeout Members`,
+        description: {
+          Server: t`Temporarily prevent lower-ranking members from interacting`,
+        },
       },
-    },
-    {
-      key: "AssignRoles",
-      value: 2n ** 9n,
-      title: t`Assign Roles`,
-      description: {
-        Server: t`Assign lower-ranked roles to lower-ranking members`,
+      {
+        key: "AssignRoles",
+        value: 2n ** 9n,
+        title: t`Assign Roles`,
+        description: {
+          Server: t`Assign lower-ranked roles to lower-ranking members`,
+        },
       },
-    },
-    {
-      key: "ChangeNickname",
-      value: 2n ** 10n,
-      title: t`Change Nickname`,
-      description: {
-        Server: t`Change own nickname`,
+      {
+        key: "ChangeNickname",
+        value: 2n ** 10n,
+        title: t`Change Nickname`,
+        description: {
+          Server: t`Change own nickname`,
+        },
       },
-    },
-    {
-      key: "ManageNicknames",
-      value: 2n ** 11n,
-      title: t`Manage Nicknames`,
-      description: {
-        Server: t`Change other members' nicknames`,
+      {
+        key: "ManageNicknames",
+        value: 2n ** 11n,
+        title: t`Manage Nicknames`,
+        description: {
+          Server: t`Change other members' nicknames`,
+        },
       },
-    },
-    {
-      key: "ChangeAvavar",
-      value: 2n ** 12n,
-      title: t`Change Avatar`,
-      description: {
-        Server: t`Change own avatar`,
+      {
+        key: "ChangeAvavar",
+        value: 2n ** 12n,
+        title: t`Change Avatar`,
+        description: {
+          Server: t`Change own avatar`,
+        },
       },
-    },
-    {
-      key: "RemoveAvatars",
-      value: 2n ** 13n,
-      title: t`Remove Avatars`,
-      description: {
-        Server: t`Remove other members' avatars`,
+      {
+        key: "RemoveAvatars",
+        value: 2n ** 13n,
+        title: t`Remove Avatars`,
+        description: {
+          Server: t`Remove other members' avatars`,
+        },
       },
-    },
-    {
-      heading: t`Channels`,
-      key: "ViewChannel",
-      value: 2n ** 20n,
-      title: t`View Channel`,
-      description: {
-        TextChannel: t`Able to access this channel`,
-        Server: t`Able to access channels on this server`,
+      {
+        heading: t`Channels`,
+        key: "ViewChannel",
+        value: 2n ** 20n,
+        title: t`View Channel`,
+        description: {
+          TextChannel: t`Able to access this channel`,
+          Server: t`Able to access channels on this server`,
+        },
       },
-    },
-    {
-      key: "ReadMessageHistory",
-      value: 2n ** 21n,
-      title: t`Read Message History`,
-      description: {
-        TextChannel: t`Read past messages sent in channel`,
-        Server: t`Read past messages sent in channels`,
+      {
+        key: "ReadMessageHistory",
+        value: 2n ** 21n,
+        title: t`Read Message History`,
+        description: {
+          TextChannel: t`Read past messages sent in channel`,
+          Server: t`Read past messages sent in channels`,
+        },
       },
-    },
-    {
-      key: "SendMessage",
-      value: 2n ** 22n,
-      title: t`Send Messages`,
-      description: {
-        Group: t`Send messages in channel`,
-        TextChannel: t`Send messages in channel`,
-        Server: t`Send messages in channels`,
+      {
+        key: "SendMessage",
+        value: 2n ** 22n,
+        title: t`Send Messages`,
+        description: {
+          Group: t`Send messages in channel`,
+          TextChannel: t`Send messages in channel`,
+          Server: t`Send messages in channels`,
+        },
       },
-    },
-    {
-      key: "ManageMessages",
-      value: 2n ** 23n,
-      title: t`Manage Messages`,
-      description: {
-        Group: t`Delete and pin messages sent by other members`,
-        TextChannel: t`Delete and pin messages sent by other members`,
-        Server: t`Delete and pin messages sent by other members`,
+      {
+        key: "ManageMessages",
+        value: 2n ** 23n,
+        title: t`Manage Messages`,
+        description: {
+          Group: t`Delete and pin messages sent by other members`,
+          TextChannel: t`Delete and pin messages sent by other members`,
+          Server: t`Delete and pin messages sent by other members`,
+        },
       },
-    },
-    {
-      key: "ManageWebhooks",
-      value: 2n ** 24n,
-      title: t`Manage Webhooks`,
-      description: {
-        Group: t`Create and edit webhooks`,
-        TextChannel: t`Create and edit webhooks`,
-        Server: t`Create and edit webhooks`,
+      {
+        key: "ManageWebhooks",
+        value: 2n ** 24n,
+        title: t`Manage Webhooks`,
+        description: {
+          Group: t`Create and edit webhooks`,
+          TextChannel: t`Create and edit webhooks`,
+          Server: t`Create and edit webhooks`,
+        },
       },
-    },
-    {
-      key: "InviteOthers",
-      value: 2n ** 25n,
-      title: t`Invite Others`,
-      description: {
-        Group: t`Add new members to the group`,
-        Any: t`Create invites for others to use`,
+      {
+        key: "InviteOthers",
+        value: 2n ** 25n,
+        title: t`Invite Others`,
+        description: {
+          Group: t`Add new members to the group`,
+          Any: t`Create invites for others to use`,
+        },
       },
-    },
-    {
-      heading: t`Messaging`,
-      key: "SendEmbeds",
-      value: 2n ** 26n,
-      title: t`Send Embeds`,
-      description: {
-        Any: t`Send embedded content such as link embeds or custom embeds`,
+      {
+        heading: t`Messaging`,
+        key: "SendEmbeds",
+        value: 2n ** 26n,
+        title: t`Send Embeds`,
+        description: {
+          Any: t`Send embedded content such as link embeds or custom embeds`,
+        },
       },
-    },
-    {
-      key: "UploadFiles",
-      value: 2n ** 27n,
-      title: t`Upload Files`,
-      description: {
-        Any: t`Send attachments to chat`,
+      {
+        key: "UploadFiles",
+        value: 2n ** 27n,
+        title: t`Upload Files`,
+        description: {
+          Any: t`Send attachments to chat`,
+        },
       },
-    },
-    {
-      key: "Masquerade",
-      value: 2n ** 28n,
-      title: t`Masquerade`,
-      description: {
-        Any: t`Allow members to change name and avatar per-message`,
+      {
+        key: "Masquerade",
+        value: 2n ** 28n,
+        title: t`Masquerade`,
+        description: {
+          Any: t`Allow members to change name and avatar per-message`,
+        },
       },
-    },
-    {
-      key: "React",
-      value: 2n ** 29n,
-      title: t`React`,
-      description: {
-        Any: t`React to messages with emoji`,
+      {
+        key: "React",
+        value: 2n ** 29n,
+        title: t`React`,
+        description: {
+          Any: t`React to messages with emoji`,
+        },
       },
-    },
-    {
-      heading: t`Voice`,
-      key: "Connect",
-      value: 2n ** 30n,
-      title: t`Connect`,
-      description: {
-        TextChannel: t`Connect to voice channel`,
-        Server: t`Connect to voice channel`,
+      {
+        heading: t`Voice`,
+        key: "Connect",
+        value: 2n ** 30n,
+        title: t`Connect`,
+        description: {
+          TextChannel: t`Connect to voice channel`,
+          Server: t`Connect to voice channel`,
+        },
       },
-    },
-    {
-      key: "Speak",
-      value: 2n ** 31n,
-      title: t`Speak`,
-      description: {
-        TextChannel: t`Able to speak in voice call`,
-        Server: t`Able to speak in voice call`,
+      {
+        key: "Speak",
+        value: 2n ** 31n,
+        title: t`Speak`,
+        description: {
+          TextChannel: t`Able to speak in voice call`,
+          Server: t`Able to speak in voice call`,
+        },
       },
-    },
-    {
-      key: "Video",
-      value: 2n ** 32n,
-      title: t`Video`,
-      description: {
-        TextChannel: t`Share camera or screen in voice call`,
-        Server: t`Share camera or screen in voice call`,
+      {
+        key: "Video",
+        value: 2n ** 32n,
+        title: t`Video`,
+        description: {
+          TextChannel: t`Share camera or screen in voice call`,
+          Server: t`Share camera or screen in voice call`,
+        },
       },
-    },
-    {
-      key: "MuteMembers",
-      value: 2n ** 33n,
-      title: t`Mute Members`,
-      description: {
-        TextChannel: t`Mute lower-ranking members in voice call`,
-        Server: t`Mute lower-ranking members in voice call`,
+      {
+        key: "MuteMembers",
+        value: 2n ** 33n,
+        title: t`Mute Members`,
+        description: {
+          TextChannel: t`Mute lower-ranking members in voice call`,
+          Server: t`Mute lower-ranking members in voice call`,
+        },
       },
-    },
-    {
-      key: "DeafenMembers",
-      value: 2n ** 34n,
-      title: t`Deafen Members`,
-      description: {
-        TextChannel: t`Deafen lower-ranking members in voice call`,
-        Server: t`Deafen lower-ranking members in voice call`,
+      {
+        key: "DeafenMembers",
+        value: 2n ** 34n,
+        title: t`Deafen Members`,
+        description: {
+          TextChannel: t`Deafen lower-ranking members in voice call`,
+          Server: t`Deafen lower-ranking members in voice call`,
+        },
       },
-    },
-    {
-      key: "MoveMembers",
-      value: 2n ** 35n,
-      title: t`Move Members`,
-      description: {
-        TextChannel: t`Move members between voice channels`,
-        Server: t`Move members between voice channels`,
+      {
+        key: "MoveMembers",
+        value: 2n ** 35n,
+        title: t`Move Members`,
+        description: {
+          TextChannel: t`Move members between voice channels`,
+          Server: t`Move members between voice channels`,
+        },
       },
-    },
-    {
-      key: "Listen",
-      value: 2n ** 36n,
-      title: t`Listen`,
-      description: {
-        TextChannel: t`Hear other people and see their video`,
-        Server: t`Hear other people and see their video`,
+      {
+        key: "Listen",
+        value: 2n ** 36n,
+        title: t`Listen`,
+        description: {
+          TextChannel: t`Hear other people and see their video`,
+          Server: t`Hear other people and see their video`,
+        },
       },
-    },
-    {
-      heading: t`Mentions`,
-      key: "MentionEveryone",
-      value: 2n ** 37n,
-      title: t`Mention Everyone`,
-      description: {
-        Any: t`Mention everyone and online members inside the server`,
+      {
+        heading: t`Mentions`,
+        key: "MentionEveryone",
+        value: 2n ** 37n,
+        title: t`Mention Everyone`,
+        description: {
+          Any: t`Mention everyone and online members inside the server`,
+        },
       },
-    },
-    {
-      key: "MentionRoles",
-      value: 2n ** 38n,
-      title: t`Mention Roles`,
-      description: {
-        Any: t`Mention specific roles`,
+      {
+        key: "MentionRoles",
+        value: 2n ** 38n,
+        title: t`Mention Roles`,
+        description: {
+          Any: t`Mention specific roles`,
+        },
       },
-    },
-  ];
+    ];
 
   /**
    * Find description for this permission in context

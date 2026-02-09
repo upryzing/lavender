@@ -1,5 +1,5 @@
 import { useLingui } from "@lingui-solid/solid/macro";
-import { API } from "stoat.js";
+import { API } from "@upryzing/upryzing.js";
 
 /**
  * Translate any error

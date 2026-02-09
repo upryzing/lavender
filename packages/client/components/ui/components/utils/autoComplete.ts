@@ -7,7 +7,7 @@ import {
   ServerMember,
   ServerRole,
   User,
-} from "stoat.js";
+} from "@upryzing/upryzing.js";
 
 export interface AutoCompleteSearchSpace {
   users?: User[];

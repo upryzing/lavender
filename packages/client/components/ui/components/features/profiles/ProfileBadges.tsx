@@ -2,7 +2,7 @@ import { BiSolidShield } from "solid-icons/bi";
 import { Show } from "solid-js";
 
 import { Trans, useLingui } from "@lingui-solid/solid/macro";
-import { User, UserBadges } from "stoat.js";
+import { User, UserBadges } from "@upryzing/upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import badgeJoke1 from "../../../../../public/assets/badges/amog.svg";

@@ -1,7 +1,7 @@
 import { Accessor, For, JSX, Show, createMemo, createSignal } from "solid-js";
 
 import { Trans } from "@lingui-solid/solid/macro";
-import { Channel, Server, User } from "stoat.js";
+import { Channel, Server, User } from "@upryzing/upryzing.js";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 

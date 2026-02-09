@@ -2,7 +2,7 @@ import { For, Match, Show, Switch } from "solid-js";
 
 import { Trans } from "@lingui-solid/solid/macro";
 import dayjs from "dayjs";
-import { Channel } from "stoat.js";
+import { Channel } from "@upryzing/upryzing.js";
 
 import { useState } from "@revolt/state";
 import { Column, Text, Time } from "@revolt/ui";
@@ -114,8 +114,8 @@ export function NotificationContextMenu(props: { channel: Channel }) {
                   when={
                     props.channel.server
                       ? state.notifications.computeForServer(
-                          props.channel.server!,
-                        ) === "all"
+                        props.channel.server!,
+                      ) === "all"
                       : true
                   }
                 >

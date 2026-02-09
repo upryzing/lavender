@@ -2,7 +2,7 @@ import { For, Show, Suspense, createSignal } from "solid-js";
 
 import { Trans } from "@lingui-solid/solid/macro";
 import { useQuery } from "@tanstack/solid-query";
-import { API, Channel } from "stoat.js";
+import { API, Channel } from "@upryzing/upryzing.js";
 
 import { Message } from "@revolt/app";
 import { Button, CircularProgress, Row } from "@revolt/ui";
@@ -24,9 +24,9 @@ export function TextSearchSidebar(props: {
           props.query.sort
             ? props.query
             : {
-                ...props.query,
-                sort: sort(),
-              },
+              ...props.query,
+              sort: sort(),
+            },
         )
         .then((result) => result.messages),
   }));

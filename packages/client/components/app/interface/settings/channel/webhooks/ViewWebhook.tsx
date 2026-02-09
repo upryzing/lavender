@@ -3,7 +3,7 @@ import { Show } from "solid-js";
 
 import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { useMutation } from "@tanstack/solid-query";
-import { API, ChannelWebhook } from "stoat.js";
+import { API, ChannelWebhook } from "@upryzing/upryzing.js";
 
 import { useClient } from "@revolt/client";
 import { CONFIGURATION } from "@revolt/common";

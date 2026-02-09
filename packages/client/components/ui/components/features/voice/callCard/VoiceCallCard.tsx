@@ -14,7 +14,7 @@ import {
 import { Portal } from "solid-js/web";
 
 import { AutoSizer } from "@dschz/solid-auto-sizer";
-import { Channel } from "stoat.js";
+import { Channel } from "@upryzing/upryzing.js";
 import { css } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
@@ -26,16 +26,16 @@ import { VoiceCallCardPreview } from "./VoiceCallCardPreview";
 
 type State =
   | {
-      type: "floating";
-      corner: "top-left" | "top-right" | "bottom-left" | "bottom-right";
-    }
+    type: "floating";
+    corner: "top-left" | "top-right" | "bottom-left" | "bottom-right";
+  }
   | {
-      type: "fixed";
-      x: number;
-      y: number;
-      width: number;
-      channel: Channel;
-    };
+    type: "fixed";
+    x: number;
+    y: number;
+    width: number;
+    channel: Channel;
+  };
 
 type NewState = { channel: Channel; x: number; y: number; width: number };
 
@@ -73,15 +73,13 @@ export function VoiceCallCardContext(props: { children: JSX.Element }) {
           "--height": "158px",
           "--padding-x": "32px",
           "--padding-y": "96px",
-          transform: `translate(${
-            position.corner === "top-left" || position.corner === "bottom-left"
+          transform: `translate(${position.corner === "top-left" || position.corner === "bottom-left"
               ? "calc(var(--padding-x) + var(--offset-x))"
               : "calc(100vw - var(--padding-x) - var(--width) + var(--offset-x))"
-          }, ${
-            position.corner === "top-left" || position.corner === "top-right"
+            }, ${position.corner === "top-left" || position.corner === "top-right"
               ? "calc(var(--padding-y) + var(--offset-y))"
               : "calc(100vh - var(--padding-y) - var(--height) + var(--offset-y))"
-          })`,
+            })`,
           width: "var(--width)",
           height: "var(--height)",
         };
@@ -193,8 +191,8 @@ export function VoiceCallCardContext(props: { children: JSX.Element }) {
               });
             }
           }}
-          // dragging logic for touch input
-          // todo
+        // dragging logic for touch input
+        // todo
         >
           <Switch>
             <Match when={state().type === "fixed"}>

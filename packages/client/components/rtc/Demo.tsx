@@ -12,7 +12,7 @@ import {
 } from "solid-livekit-components";
 
 import { Track } from "livekit-client";
-import { Channel } from "stoat.js";
+import { Channel } from "@upryzing/upryzing.js";
 import { css } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
@@ -301,9 +301,9 @@ export function Demo(props: { channel: Channel }) {
                 tooltip: props.channel.havePermission("Speak")
                   ? undefined
                   : {
-                      placement: "top",
-                      content: "No permission to speak",
-                    },
+                    placement: "top",
+                    content: "No permission to speak",
+                  },
               }}
             >
               <IconButton

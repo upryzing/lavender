@@ -2,7 +2,7 @@ import { createFormControl, createFormGroup } from "solid-forms";
 import { For, Match, Switch } from "solid-js";
 
 import { Trans, useLingui } from "@lingui-solid/solid/macro";
-import { Server } from "stoat.js";
+import { Server } from "@upryzing/upryzing.js";
 import { css } from "styled-system/css";
 
 import { useClient } from "@revolt/client";

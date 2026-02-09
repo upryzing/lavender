@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
 
 import { useNavigate } from "@solidjs/router";
-import { ServerMember, User } from "stoat.js";
+import { ServerMember, User } from "@upryzing/upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { UserContextMenu } from "@revolt/app";
@@ -74,10 +74,10 @@ export function ProfileActions(props: {
           props.member
             ? props.user.self
               ? props.member.server!.havePermission("ChangeNickname") ||
-                props.member.server!.havePermission("ChangeAvatar")
+              props.member.server!.havePermission("ChangeAvatar")
               : (props.member.server!.havePermission("ManageNicknames") ||
-                  props.member.server!.havePermission("RemoveAvatars")) &&
-                props.member.inferiorTo(props.member!.server!.member!)
+                props.member.server!.havePermission("RemoveAvatars")) &&
+              props.member.inferiorTo(props.member!.server!.member!)
             : props.user.self
         }
       >

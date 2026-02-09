@@ -2,7 +2,7 @@ import { For, Match, Switch } from "solid-js";
 
 import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { useQuery, useQueryClient } from "@tanstack/solid-query";
-import { Server, ServerInvite } from "stoat.js";
+import { Server, ServerInvite } from "@upryzing/upryzing.js";
 
 import { useModals } from "@revolt/modal";
 import {
@@ -64,9 +64,9 @@ export function ListServerInvites(props: { server: Server }) {
         use:floating={{
           tooltip: serverDoesntHaveChannels()
             ? {
-                content: t`Create a channel before inviting others!`,
-                placement: "bottom",
-              }
+              content: t`Create a channel before inviting others!`,
+              placement: "bottom",
+            }
             : undefined,
         }}
       >
