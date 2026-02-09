@@ -7,8 +7,8 @@ const inlineCodeStyles: SystemStyleObject = {
   padding: "1px 4px",
   borderRadius: "var(--borderRadius-md)",
 
-  color: "var(--colours-messaging-component-code-block-foreground)",
-  background: "var(--colours-messaging-component-code-block-background)",
+  color: "#c9d1d9",
+  background: "#0d1117",
 };
 
 export const paragraph = styled("p", {
@@ -18,13 +18,13 @@ export const paragraph = styled("p", {
   variants: {
     emojiSize: {
       small: {
-        "--emoji-size": "var(--layout-emoji-small)",
+        // inherit default
       },
       medium: {
-        "--emoji-size": "var(--layout-emoji-medium)",
+        "--emoji-size": "var(--emoji-size-medium)",
       },
       large: {
-        "--emoji-size": "var(--layout-emoji-large)",
+        "--emoji-size": "var(--emoji-size-large)",
       },
     },
   },
@@ -33,6 +33,18 @@ export const paragraph = styled("p", {
 export const emphasis = styled("em", {
   base: {
     fontStyle: "italic",
+  },
+});
+
+export const strong = styled("strong", {
+  base: {
+    fontWeight: "bold",
+  },
+});
+
+export const strikethrough = styled("del", {
+  base: {
+    textDecoration: "line-through",
   },
 });
 
@@ -101,8 +113,18 @@ export const orderedList = styled("ol", {
   base: {
     listStylePosition: "outside",
     paddingLeft: "1.5em",
+    listStyleType: "none",
+    counterReset: "list-counter var(--start-number, 0)",
 
-    listStyleType: "decimal",
+    "& li": {
+      display: "list-item",
+      counterIncrement: "list-counter",
+
+      "&::before": {
+        content: 'counter(list-counter) ". "',
+        fontWeight: "inherit",
+      },
+    },
   },
 });
 
@@ -110,11 +132,25 @@ export const blockquote = styled("blockquote", {
   base: {
     margin: "var(--gap-sm) 0",
     padding: "var(--gap-sm) var(--gap-md)",
-    borderRadius: "var(--borderRadius-md)",
-    color: "var(--colours-messaging-component-blockquote-foreground)",
-    background: "var(--colours-messaging-component-blockquote-background)",
-    borderInlineStart:
-      "var(--gap-sm) solid var(--colours-messaging-component-blockquote-foreground)",
+    borderRadius: "var(--borderRadius-sm)",
+    borderInlineStart: "var(--gap-sm) solid var(--border)",
+
+    "&, & > blockquote > blockquote": {
+      color: "var(--md-sys-color-on-secondary-container)",
+      background: "var(--md-sys-color-secondary-container)",
+      "--border": "var(--md-sys-color-secondary)",
+    },
+
+    "& > blockquote, & > blockquote > blockquote > blockquote": {
+      color: "var(--md-sys-color-on-tertiary-container)",
+      background: "var(--md-sys-color-tertiary-container)",
+      "--border": "var(--md-sys-color-tertiary)",
+    },
+
+    "& blockquote": {
+      borderBlock: "1px solid var(--border)",
+      borderInlineEnd: "1px solid var(--border)",
+    },
   },
 });
 
@@ -128,14 +164,14 @@ export const tableHeader = styled("th", {
   base: {
     fontWeight: 600,
     padding: "var(--gap-sm)",
-    border: "1px solid var(--colours-foreground)",
+    border: "1px solid var(--md-sys-color-outline)",
   },
 });
 
 export const tableElement = styled("td", {
   base: {
     padding: "var(--gap-sm)",
-    border: "1px solid var(--colours-foreground)",
+    border: "1px solid var(--md-sys-color-outline)",
   },
 });
 

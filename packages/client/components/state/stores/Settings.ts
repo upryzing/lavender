@@ -1,3 +1,8 @@
+import {
+  UNICODE_EMOJI_PACKS,
+  UnicodeEmojiPacks,
+} from "@revolt/markdown/emoji/UnicodeEmoji";
+
 import { State } from "..";
 
 import { AbstractStore } from ".";
@@ -5,7 +10,7 @@ import { AbstractStore } from ".";
 interface SettingsDefinition {
   /**
    * Whether to enable desktop notifications
-   * Revolt will try to get notification permission after login if it doesn't already.
+   * Stoat will try to get notification permission after login if it doesn't already.
    * TODO: implement
    */
   // "notifications:desktop": boolean;
@@ -17,10 +22,9 @@ interface SettingsDefinition {
   // "notifications:sounds": SoundOptions;
 
   /**
-   * Selected emoji pack
-   * TODO: implement
+   * Selected unicode emoji
    */
-  // "appearance:emoji": EmojiPack;
+  "appearance:unicode_emoji": UnicodeEmojiPacks;
 
   // TODO: this should be part of theme
   // "appearance:ligatures": boolean;
@@ -45,10 +49,25 @@ interface SettingsDefinition {
   "appearance:compact_mode": boolean;
 
   /**
-   * Indicate new users to Revolt
+   * Indicate new users to Stoat
    * TODO: implement
    */
   // "appearance:show_account_age": boolean;
+
+  /**
+   * Whether to include 'copy ID' in context menus
+   */
+  "advanced:copy_id": boolean;
+
+  /**
+   * Whether to include admin panel links in context menus
+   */
+  "advanced:admin_panel": boolean;
+
+  /**
+   * Last read changelog index
+   */
+  "changelog:last_index": number;
 }
 
 /**
@@ -57,17 +76,25 @@ interface SettingsDefinition {
 type ValueType<T extends keyof SettingsDefinition> =
   SettingsDefinition[T] extends boolean
     ? "boolean"
-    : SettingsDefinition[T] extends string
-    ? "string"
-    : (v: Partial<SettingsDefinition[T]>) => SettingsDefinition[T] | undefined;
+    : SettingsDefinition[T] extends number
+      ? "number"
+      : SettingsDefinition[T] extends string
+        ? "string"
+        : (
+            v: Partial<SettingsDefinition[T]>,
+          ) => SettingsDefinition[T] | undefined;
 
 /**
  * Expected types of settings keys, enforce some sort of validation is present for all keys.
  * If we cannot validate the value as a primitive, clean it up using a function.
  */
 const EXPECTED_TYPES: { [K in keyof SettingsDefinition]: ValueType<K> } = {
+  "appearance:unicode_emoji": "string",
   "appearance:show_send_button": "boolean",
   "appearance:compact_mode": "boolean",
+  "advanced:copy_id": "boolean",
+  "advanced:admin_panel": "boolean",
+  "changelog:last_index": "number",
 };
 
 /**
@@ -103,7 +130,13 @@ export class Settings extends AbstractStore<"settings", TypeSettings> {
    * Generate default values
    */
   default(): TypeSettings {
-    return {};
+    return {
+      "appearance:unicode_emoji": "fluent-3d",
+      "appearance:show_send_button": true,
+      "appearance:compact_mode": false,
+      "advanced:copy_id": false,
+      "advanced:admin_panel": false,
+    };
   }
 
   /**
@@ -117,13 +150,17 @@ export class Settings extends AbstractStore<"settings", TypeSettings> {
 
       if (typeof expectedType === "function") {
         const cleanedValue = (expectedType as (value: unknown) => unknown)(
-          input[key]
+          input[key],
         );
         if (cleanedValue) {
           settings[key] = cleanedValue as never;
         }
+      } else if (key === "appearance:unicode_emoji") {
+        if (UNICODE_EMOJI_PACKS.includes(input[key] as never)) {
+          settings[key] = input[key];
+        }
       } else if (typeof input[key] === expectedType) {
-        settings[key] = input[key];
+        settings[key] = input[key] as never;
       }
     }
 

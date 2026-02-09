@@ -1,9 +1,8 @@
 import { Accessor, JSX } from "solid-js";
 
-import { Settings, SettingsProps } from "./Settings";
-import channel from "./channel";
-import server from "./server";
-import user from "./user";
+import channel from "./ChannelSettings";
+import server from "./ServerSettings";
+import user from "./UserSettings";
 
 export { Settings } from "./Settings";
 
@@ -12,13 +11,14 @@ export type SettingsConfiguration<T> = {
    * Generate list of categories and entries
    * @returns List
    */
-  list: (context: T) => SettingsList;
+  list: (context: T) => SettingsList<T>;
 
   /**
    * Render the title of the current breadcrumb key
+   * @param ctx Context from settings list
    * @param key Key
    */
-  title: (key: string) => string;
+  title: (ctx: SettingsList<T>, key: string) => string;
 
   /**
    * Render the current settings page
@@ -26,14 +26,15 @@ export type SettingsConfiguration<T> = {
    */
   render: (
     props: { page: Accessor<undefined | string> },
-    context: T
+    context: T,
   ) => JSX.Element;
 };
 
 /**
  * List of categories and entries
  */
-export type SettingsList = {
+export type SettingsList<T> = {
+  context: T;
   prepend?: JSX.Element;
   append?: JSX.Element;
   entries: {
@@ -57,32 +58,9 @@ export type SettingsEntry = {
   title: JSX.Element;
 };
 
-export const SettingsConfigurations: Record<
-  string,
-  SettingsConfiguration<never>
-> = {
+// eslint-disable-next-line
+export const SettingsConfigurations: Record<string, any> = {
   user,
   server,
   channel,
 };
-
-/**
- * Render using a specific set of configurations
- * @param props
- * @returns
- */
-export function SettingsUsingConfiguration(
-  props: SettingsProps & { configKey: string }
-) {
-  // eslint-disable-next-line solid/reactivity
-  const config = SettingsConfigurations[props.configKey ?? "client"];
-
-  return (
-    <Settings
-      {...props}
-      render={config.render}
-      title={config.title}
-      list={config.list}
-    />
-  );
-}

@@ -1,71 +1,105 @@
-import { useClient } from "@revolt/client";
-import { createProfileResource } from "@revolt/client/resources";
-import {
-  CategoryButton,
-  CategoryButtonGroup,
-  Column,
-  iconSize,
-} from "@revolt/ui";
+import { Trans } from "@lingui-solid/solid/macro";
+import { Bot } from "stoat.js";
 
+import { createProfileResource } from "@revolt/client/resources";
+import { useModals } from "@revolt/modal";
+import { CategoryButton, Column, iconSize } from "@revolt/ui";
+
+import MdContentCopy from "@material-design-icons/svg/outlined/content_copy.svg?component-solid";
+import MdKey from "@material-design-icons/svg/outlined/key.svg?component-solid";
 import MdLink from "@material-design-icons/svg/outlined/link.svg?component-solid";
 import MdPersonAdd from "@material-design-icons/svg/outlined/person_add.svg?component-solid";
 import MdPublic from "@material-design-icons/svg/outlined/public.svg?component-solid";
 import MdToken from "@material-design-icons/svg/outlined/token.svg?component-solid";
 
-import { useSettingsNavigation } from "../../Settings";
 import { UserSummary } from "../account/index";
-import { EditProfileButtons } from "../profile/EditProfileButtons";
+import { UserProfileEditor } from "../profile/UserProfileEditor";
 
 /**
  * View a specific bot
  */
-export function ViewBot() {
-  const client = useClient();
-  const { page } = useSettingsNavigation();
-
-  const bot = () => client().bots.get(page()!.substring("bots/".length))!;
-  const profile = createProfileResource(bot().user!);
+export function ViewBot(props: { bot: Bot }) {
+  // `bot` will never change, so we don't care about reactivity here
+  // eslint-disable-next-line solid/reactivity
+  const profile = createProfileResource(props.bot.user!);
+  const { openModal } = useModals();
 
   return (
     <Column gap="lg">
       <UserSummary
-        user={bot().user!}
+        user={props.bot.user!}
         showBadges
         bannerUrl={profile.data?.animatedBannerURL}
       />
-      <EditProfileButtons user={bot().user!} />
+
+      <UserProfileEditor user={props.bot.user!} />
       {/* <ErrorBoundary fallback={<>Failed to load profile</>}>
         <Suspense fallback={<>loading...</>}>{profile.data?.content}</Suspense>
       </ErrorBoundary> */}
 
-      <CategoryButtonGroup>
+      <CategoryButton.Group>
         <CategoryButton
-          description="Generate a new token if it gets lost or compromised"
+          description={
+            <Trans>Generate a new token if it gets lost or compromised</Trans>
+          }
           icon={<MdToken {...iconSize(22)} />}
           action="chevron"
+          onClick={() => openModal({ type: "reset_bot_token", bot: props.bot })}
         >
-          Reset Token
+          <Trans>Reset Token</Trans>
         </CategoryButton>
         <CategoryButton
-          description="Allow others to add your bot to their servers from Discover"
+          description={
+            <Trans>
+              Allow others to add your bot to their servers from Discover
+            </Trans>
+          }
           icon={<MdPublic {...iconSize(22)} />}
           action="chevron"
         >
-          Submit to Discover
+          <Trans>Submit to Discover</Trans>
         </CategoryButton>
-      </CategoryButtonGroup>
+      </CategoryButton.Group>
 
-      <CategoryButtonGroup>
-        <CategoryButton icon={<MdLink {...iconSize(22)} />} action="copy">
-          Copy Invite
-        </CategoryButton>
+      <CategoryButton.Group>
         <CategoryButton
           icon={<MdPersonAdd {...iconSize(22)} />}
           action="chevron"
+          onClick={() =>
+            openModal({
+              type: "add_bot",
+              invite: props.bot.publicBot,
+            })
+          }
         >
-          Invite Bot
+          <Trans>Invite Bot</Trans>
         </CategoryButton>
-      </CategoryButtonGroup>
+        <CategoryButton
+          icon={<MdLink {...iconSize(22)} />}
+          action="copy"
+          onClick={() =>
+            navigator.clipboard.writeText(
+              new URL(`/bot/${props.bot.id}`, window.origin).toString(),
+            )
+          }
+        >
+          <Trans>Copy Invite URL</Trans>
+        </CategoryButton>
+        <CategoryButton
+          icon={<MdContentCopy {...iconSize(22)} />}
+          action="copy"
+          onClick={() => navigator.clipboard.writeText(props.bot.id)}
+        >
+          <Trans>Copy ID</Trans>
+        </CategoryButton>
+        <CategoryButton
+          icon={<MdKey {...iconSize(22)} />}
+          action="copy"
+          onClick={() => navigator.clipboard.writeText(props.bot.token)}
+        >
+          <Trans>Copy Token</Trans>
+        </CategoryButton>
+      </CategoryButton.Group>
     </Column>
   );
 }

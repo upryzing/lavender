@@ -1,38 +1,77 @@
-import { useTranslation } from "@revolt/i18n";
+import { createFormControl, createFormGroup } from "solid-forms";
 
-import { createFormModal } from "../form";
-import { PropGenerator } from "../types";
+import { Trans, useLingui } from "@lingui-solid/solid/macro";
+
+import { Column, Dialog, DialogProps, Form2 } from "@revolt/ui";
+
+import { useModals } from "..";
+import { Modals } from "../types";
 
 /**
- * Modal for editing email
+ * Change account email address
  */
-const EditEmail: PropGenerator<"edit_email"> = (props) => {
-  const t = useTranslation();
+export function EditEmailModal(
+  props: DialogProps & Modals & { type: "edit_email" },
+) {
+  const { t } = useLingui();
+  const { showError } = useModals();
 
-  return createFormModal({
-    modalProps: {
-      title: t("app.special.modals.account.change.email"),
-    },
-    schema: {
-      email: "text",
-      currentPassword: "password",
-    },
-    data: {
-      email: {
-        field: t("login.email"),
-        placeholder: t("login.enter.username"),
-      },
-      currentPassword: {
-        field: t("login.current_password"),
-        placeholder: t("login.enter.current_password"),
-      },
-    },
-    callback: async ({ email, currentPassword }) =>
-      void (await props.client.account.changeEmail(email, currentPassword)),
-    submit: {
-      children: t("app.special.modals.actions.update"),
-    },
+  const group = createFormGroup({
+    email: createFormControl("", { required: true }),
+    currentPassword: createFormControl("", { required: true }),
   });
-};
 
-export default EditEmail;
+  async function onSubmit() {
+    try {
+      await props.client.account.changeEmail(
+        group.controls.email.value,
+        group.controls.currentPassword.value,
+      );
+
+      props.onClose();
+    } catch (err) {
+      showError(err);
+    }
+  }
+
+  const submit = Form2.useSubmitHandler(group, onSubmit);
+
+  return (
+    <Dialog
+      show={props.show}
+      onClose={props.onClose}
+      title={<Trans>Change login email</Trans>}
+      actions={[
+        { text: <Trans>Close</Trans> },
+        {
+          text: <Trans>Send email</Trans>,
+          onClick: () => {
+            onSubmit();
+            return false;
+          },
+          isDisabled: !Form2.canSubmit(group),
+        },
+      ]}
+      isDisabled={group.isPending}
+    >
+      <form onSubmit={submit}>
+        <Column>
+          <Form2.TextField
+            name="email"
+            type="email"
+            label={t`Email`}
+            control={group.controls.email}
+            placeholder={t`someone@example.com`}
+          />
+          <Form2.TextField
+            name="currentPassword"
+            control={group.controls.currentPassword}
+            label={t`Current Password`}
+            type="password"
+            placeholder={t`Enter your current password...`}
+          />
+        </Column>
+      </form>
+    </Dialog>
+  );
+}

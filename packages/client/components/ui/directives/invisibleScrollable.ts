@@ -33,7 +33,7 @@ const baseStyles = cva({
  */
 export function invisibleScrollable(
   el: HTMLDivElement,
-  accessor: Accessor<JSX.Directives["invisibleScrollable"] & object>
+  accessor: Accessor<JSX.Directives["invisibleScrollable"] & object>,
 ) {
   const props = accessor();
 

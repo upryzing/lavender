@@ -1,11 +1,12 @@
 import { For, createSignal } from "solid-js";
 
+import { Trans } from "@lingui-solid/solid/macro";
 import { styled } from "styled-system/jsx";
 
-import { useTranslation } from "@revolt/i18n";
+import { Dialog, DialogProps, Text } from "@revolt/ui";
 
-import { modalController } from "..";
-import { PropGenerator } from "../types";
+import { useModals } from "..";
+import { Modals } from "../types";
 
 /**
  * List of recovery codes
@@ -29,8 +30,10 @@ const List = styled("div", {
 /**
  * Modal to display a list of recovery codes
  */
-const MFARecovery: PropGenerator<"mfa_recovery"> = (props) => {
-  const t = useTranslation();
+export function MFARecoveryModal(
+  props: DialogProps & Modals & { type: "mfa_recovery" },
+) {
+  const { mfaFlow, showError } = useModals();
 
   // Keep track of changes to recovery codes
   // eslint-disable-next-line solid/reactivity
@@ -39,44 +42,49 @@ const MFARecovery: PropGenerator<"mfa_recovery"> = (props) => {
   /**
    * Reset recovery codes
    */
-  const reset = async () => {
-    const ticket = await modalController.mfaFlow(props.mfa);
-    if (ticket) {
-      const codes = await ticket.generateRecoveryCodes();
-      setCodes(codes);
+  async function reset() {
+    try {
+      const ticket = await mfaFlow(props.mfa);
+      if (ticket) {
+        const codes = await ticket.generateRecoveryCodes();
+        setCodes(codes);
+      }
+    } catch (error) {
+      showError(error);
     }
+  }
 
-    return false;
-  };
-
-  return {
-    title: t("app.special.modals.mfa.recovery_codes"),
-    description: t("app.special.modals.mfa.save_codes"),
-    actions: [
-      {
-        palette: "primary",
-        children: t("app.special.modals.actions.done"),
-        onClick: () => true,
-        confirmation: true,
-      },
-      {
-        palette: "plain",
-        children: t("app.special.modals.actions.reset"),
-        onClick: reset,
-      },
-    ],
-    children: (
+  return (
+    <Dialog
+      show={props.show}
+      onClose={props.onClose}
+      title={<Trans>Your recovery codes</Trans>}
+      actions={[
+        {
+          text: <Trans>Reset</Trans>,
+          onClick: () => {
+            reset();
+            return false;
+          },
+        },
+        {
+          text: <Trans>Done</Trans>,
+          onClick: () => true,
+        },
+      ]}
+    >
+      <Text>
+        <Trans>Please save these to a safe location.</Trans>
+      </Text>
       <List>
         <For each={known()}>
           {(code, index) => (
             <span>
-              {code} {index() !== known.length && <i>{","}</i>}
+              {code} {index() !== known().length - 1 && <i>{","}</i>}
             </span>
           )}
         </For>
       </List>
-    ),
-  };
-};
-
-export default MFARecovery;
+    </Dialog>
+  );
+}

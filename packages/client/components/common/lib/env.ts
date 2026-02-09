@@ -13,6 +13,7 @@ export default {
    * Whether to emit additional debug information
    */
   DEBUG: import.meta.env.DEV || true,
+  
   /**
    * What API server to connect to by default.
    */
@@ -62,6 +63,17 @@ export default {
    */
   INVITE_ONLY: (import.meta.env.VITE_INVITE_ONLY as boolean) ?? false,
 
+  /**
+   * Maximum number of emoji a server can have
+   */
+  MAX_EMOJI: (import.meta.env.VITE_CFG_MAX_EMOJI as number) ?? 100,
+  /**
+   * Max file size allowed for uploads (in bytes)
+   * 20 MB = 20 * 1024 * 1024 = 20,971,520 bytes
+   * I kinda wonder if this should be a setting, or something fetched from the backend dynamically.
+   */
+  MAX_FILE_SIZE:
+    (import.meta.env.VITE_CFG_MAX_FILE_SIZE as number) ?? 20_000_000,
   /**
    * Session ID to set during development.
    */

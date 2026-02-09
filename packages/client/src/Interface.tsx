@@ -1,17 +1,19 @@
-import { JSX, Match, Switch, createEffect, onCleanup, onMount } from "solid-js";
+import { JSX, Match, Switch, createEffect } from "solid-js";
 
 import { Server } from "@upryzing/upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { ChannelContextMenu, ServerContextMenu } from "@revolt/app";
-import { clientController } from "@revolt/client";
-import { State, TransitionType } from "@revolt/client/Controller";
-import { KeybindAction } from "@revolt/keybinds";
-import { modalController } from "@revolt/modal";
-import { Navigate, useBeforeLeave } from "@revolt/routing";
-import { state } from "@revolt/state";
-import { Preloader } from "@revolt/ui";
-import { useKeybindActions } from "@revolt/ui/components/context/Keybinds";
+import { MessageCache } from "@revolt/app/interface/channels/text/MessageCache";
+import { Titlebar } from "@revolt/app/interface/desktop/Titlebar";
+import { useClient, useClientLifecycle } from "@revolt/client";
+import { State } from "@revolt/client/Controller";
+import { NotificationsWorker } from "@revolt/client/NotificationsWorker";
+import { useModals } from "@revolt/modal";
+import { Navigate, useBeforeLeave, useLocation } from "@revolt/routing";
+import { useState } from "@revolt/state";
+import { LAYOUT_SECTIONS } from "@revolt/state/stores/Layout";
+import { CircularProgress } from "@revolt/ui";
 
 import { Sidebar } from "./interface/Sidebar";
 
@@ -19,13 +21,17 @@ import { Sidebar } from "./interface/Sidebar";
  * Application layout
  */
 const Interface = (props: { children: JSX.Element }) => {
-  const keybinds = useKeybindActions();
+  const state = useState();
+  const client = useClient();
+  const { openModal } = useModals();
+  const { isLoggedIn, lifecycle } = useClientLifecycle();
+  const { pathname } = useLocation();
 
   useBeforeLeave((e) => {
     if (!e.defaultPrevented) {
       if (e.to === "/settings") {
         e.preventDefault();
-        modalController.push({
+        openModal({
           type: "settings",
           config: "user",
         });
@@ -35,122 +41,77 @@ const Interface = (props: { children: JSX.Element }) => {
     }
   });
 
-  onMount(() => {
-    keybinds.addEventListener(
-      KeybindAction.DeveloperToggleAllExperiments,
-      state.experiments.toggleSafeMode
-    );
-  });
-
-  onCleanup(() => {
-    keybinds.removeEventListener(
-      KeybindAction.DeveloperToggleAllExperiments,
-      state.experiments.toggleSafeMode
-    );
-  });
-
   createEffect(() => {
-    if (!clientController.isLoggedIn()) {
-      console.info("WAITING... currently", clientController.lifecycle.state());
+    if (!isLoggedIn()) {
+      state.layout.setNextPath(pathname);
+      console.debug("WAITING... currently", lifecycle.state());
     }
   });
 
+  function isDisconnected() {
+    return [
+      State.Connecting,
+      State.Disconnected,
+      State.Reconnecting,
+      State.Offline,
+    ].includes(lifecycle.state());
+  }
+
   return (
-    <div
-      style={{
-        display: "flex",
-        "flex-direction": "column",
-        height: "100%",
-      }}
-    >
-      <Notice>
-        ⚠️ This is beta software, things will break! State:{" "}
-        <Switch>
-          <Match when={clientController.lifecycle.state() === State.Connecting}>
-            Connecting
+    <MessageCache client={client()}>
+      <div
+        style={{
+          display: "flex",
+          "flex-direction": "column",
+          height: "100%",
+        }}
+      >
+        <Titlebar />
+        <Switch fallback={<CircularProgress />}>
+          <Match when={!isLoggedIn()}>
+            <Navigate href="/login" />
           </Match>
-          <Match when={clientController.lifecycle.state() === State.Connected}>
-            Connected
-          </Match>
-          <Match
-            when={clientController.lifecycle.state() === State.Disconnected}
-          >
-            Disconnected{" "}
-            <a
-              onClick={() =>
-                clientController.lifecycle.transition({
-                  type: TransitionType.Retry,
-                })
-              }
+          <Match when={lifecycle.loadedOnce()}>
+            <Layout
+              disconnected={isDisconnected()}
+              style={{ "flex-grow": 1, "min-height": 0 }}
+              onDragOver={(e) => {
+                if (e.dataTransfer) e.dataTransfer.dropEffect = "none";
+              }}
+              onDrop={(e) => e.preventDefault()}
             >
-              (reconnect now)
-            </a>
-          </Match>
-          <Match
-            when={clientController.lifecycle.state() === State.Reconnecting}
-          >
-            Reconnecting
-          </Match>
-          <Match when={clientController.lifecycle.state() === State.Offline}>
-            Device is offline
+              <Sidebar
+                menuGenerator={(target) => ({
+                  contextMenu: () => {
+                    return (
+                      <>
+                        {target instanceof Server ? (
+                          <ServerContextMenu server={target} />
+                        ) : (
+                          <ChannelContextMenu channel={target} />
+                        )}
+                      </>
+                    );
+                  },
+                })}
+              />
+              <Content
+                sidebar={state.layout.getSectionState(
+                  LAYOUT_SECTIONS.PRIMARY_SIDEBAR,
+                  true,
+                )}
+              >
+                {props.children}
+              </Content>
+            </Layout>
           </Match>
         </Switch>
-      </Notice>
-      <Switch fallback={<Preloader grow type="spinner" />}>
-        <Match when={!clientController.isLoggedIn()}>
-          <Navigate href="/login" />
-        </Match>
-        <Match when={clientController.lifecycle.loadedOnce()}>
-          <Layout
-            style={{ "flex-grow": 1, "min-height": 0 }}
-            onDragOver={(e) => {
-              if (e.dataTransfer) e.dataTransfer.dropEffect = "none";
-            }}
-            onDrop={(e) => e.preventDefault()}
-          >
-            <Sidebar
-              menuGenerator={(target) => ({
-                contextMenu: () => {
-                  return (
-                    <>
-                      {target instanceof Server ? (
-                        <ServerContextMenu server={target} />
-                      ) : (
-                        <ChannelContextMenu channel={target} />
-                      )}
-                    </>
-                  );
-                },
-              })}
-            />
-            <div
-              style={{
-                background: "var(--colours-messaging-message-box-background)",
-                display: "flex",
-                width: "100%",
-                "min-width": 0,
-              }}
-            >
-              {props.children}
-            </div>
-          </Layout>
-        </Match>
-      </Switch>
-    </div>
+
+        <NotificationsWorker />
+      </div>
+    </MessageCache>
   );
 };
-
-const Notice = styled("div", {
-  base: {
-    textAlign: "center",
-    fontSize: "0.8em",
-    // margin: "var(--gap-md) var(--gap-md) 0 var(--gap-md)",
-    padding: "var(--gap-md)",
-    background: "var(--colours-testing)",
-    color: "var(--colours-messaging-message-box-foreground)",
-    // borderRadius: "var(--borderRadius-md)",
-  },
-});
 
 /**
  * Parent container
@@ -159,8 +120,41 @@ const Layout = styled("div", {
   base: {
     display: "flex",
     height: "100%",
-    background: "var(--colours-testing)",
     minWidth: 0,
+  },
+  variants: {
+    disconnected: {
+      true: {
+        color: "var(--md-sys-color-on-primary-container)",
+        background: "var(--md-sys-color-primary-container)",
+      },
+      false: {
+        color: "var(--md-sys-color-outline)",
+        background: "var(--md-sys-color-surface-container-high)",
+      },
+    },
+  },
+});
+
+/**
+ * Main content container
+ */
+const Content = styled("div", {
+  base: {
+    background: "var(--md-sys-color-surface-container-low)",
+
+    display: "flex",
+    width: "100%",
+    minWidth: 0,
+  },
+  variants: {
+    sidebar: {
+      false: {
+        borderTopLeftRadius: "var(--borderRadius-lg)",
+        borderBottomLeftRadius: "var(--borderRadius-lg)",
+        overflow: "hidden",
+      },
+    },
   },
 });
 

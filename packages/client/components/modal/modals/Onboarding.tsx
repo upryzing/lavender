@@ -1,33 +1,65 @@
-import { useTranslation } from "@revolt/i18n";
+import { createFormControl, createFormGroup } from "solid-forms";
 
-import { createFormModal } from "../form";
-import { PropGenerator } from "../types";
+import { Trans, useLingui } from "@lingui-solid/solid/macro";
+
+import { Column, Dialog, DialogProps, Form2 } from "@revolt/ui";
+
+import { useModals } from "..";
+import { Modals } from "../types";
 
 // TODO: port the onboarding modal design
 
 /**
  * Modal to pick a new username
  */
-const Onboarding: PropGenerator<"onboarding"> = (props) => {
-  const t = useTranslation();
+export function OnboardingModal(
+  props: DialogProps & Modals & { type: "onboarding" },
+) {
+  const { t } = useLingui();
+  const { showError } = useModals();
 
-  return createFormModal({
-    modalProps: {
-      title: "Choose username",
-    },
-    schema: {
-      username: "text",
-    },
-    data: {
-      username: {
-        field: "Username",
-      },
-    },
-    callback: async ({ username }) => await props.callback(username),
-    submit: {
-      children: "Good",
-    },
+  const group = createFormGroup({
+    username: createFormControl("", { required: true }),
   });
-};
 
-export default Onboarding;
+  async function onSubmit() {
+    try {
+      await props.callback(group.controls.username.value);
+      props.onClose();
+    } catch (error) {
+      showError(error);
+    }
+  }
+
+  const submit = Form2.useSubmitHandler(group, onSubmit);
+
+  return (
+    <Dialog
+      show={props.show}
+      onClose={props.onClose}
+      title={<Trans>Choose username</Trans>}
+      actions={[
+        { text: <Trans>Cancel</Trans> },
+        {
+          text: <Trans>Good</Trans>,
+          onClick: () => {
+            onSubmit();
+            return false;
+          },
+          isDisabled: !Form2.canSubmit(group),
+        },
+      ]}
+      isDisabled={group.isPending}
+    >
+      <form onSubmit={submit}>
+        <Column>
+          <Form2.TextField
+            name="username"
+            control={group.controls.username}
+            label={t`Username`}
+          />
+        </Column>
+      </form>
+    </Dialog>
+  );
+}

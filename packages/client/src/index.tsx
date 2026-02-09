@@ -1,53 +1,34 @@
 /**
  * Configure contexts and render App
  */
-import {
-  JSX,
-  Show,
-  createEffect,
-  createMemo,
-  createResource,
-  createSignal,
-  lazy,
-  on,
-  onMount,
-} from "solid-js";
-import { createStore } from "solid-js/store";
+import "./sentry";
+
+import { JSX, onMount } from "solid-js";
 import { render } from "solid-js/web";
 
 import { attachDevtoolsOverlay } from "@solid-devtools/overlay";
-import * as i18n from "@solid-primitives/i18n";
-import { Navigate, Route, Router } from "@solidjs/router";
+import { Navigate, Route, Router, useParams } from "@solidjs/router";
 import { QueryClient, QueryClientProvider } from "@tanstack/solid-query";
-import { isTauri } from "@tauri-apps/api/core";
-import { getCurrentWindow } from "@tauri-apps/api/window";
+import "material-symbols";
 import "mdui/mdui.css";
+import { PublicBot, PublicChannelInvite } from "@upryzing/upryzing.js";
 
 import FlowCheck from "@revolt/auth/src/flows/FlowCheck";
 import FlowConfirmReset from "@revolt/auth/src/flows/FlowConfirmReset";
 import FlowCreate from "@revolt/auth/src/flows/FlowCreate";
+import FlowDeleteAccount from "@revolt/auth/src/flows/FlowDelete";
 import FlowHome from "@revolt/auth/src/flows/FlowHome";
 import FlowLogin from "@revolt/auth/src/flows/FlowLogin";
 import FlowResend from "@revolt/auth/src/flows/FlowResend";
 import FlowReset from "@revolt/auth/src/flows/FlowReset";
 import FlowVerify from "@revolt/auth/src/flows/FlowVerify";
-import {
-  I18nContext,
-  dict,
-  fetchLanguage,
-  language,
-  setLanguage,
-} from "@revolt/i18n";
-import { ModalRenderer, modalController } from "@revolt/modal";
-import { state } from "@revolt/state";
-import {
-  ApplyGlobalStyles,
-  FloatingManager,
-  KeybindsProvider,
-  Masks,
-  Titlebar,
-  darkTheme,
-} from "@revolt/ui";
+import { ClientContext, useClient } from "@revolt/client";
+import { I18nProvider } from "@revolt/i18n";
+import { KeybindContext } from "@revolt/keybinds";
+import { ModalContext, ModalRenderer, useModals } from "@revolt/modal";
+import { VoiceContext } from "@revolt/rtc";
+import { StateContext, SyncWorker, useState } from "@revolt/state";
+import { FloatingManager, LoadTheme } from "@revolt/ui";
 
 /* @refresh reload */
 import "@revolt/ui/styles";
@@ -55,50 +36,21 @@ import "@revolt/ui/styles";
 import AuthPage from "./Auth";
 import Interface from "./Interface";
 import "./index.css";
-import { ConfirmDelete } from "./interface/ConfirmDelete";
 import { DevelopmentPage } from "./interface/Development";
+import { Discover } from "./interface/Discover";
 import { Friends } from "./interface/Friends";
 import { HomePage } from "./interface/Home";
 import { ServerHome } from "./interface/ServerHome";
 import { ChannelPage } from "./interface/channels/ChannelPage";
-import "./sentry";
-import { registerKeybindsWithPriority } from "./shared/lib/priorityKeybind";
+import "./serviceWorkerInterface";
 
 attachDevtoolsOverlay();
-
-/** TEMPORARY */
-function MountTheme(props: { children: any }) {
-  const [accent, setAccent] = createSignal("#dca3ff");
-  const [darkMode, setDarkMode] = createSignal(false);
-
-  (window as any)._demo_setAccent = setAccent;
-  (window as any)._demo_setDarkMode = setDarkMode;
-
-  // TMP: MY EYEESSSSSS, keeping this on
-  setDarkMode(true);
-
-  const [theme, setTheme] = createStore(darkTheme(accent(), darkMode()));
-
-  createEffect(
-    on(
-      () => [accent(), darkMode()] as [string, boolean],
-      ([accent, darkMode]) => setTheme(darkTheme(accent, darkMode))
-    )
-  );
-
-  return (
-    <>
-      {props.children}
-      <ApplyGlobalStyles theme={theme} />
-    </>
-  );
-}
-/** END TEMPORARY */
 
 /**
  * Redirect PWA start to the last active path
  */
 function PWARedirect() {
+  const state = useState();
   return <Navigate href={state.layout.getLastActivePath()} />;
 }
 
@@ -106,53 +58,90 @@ function PWARedirect() {
  * Open settings and redirect to last active path
  */
 function SettingsRedirect() {
-  onMount(() => modalController.push({ type: "settings", config: "user" }));
+  const { openModal } = useModals();
+
+  onMount(() => openModal({ type: "settings", config: "user" }));
   return <PWARedirect />;
 }
 
-const client = new QueryClient();
+/**
+ * Open invite and redirect to last active path
+ */
+function InviteRedirect() {
+  const params = useParams();
+  const client = useClient();
+  const { openModal, showError } = useModals();
 
-function MountContext(props: { children?: JSX.Element }) {
-  const [dictionary] = createResource(language, fetchLanguage, {
-    initialValue: i18n.flatten(dict.en),
+  onMount(() => {
+    if (params.code) {
+      client()
+        // TODO: add a helper to stoat.js for this
+        .api.get(`/invites/${params.code as ""}`)
+        .then((invite) => PublicChannelInvite.from(client(), invite))
+        .then((invite) => openModal({ type: "invite", invite }))
+        .catch(showError);
+    }
   });
 
-  const t = createMemo(() => i18n.translator(dictionary, i18n.resolveTemplate));
+  return <PWARedirect />;
+}
 
-  const appWindow = isTauri() ? getCurrentWindow() : null;
+/**
+ * Open bot invite and redirect to last active path
+ */
+function BotRedirect() {
+  const params = useParams();
+  const client = useClient();
+  const { openModal, showError } = useModals();
+
+  onMount(() => {
+    if (params.code) {
+      client()
+        // TODO: add a helper to stoat.js for this
+        .api.get(`/bots/${params.code as ""}/invite`)
+        .then((invite) => new PublicBot(client(), invite))
+        .then((invite) => openModal({ type: "add_bot", invite }))
+        .catch(showError);
+    }
+  });
+
+  return <PWARedirect />;
+}
+
+function MountContext(props: { children?: JSX.Element }) {
+  const state = useState();
+
+  /**
+   * Tanstack Query client
+   */
+  const client = new QueryClient();
 
   return (
-    <I18nContext.Provider value={t()}>
-      <QueryClientProvider client={client}>
-        <Masks />
-        <MountTheme>
-          <KeybindsProvider keybinds={() => state.keybinds.getKeybinds()}>
-            <Show when={window.__TAURI__}>
-              <Titlebar
-                isBuildDev={import.meta.env.DEV}
-                onMinimize={() => appWindow?.minimize?.()}
-                onMaximize={() => appWindow?.toggleMaximize?.()}
-                onClose={() => appWindow?.hide?.()}
-              />
-            </Show>
-            {props.children}
-          </KeybindsProvider>
-          <ModalRenderer />
-          <FloatingManager />
-        </MountTheme>
-      </QueryClientProvider>
-    </I18nContext.Provider>
+    <KeybindContext>
+      <ModalContext>
+        <ClientContext state={state}>
+          <I18nProvider>
+            <VoiceContext>
+              <QueryClientProvider client={client}>
+                {props.children}
+                <ModalRenderer />
+                <FloatingManager />
+              </QueryClientProvider>
+            </VoiceContext>
+          </I18nProvider>
+          <SyncWorker />
+        </ClientContext>
+      </ModalContext>
+    </KeybindContext>
   );
 }
 
-registerKeybindsWithPriority();
-
-state.hydrate().then(() =>
-  render(
-    () => (
+render(
+  () => (
+    <StateContext>
       <Router root={MountContext}>
         <Route path="/login" component={AuthPage as never}>
-          <Route path="/delete/:token" component={ConfirmDelete} />
+          <Route path="/delete/:token" component={FlowDeleteAccount} />
           <Route path="/check" component={FlowCheck} />
           <Route path="/create" component={FlowCreate} />
           <Route path="/auth" component={FlowLogin} />
@@ -165,7 +154,10 @@ state.hydrate().then(() =>
         <Route path="/" component={Interface as never}>
           <Route path="/pwa" component={PWARedirect} />
           <Route path="/dev" component={DevelopmentPage} />
+          <Route path="/discover/*" component={Discover} />
           <Route path="/settings" component={SettingsRedirect} />
+          <Route path="/invite/:code" component={InviteRedirect} />
+          <Route path="/bot/:code" component={BotRedirect} />
           <Route path="/friends" component={Friends} />
           <Route path="/server/:server/*">
             <Route path="/channel/:channel/*" component={ChannelPage} />
@@ -175,7 +167,10 @@ state.hydrate().then(() =>
           <Route path="/*" component={HomePage} />
         </Route>
       </Router>
-    ),
-    document.getElementById("root") as HTMLElement
-  )
+
+      <LoadTheme />
+      {/* <ReportBug /> */}
+    </StateContext>
+  ),
+  document.getElementById("root") as HTMLElement,
 );

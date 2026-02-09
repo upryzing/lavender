@@ -1,4 +1,4 @@
-import { getController } from "@revolt/common";
+import { Client } from "stoat.js";
 
 import { State } from "..";
 
@@ -61,8 +61,7 @@ export class Ordering extends AbstractStore<"ordering", TypeOrdering> {
    * All known servers with ordering applied
    * @returns List of Server objects
    */
-  get orderedServers() {
-    const client = getController("client").getCurrentClient();
+  orderedServers(client: Client) {
     const known = new Set(client?.servers.keys() ?? []);
     const ordered = [...this.get().servers];
 
@@ -92,16 +91,14 @@ export class Ordering extends AbstractStore<"ordering", TypeOrdering> {
    * All known active DM conversations ordered by last updated
    * @returns List of Channel objects
    */
-  get orderedConversations() {
-    const client = getController("client").getCurrentClient();
-
+  orderedConversations(client: Client) {
     return (
-      client?.channels
+      client.channels
         .toList()
         .filter(
           (channel) =>
             (channel.type === "DirectMessage" && channel.active) ||
-            channel.type === "Group"
+            channel.type === "Group",
         )
         .sort((a, b) => +b.updatedAt - +a.updatedAt) ?? []
     );

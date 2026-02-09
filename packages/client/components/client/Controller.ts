@@ -2,13 +2,12 @@ import { Accessor, Setter, createSignal } from "solid-js";
 
 import { API, Client, ConnectionState } from "@upryzing/upryzing.js";
 import { detect } from "detect-browser";
+import { API, Client, ConnectionState } from "@upryzing/upryzing.js";
+import { ProtocolV1 } from "@upryzing/upryzing.js/lib/events/v1";
 
-import {
-  CONFIGURATION,
-  getController,
-  registerController,
-} from "@revolt/common";
-import { state } from "@revolt/state";
+import { CONFIGURATION } from "@revolt/common";
+import { ModalControllerExtended } from "@revolt/modal";
+import type { State as ApplicationState } from "@revolt/state";
 import type { Session } from "@revolt/state/stores/Auth";
 
 export enum State {
@@ -36,6 +35,7 @@ export enum TransitionType {
   NoUser = "no user",
   Cancel = "cancel",
   Dispose = "dispose",
+  DisposeOnly = "dispose only",
   Dismiss = "dismiss",
   Ready = "ready",
   Retry = "retry",
@@ -64,15 +64,28 @@ export type Transition =
         | TransitionType.Ready
         | TransitionType.Retry
         | TransitionType.Dispose
+        | TransitionType.DisposeOnly
         | TransitionType.Logout;
     };
 
+type PolicyAttentionRequired = [
+  ProtocolV1["types"]["policyChange"][],
+  () => Promise<void>,
+];
+
 class Lifecycle {
+  #controller: ClientController;
+
   readonly state: Accessor<State>;
   #setStateSetter: Setter<State>;
 
   readonly loadedOnce: Accessor<boolean>;
   #setLoadedOnce: Setter<boolean>;
+
+  readonly policyAttentionRequired: Accessor<
+    undefined | PolicyAttentionRequired
+  >;
+  #policyAttentionRequired: Setter<undefined | PolicyAttentionRequired>;
 
   client: Client;
 
@@ -80,9 +93,12 @@ class Lifecycle {
   #permanentError: string | undefined;
   #retryTimeout: number | undefined;
 
-  constructor() {
+  constructor(controller: ClientController) {
+    this.#controller = controller;
+
     this.onState = this.onState.bind(this);
     this.onReady = this.onReady.bind(this);
+    this.onPolicyChanges = this.onPolicyChanges.bind(this);
 
     const [state, setState] = createSignal(State.Ready);
     this.state = state;
@@ -91,6 +107,13 @@ class Lifecycle {
     const [loadedOnce, setLoadedOnce] = createSignal(false);
     this.loadedOnce = loadedOnce;
     this.#setLoadedOnce = setLoadedOnce;
+
+    const [policyAttentionRequired, setPolicyAttentionRequired] = createSignal<
+      undefined | PolicyAttentionRequired
+    >(undefined);
+
+    this.policyAttentionRequired = policyAttentionRequired;
+    this.#policyAttentionRequired = setPolicyAttentionRequired;
 
     this.client = null!;
     this.dispose();
@@ -108,6 +131,10 @@ class Lifecycle {
       autoReconnect: false,
       syncUnreads: true,
       debug: import.meta.env.DEV,
+      channelIsMuted: (channel) =>
+        this.#controller.state.notifications.isMuted(channel),
+      channelExclusiveMuted: (channel) =>
+        this.#controller.state.notifications.isChannelMuted(channel),
     });
 
     let useBaseConfig = !CONFIGURATION.REQUEST_CONFIG;
@@ -158,17 +185,28 @@ class Lifecycle {
           invite_only: CONFIGURATION.INVITE_ONLY,
           voso: {} as never,
         },
-        vapid: String(),
-        ws: CONFIGURATION.DEFAULT_WS_URL,
-      };
-    }
+        captcha: {} as never,
+        email: true,
+        invite_only: false,
+        livekit: {
+          enabled: false,
+          nodes: [],
+        },
+      },
+      vapid: String(),
+      ws: CONFIGURATION.DEFAULT_WS_URL,
+    };
 
     this.client.events.on("state", this.onState);
     this.client.on("ready", this.onReady);
+    this.client.on("policyChanges", this.onPolicyChanges);
   }
 
   #enter(nextState: State) {
-    console.debug("Entering state", nextState);
+    if (import.meta.env.DEV) {
+      console.info("[lifecycle] entering state", nextState);
+    }
+
     this.#setStateSetter(nextState);
 
     // Clean up retry timer
@@ -195,7 +233,7 @@ class Lifecycle {
         this.client.connect();
         break;
       case State.Connected:
-        state.auth.markValid();
+        this.#controller.state.auth.markValid();
         this.#setLoadedOnce(true);
         this.#connectionFailures = 0;
         break;
@@ -221,7 +259,7 @@ class Lifecycle {
           console.info(
             "Will try to reconnect in",
             retryIn.toFixed(2),
-            "seconds!"
+            "seconds!",
           );
 
           this.#retryTimeout = setTimeout(() => {
@@ -237,6 +275,11 @@ class Lifecycle {
 
   transition(transition: Transition) {
     console.debug("Received transition", transition.type);
+
+    if (transition.type === TransitionType.DisposeOnly) {
+      this.dispose();
+      return;
+    }
 
     const currentState = this.state();
     switch (currentState) {
@@ -351,6 +394,9 @@ class Lifecycle {
           case TransitionType.DeviceOnline:
             this.#enter(State.Reconnecting);
             break;
+          case TransitionType.Retry:
+            this.#enter(State.Reconnecting);
+            break;
           case TransitionType.Logout:
             this.#enter(State.Dispose);
             break;
@@ -363,7 +409,7 @@ class Lifecycle {
         "An unhandled transition occurred!",
         transition,
         "was received on",
-        currentState
+        currentState,
       );
     }
   }
@@ -372,6 +418,16 @@ class Lifecycle {
     this.transition({
       type: TransitionType.SocketConnected,
     });
+  }
+
+  private onPolicyChanges(
+    changes: ProtocolV1["types"]["policyChange"][],
+    ack: () => Promise<void>,
+  ) {
+    this.#policyAttentionRequired([
+      changes,
+      () => ack().then(() => this.#policyAttentionRequired(undefined)),
+    ]);
   }
 
   private onState(state: ConnectionState) {
@@ -421,16 +477,34 @@ export default class ClientController {
   readonly lifecycle: Lifecycle;
 
   /**
+   * Reference to application state
+   */
+  readonly state: ApplicationState;
+
+  /**
    * Construct new client controller
    */
-  constructor() {
+  constructor(state: ApplicationState) {
+    this.state = state;
     this.api = new API.API({
       baseURL: CONFIGURATION.DEFAULT_API_URL,
     });
 
-    this.lifecycle = new Lifecycle();
+    this.lifecycle = new Lifecycle(this);
 
-    registerController("client", this);
+    this.login = this.login.bind(this);
+    this.logout = this.logout.bind(this);
+    this.selectUsername = this.selectUsername.bind(this);
+    this.isLoggedIn = this.isLoggedIn.bind(this);
+    this.isError = this.isError.bind(this);
+
+    const session = state.auth.getSession();
+    if (session) {
+      this.lifecycle.transition({
+        type: TransitionType.LoginCached,
+        session,
+      });
+    }
   }
 
   getCurrentClient() {
@@ -455,7 +529,7 @@ export default class ClientController {
    * Login given a set of credentials
    * @param credentials Credentials
    */
-  async login(credentials: API.DataLogin) {
+  async login(credentials: API.DataLogin, modals: ModalControllerExtended) {
     const browser = detect();
 
     // Generate a friendly name for this browser
@@ -489,12 +563,12 @@ export default class ClientController {
       while (session.result === "MFA") {
         const mfa_response: API.MFAResponse | undefined = await new Promise(
           (callback) =>
-            getController("modal").push({
+            modals.openModal({
               type: "mfa_flow",
               state: "unknown",
               available_methods: allowed_methods,
               callback,
-            })
+            }),
         );
 
         if (typeof mfa_response === "undefined") {
@@ -530,7 +604,7 @@ export default class ClientController {
       valid: false,
     };
 
-    state.auth.setSession(createdSession);
+    this.state.auth.setSession(createdSession);
     this.lifecycle.transition({
       type: TransitionType.LoginUncached,
       session: createdSession,
@@ -548,9 +622,15 @@ export default class ClientController {
   }
 
   logout() {
-    state.auth.removeSession();
+    this.state.auth.removeSession();
     this.lifecycle.transition({
       type: TransitionType.Logout,
+    });
+  }
+
+  dispose() {
+    this.lifecycle.transition({
+      type: TransitionType.DisposeOnly,
     });
   }
 }

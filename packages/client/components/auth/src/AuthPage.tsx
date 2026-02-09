@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
   BiLogos500px,
   BiLogosGithub,
@@ -5,17 +6,23 @@ import {
   BiLogosMastodon,
   BiLogosTwitter,
 } from "solid-icons/bi";
+=======
+import { BiLogosGithub } from "solid-icons/bi";
+>>>>>>> upstr/main
 import { JSX } from "solid-js";
 
+import { Trans } from "@lingui-solid/solid/macro";
 import { styled } from "styled-system/jsx";
 
-import { useTranslation } from "@revolt/i18n";
-import { Button, iconSize } from "@revolt/ui";
+import { Titlebar } from "@revolt/app/interface/desktop/Titlebar";
+import { useState } from "@revolt/state";
+import { IconButton, iconSize } from "@revolt/ui";
 
 import MdDarkMode from "@material-design-icons/svg/filled/dark_mode.svg?component-solid";
 
 import background from "./background.jpg";
 import { FlowBase } from "./flows/Flow";
+import bluesky from "./flows/bluesky.svg";
 
 /**
  * Authentication page layout
@@ -29,8 +36,8 @@ const Base = styled("div", {
     userSelect: "none",
     overflowY: "scroll",
 
-    color: "white",
-    background: "var(--colours-background)",
+    color: "var(--md-sys-color-on-surface)",
+    background: "var(--md-sys-color-surface)",
     // background: `var(--url)`,
     // backgroundPosition: "center",
     // backgroundRepeat: "no-repeat",
@@ -57,12 +64,7 @@ const Nav = styled("div", {
     flexDirection: "row",
     justifyContent: "space-between",
 
-    color: "white",
     textDecoration: "none",
-
-    md: {
-      color: "var(--colours-foreground)",
-    },
   },
 });
 
@@ -121,6 +123,7 @@ const Bullet = styled("div", {
 });
 
 /**
+<<<<<<< HEAD
  * Revolt Wordmark
  */
 const Logo = styled("img", {
@@ -132,12 +135,15 @@ const Logo = styled("img", {
 let a = true;
 
 /**
+=======
+>>>>>>> upstr/main
  * Authentication page
  */
 export function AuthPage(props: { children: JSX.Element }) {
-  const t = useTranslation();
+  const state = useState();
 
   return (
+<<<<<<< HEAD
     <Base style={{ "--url": `url('${background}')` }}>
       <Nav>
         <div />
@@ -175,28 +181,72 @@ export function AuthPage(props: { children: JSX.Element }) {
             <LinkWithIcon href="https://lea.pet/@upryzing" target="_blank">
               <BiLogosMastodon size={24} />
             </LinkWithIcon>
+=======
+    <div
+      style={{
+        display: "flex",
+        "flex-direction": "column",
+        height: "100%",
+      }}
+    >
+      <Titlebar />
+      <Base
+        style={{ "--url": `url('${background}')` }}
+        css={{ scrollbar: "hidden" }}
+      >
+        <Nav>
+          <div />
+          <IconButton
+            variant="tonal"
+            onPress={() =>
+              state.theme.setMode(
+                state.theme.activeTheme.darkMode ? "light" : "dark",
+              )
+            }
+          >
+            <MdDarkMode {...iconSize("24px")} />
+          </IconButton>
+        </Nav>
+        <FlowBase>{props.children}</FlowBase>
+        <Nav>
+          <NavItems variant="stack">
+            <NavItems>
+              <LinkWithIcon href="https://github.com/stoatchat" target="_blank">
+                <BiLogosGithub size={24} />
+              </LinkWithIcon>
+              <LinkWithIcon
+                href="https://bsky.app/profile/stoat.chat"
+                target="_blank"
+              >
+                <img
+                  src={bluesky}
+                  style={{ height: "22px", "padding-top": "3px" }}
+                />
+              </LinkWithIcon>
+            </NavItems>
+            <Bullet />
+            <NavItems>
+              <a href="https://stoat.chat/about" target="_blank">
+                <Trans>About</Trans>
+              </a>
+              <a href="https://stoat.chat/terms" target="_blank">
+                <Trans>Terms of Service</Trans>
+              </a>
+              <a href="https://stoat.chat/privacy" target="_blank">
+                <Trans>Privacy Policy</Trans>
+              </a>
+            </NavItems>
+>>>>>>> upstr/main
           </NavItems>
-          <Bullet />
-          <NavItems>
-            <a href="https://revolt.chat/about" target="_blank">
-              {t("general.about")}
-            </a>
-            <a href="https://revolt.chat/terms" target="_blank">
-              {t("general.tos")}
-            </a>
-            <a href="https://revolt.chat/privacy" target="_blank">
-              {t("general.privacy")}
+          <NavItems variant="hide">
+            <Trans>Image by {"@fakurian"}</Trans>
+            <Bullet />
+            <a href="https://unsplash.com/" target="_blank" rel="noreferrer">
+              unsplash.com
             </a>
           </NavItems>
-        </NavItems>
-        <NavItems variant="hide">
-          {t("general.image_by")} @fakurian
-          <Bullet />
-          <a href="https://unsplash.com/" target="_blank" rel="noreferrer">
-            unsplash.com
-          </a>
-        </NavItems>
-      </Nav>
-    </Base>
+        </Nav>
+      </Base>
+    </div>
   );
 }

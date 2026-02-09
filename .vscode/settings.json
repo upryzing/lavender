@@ -1,17 +1,24 @@
 {
+  // Configure Prettier eslint
+  "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
+  "editor.formatOnType": false,
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  // Enable ESLint auto-fixing on save
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  // Exclude files from the file explorer
   "files.exclude": {
     "**/node_modules": true,
     "**/pnpm-lock.yaml": true,
     "**/tsconfig.json": false
   },
-  "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit"
-  },
   // follow the style guidlines in `GUIDELINES.md`
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "editor.detectIndentation": false,
-  "editor.formatOnSave": true,
   // `GUIDELINES.md` only really applies to JS/HTML. Using that in Rust kinda looks ugly.
   "[rust]": {
     "editor.tabSize": 4,

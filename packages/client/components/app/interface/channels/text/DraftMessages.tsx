@@ -2,12 +2,14 @@ import { For } from "solid-js";
 
 import { Channel } from "@upryzing/upryzing.js";
 
-import { state } from "@revolt/state";
+import { useState } from "@revolt/state";
 
 import { DraftMessage } from "./DraftMessage";
 
 interface Props {
   channel: Channel;
+  tail: boolean;
+  sentIds: string[];
 }
 
 /**
@@ -16,10 +18,13 @@ interface Props {
  * @returns
  */
 export function DraftMessages(props: Props) {
+  const state = useState();
+
   const unsent = () =>
     state.draft
       .getPendingMessages(props.channel.id)
-      .filter((draft) => draft.status === "sending");
+      .filter((draft) => draft.status === "sending")
+      .filter((draft) => !props.sentIds.includes(draft.idempotencyKey));
 
   const failed = () =>
     state.draft
@@ -33,7 +38,7 @@ export function DraftMessages(props: Props) {
           <DraftMessage
             draft={draft}
             channel={props.channel}
-            tail={index() !== 0}
+            tail={index() !== 0 || props.tail}
           />
         )}
       </For>

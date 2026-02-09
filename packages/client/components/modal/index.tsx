@@ -1,15 +1,16 @@
-import { For, createEffect, onMount } from "solid-js";
+import {
+  For,
+  JSXElement,
+  Show,
+  batch,
+  createContext,
+  useContext,
+} from "solid-js";
 import { SetStoreFunction, createStore } from "solid-js/store";
 
 import type { MFA, MFATicket } from "@upryzing/upryzing.js";
 
-import { registerController } from "@revolt/common";
-
-import {
-  registerKeybindWithPriority,
-  unregisterKeybindWithPriority,
-} from "../../src/shared/lib/priorityKeybind";
-import "../ui/styled.d.ts";
+import { Keybind, KeybindAction } from "@revolt/keybinds";
 
 import { RenderModal } from "./modals";
 import { Modals } from "./types";
@@ -32,15 +33,6 @@ export type ActiveModal = {
 };
 
 /**
- * Handle key press
- * @param event Event
- */
-function keyDown(event: KeyboardEvent) {
-  event.stopPropagation();
-  modalController.pop();
-}
-
-/**
  * Global modal controller for layering and displaying one or more modal to the user
  */
 export class ModalController {
@@ -52,26 +44,44 @@ export class ModalController {
    */
   constructor() {
     const [modals, setModals] = createStore<ActiveModal[]>([]);
+    // eslint-disable-next-line solid/reactivity
     this.modals = modals;
     this.setModals = setModals;
 
+    this.openModal = this.openModal.bind(this);
     this.pop = this.pop.bind(this);
+    this.remove = this.remove.bind(this);
+    this.isOpen = this.isOpen.bind(this);
+    this.closeAll = this.closeAll.bind(this);
   }
 
   /**
    * Add a modal to the stack
    * @param props Modal parameters
    */
-  push(props: Modals) {
-    this.setModals([
-      ...this.modals,
+  openModal(props: Modals) {
+    const id = Math.random().toString();
+    this.setModals((modals) => [
+      ...modals,
       {
         // just need something unique
-        id: Math.random().toString(),
+        id,
         show: true,
         props,
       },
     ]);
+
+    // after modal commits to DOM,
+    // we can begin animations!
+    // setTimeout(
+    //   () =>
+    //     this.setModals((modals) =>
+    //       modals.map((modal) =>
+    //         modal.id === id ? { ...modal, show: true } : modal,
+    //       ),
+    //     ),
+    //   0,
+    // );
   }
 
   /**
@@ -83,6 +93,17 @@ export class ModalController {
     if (modal) {
       this.remove(modal.id);
     }
+  }
+
+  /**
+   * Remove all modals
+   */
+  closeAll() {
+    batch(() => {
+      for (const modal of this.modals) {
+        this.remove(modal.id);
+      }
+    });
   }
 
   /**
@@ -100,8 +121,10 @@ export class ModalController {
    * Whether a modal is currently open
    * @returns Boolean
    */
-  isOpen() {
-    return !!this.modals.find((x) => x.show);
+  isOpen(type?: string) {
+    return type
+      ? !!this.modals.find((x) => x.show && x.props.type === type)
+      : !!this.modals.find((x) => x.show);
   }
 }
 
@@ -114,7 +137,11 @@ export class ModalControllerExtended extends ModalController {
    */
   constructor() {
     super();
-    registerController("modal", this);
+
+    this.mfaFlow = this.mfaFlow.bind(this);
+    this.mfaEnableTOTP = this.mfaEnableTOTP.bind(this);
+    this.showError = this.showError.bind(this);
+    this.openLink = this.openLink.bind(this);
   }
 
   /**
@@ -123,12 +150,12 @@ export class ModalControllerExtended extends ModalController {
    */
   mfaFlow(mfa: MFA) {
     return new Promise((callback: (ticket?: MFATicket) => void) =>
-      this.push({
+      this.openModal({
         type: "mfa_flow",
         state: "known",
         mfa,
         callback,
-      })
+      }),
     );
   }
 
@@ -138,28 +165,34 @@ export class ModalControllerExtended extends ModalController {
    */
   mfaEnableTOTP(secret: string, identifier: string) {
     return new Promise((callback: (value?: string) => void) =>
-      this.push({
+      this.openModal({
         type: "mfa_enable_totp",
         identifier,
         secret,
         callback,
-      })
+      }),
     );
+  }
+
+  /**
+   * Show any error
+   * @param error Error
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  showError(error: any) {
+    this.openModal({
+      type: "error2",
+      error,
+    });
   }
 
   /**
    * Write text to the clipboard
    * @param text Text to write
+   * @deprecated use navigator clipboard directly
    */
   writeText(text: string) {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(text);
-    } else {
-      this.push({
-        type: "clipboard",
-        text,
-      });
-    }
+    navigator.clipboard.writeText(text);
   }
 
   /**
@@ -168,7 +201,7 @@ export class ModalControllerExtended extends ModalController {
    * @param trusted Whether we trust this link
    * @returns Whether to cancel default event
    */
-  openLink(href?: string, trusted?: boolean) {
+  openLink(/*href?: string, trusted?: boolean*/) {
     /*const link = determineLink(href);
     const settings = getApplicationState().settings;
 
@@ -194,26 +227,52 @@ export class ModalControllerExtended extends ModalController {
   }
 }
 
-export const modalController = new ModalControllerExtended();
+const ModalControllerContext = createContext<ModalControllerExtended>(
+  null as unknown as ModalControllerExtended,
+);
 
-export function ModalRenderer() {
-  createEffect(() => {
-    if (modalController.modals.length === 0)
-      return unregisterKeybindWithPriority(keyDown);
-
-    return registerKeybindWithPriority("Escape", keyDown, 1, "user-visible");
-  });
-
-  createEffect(() => {
-    console.info(
-      "[DEBUG] (2) Modal render targets updated:",
-      modalController.modals
-    );
-  });
+/**
+ * Mount the modal controller
+ */
+export function ModalContext(props: { children: JSXElement }) {
+  const controller = new ModalControllerExtended();
 
   return (
-    <For each={modalController.modals}>
-      {(entry) => <RenderModal {...entry} />}
-    </For>
+    <ModalControllerContext.Provider value={controller}>
+      {props.children}
+    </ModalControllerContext.Provider>
+  );
+}
+
+/**
+ * Use the modal controller
+ */
+export function useModals() {
+  return useContext(ModalControllerContext);
+}
+
+/**
+ * Render modals
+ */
+export function ModalRenderer() {
+  const modalController = useModals();
+
+  return (
+    <>
+      <For each={modalController.modals}>
+        {(entry) => (
+          <RenderModal
+            {...entry}
+            onClose={() => modalController.remove(entry.id)}
+          />
+        )}
+      </For>
+      <Show when={modalController.isOpen()}>
+        <Keybind
+          keybind={KeybindAction.CLOSE_MODAL}
+          onPressed={() => modalController.pop()}
+        />
+      </Show>
+    </>
   );
 }

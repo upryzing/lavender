@@ -1,5 +1,4 @@
-import { TransitionType } from "@revolt/client/Controller";
-import { CONFIGURATION, getController } from "@revolt/common";
+import { CONFIGURATION } from "@revolt/common";
 
 import { State } from "..";
 
@@ -41,15 +40,6 @@ export class Auth extends AbstractStore<"auth", TypeAuth> {
         token: CONFIGURATION.DEVELOPMENT_TOKEN,
         userId: CONFIGURATION.DEVELOPMENT_USER_ID,
         valid: true,
-      });
-    }
-
-    const session = this.getSession();
-    if (session) {
-      const clientController = getController("client");
-      clientController.lifecycle.transition({
-        type: TransitionType.LoginCached,
-        session,
       });
     }
   }

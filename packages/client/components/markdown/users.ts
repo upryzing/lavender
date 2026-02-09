@@ -3,7 +3,7 @@ import { Accessor, createMemo } from "solid-js";
 import { ServerMember, User } from "@upryzing/upryzing.js";
 
 import { useClient } from "@revolt/client";
-import { useParams } from "@revolt/routing";
+import { useSmartParams } from "@revolt/routing";
 
 // TODO: move to @revolt/common?
 
@@ -61,12 +61,12 @@ export function userInformation(user?: User, member?: ServerMember) {
  */
 export function useUsers(
   ids: string[] | Accessor<string[]>,
-  filterNull?: boolean
+  filterNull?: boolean,
 ): Accessor<(UserInformation | undefined)[]> {
   const clientAccessor = useClient();
 
   // TODO: use a context here for when we do multi view :)
-  const { server } = useParams<{ server: string }>();
+  const params = useSmartParams();
 
   // eslint-disable-next-line solid/reactivity
   return createMemo(() => {
@@ -77,12 +77,12 @@ export function useUsers(
       if (user) {
         return userInformation(
           user,
-          server
+          params().serverId
             ? client.serverMembers.getByKey({
-                server,
+                server: params().serverId!,
                 user: user.id,
               })
-            : undefined
+            : undefined,
         );
       }
     });
@@ -96,7 +96,9 @@ export function useUsers(
  * @param id ID
  * @returns User information
  */
-export function useUser(id: string): Accessor<UserInformation> {
-  const users = useUsers([id]);
+export function useUser(
+  id: string | Accessor<string>,
+): Accessor<UserInformation> {
+  const users = useUsers(typeof id === "function" ? () => [id()] : [id]);
   return () => users()[0] ?? { username: "Unknown User" };
 }

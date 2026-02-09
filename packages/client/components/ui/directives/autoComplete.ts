@@ -1,6 +1,6 @@
 import { Accessor, JSX, createSignal, onCleanup } from "solid-js";
 
-import { Channel, Client, ServerMember, User } from "@upryzing/upryzing.js";
+import { Channel, Client, ServerMember, ServerRole, User } from "@upryzing/upryzing.js";
 
 import emojiMapping from "../emojiMapping.json";
 
@@ -9,7 +9,7 @@ import { registerFloatingElement, unregisterFloatingElement } from "./floating";
 const EMOJI_KEYS = Object.keys(emojiMapping).sort();
 const MAPPED_EMOJI_KEYS = EMOJI_KEYS.map((id) => ({ id, name: id }));
 
-type Operator = "@" | ":" | "#";
+type Operator = "@" | ":" | "#" | "%";
 
 export type AutoCompleteState =
   | {
@@ -39,6 +39,13 @@ export type AutoCompleteState =
           }[];
         }
       | {
+          matched: "role";
+          matches: {
+            role: ServerRole;
+            replacement: string;
+          }[];
+        }
+      | {
           matched: "channel";
           matches: {
             channel: Channel;
@@ -54,7 +61,7 @@ export type AutoCompleteState =
  */
 export function autoComplete(
   element: HTMLInputElement,
-  config: Accessor<JSX.Directives["autoComplete"]>
+  config: Accessor<JSX.Directives["autoComplete"]>,
 ) {
   if (!config()) return;
 
@@ -69,10 +76,18 @@ export function autoComplete(
    * @param index Entry
    */
   function select(index: number) {
+    const realElement = element.shadowRoot
+      ? element.shadowRoot.querySelector("input") ||
+        element.shadowRoot.querySelector("textarea")
+      : element;
+
+    if (!realElement) return;
+
     const info = state() as AutoCompleteState & {
       matched: "emoji" | "user" | "member";
     };
-    const currentPosition = element.selectionStart;
+
+    const currentPosition = realElement.selectionStart;
     if (!currentPosition) return;
 
     const match = info.matches[index];
@@ -102,6 +117,7 @@ export function autoComplete(
     autoComplete: {
       state,
       selection,
+      setSelection,
       select,
     },
   });
@@ -117,13 +133,27 @@ export function autoComplete(
    * Intercept selection
    */
   function onKeyDown(
-    event: KeyboardEvent & { currentTarget: HTMLTextAreaElement }
+    event: KeyboardEvent & { currentTarget: HTMLTextAreaElement },
   ) {
     const current = state();
     if (current.matched !== "none") {
       if (event.key === "Enter" || event.key === "Tab") {
         event.preventDefault();
         select(selection());
+        return;
+      }
+
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        setSelection((index) =>
+          index === 0 ? current.matches.length - 1 : index - 1,
+        );
+        return;
+      }
+
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        setSelection((index) => (index + 1) % current.matches.length);
         return;
       }
     }
@@ -147,34 +177,43 @@ export function autoComplete(
       }
     }
 
-    const cursor = element.selectionStart;
-    if (cursor && cursor === element.selectionEnd) {
-      const content = element.value.slice(0, cursor);
+    const realElement = element.shadowRoot
+      ? element.shadowRoot.querySelector("input") ||
+        element.shadowRoot.querySelector("textarea")
+      : element;
 
-      // Try to figure out what we're matching
-      const current = (["@", ":", "#"] as Operator[])
-        // First find any applicable string
-        .map((searchType) => {
-          const index = content.lastIndexOf(searchType);
-          return (
-            index === -1
-              ? undefined
-              : [searchType, content.slice(index + 1).toLowerCase()]
-          ) as [Operator, string];
-        })
-        // Filter by found strings
-        .filter((match) => match)
-        // Make sure there's no spaces nor other matching characters
-        .filter(([, matchedString]) => /^[^\s@:#]*$/.test(matchedString))
-        // Enforce minimum length for emoji matching
-        .filter(([searchType, matchedString]) =>
-          searchType === ":" ? matchedString.length > 0 : true
-        )[0];
+    if (realElement) {
+      const cursor = realElement.selectionStart;
+      if (cursor && cursor === realElement.selectionEnd) {
+        const content = realElement.value.slice(0, cursor);
 
-      if (current) {
-        setSelection(0);
-        setState(searchMatches(...current, config()));
-        return;
+        // Try to figure out what we're matching
+        const current = (["@", ":", "#", "%"] as Operator[])
+          // First find any applicable string
+          .map((searchType) => {
+            const index = content.lastIndexOf(searchType);
+            return (
+              index === -1
+                ? undefined
+                : [searchType, content.slice(index + 1).toLowerCase()]
+            ) as [Operator, string];
+          })
+          // Filter by found strings
+          .filter((match) => match)
+          // Make sure there's no spaces nor other matching characters
+          .filter(([, matchedString]) => /^[^\s@:#]*$/.test(matchedString))
+          // Enforce minimum length for emoji and role matching
+          .filter(([searchType, matchedString]) =>
+            searchType === ":" || searchType === "%"
+              ? matchedString.length > 0
+              : true,
+          )[0];
+
+        if (current) {
+          setSelection(0);
+          setState(searchMatches(...current, config()));
+          return;
+        }
       }
     }
 
@@ -215,7 +254,7 @@ export function autoComplete(
 function searchMatches(
   operator: Operator,
   query: string,
-  config: JSX.Directives["autoComplete"]
+  config: JSX.Directives["autoComplete"],
 ): AutoCompleteState {
   if (operator === ":") {
     const matches: string[] = [];
@@ -268,7 +307,7 @@ function searchMatches(
               shortcode: id,
               codepoint: emojiMapping[id as keyof typeof emojiMapping],
               replacement: emojiMapping[id as keyof typeof emojiMapping],
-            }
+            },
       ),
     };
   }
@@ -303,6 +342,35 @@ function searchMatches(
           matches: matches.map((user) => ({
             user,
             replacement: user.toString(),
+          })),
+        };
+      }
+    }
+
+    if (operator === "%") {
+      const matches: ServerRole[] = [];
+      const searchSpace =
+        config.searchSpace?.roles?.toSorted((a, b) =>
+          a.name!.localeCompare(b.name!),
+        ) ?? [];
+
+      let i = 0;
+      while (matches.length < 10 && i < searchSpace.length) {
+        const role = searchSpace[i];
+        if (role.name?.toLowerCase().includes(query)) {
+          matches.push(searchSpace[i]);
+        }
+
+        i++;
+      }
+
+      if (matches.length) {
+        return {
+          matched: "role",
+          length: query.length + 1,
+          matches: matches.map((role) => ({
+            role,
+            replacement: role.toString(),
           })),
         };
       }

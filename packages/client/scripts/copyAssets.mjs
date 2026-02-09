@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+
 import lnk from "lnk";
 import { lstat, readdir, readlink, rmdir, unlink } from "node:fs/promises";
 import { resolve } from "node:path";
@@ -17,7 +19,7 @@ async function createSymlink() {
     await lnk(resolve(revoltAssets), resolve(publicFolder), {
       rename: "assets",
     });
-    console.info(`Configured Revolt assets.`);
+    console.info(`Configured Stoat assets.`);
   } catch (error) {
     if (error === "Empty Directory" || error.code === "ENOENT") {
       await lnk(resolve(fallbackAssets), resolve(publicFolder), {
@@ -37,7 +39,7 @@ try {
   try {
     await readlink(path);
     await unlink(path);
-  } catch (err) {
+  } catch {
     await rmdir(path);
   }
 

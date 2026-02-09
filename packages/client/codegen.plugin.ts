@@ -27,7 +27,7 @@ export default function codegenPlugin() {
                 [key]: value,
               };
             },
-            { type }
+            { type },
           ) as {
             type: "directives";
             props?: string;
@@ -35,7 +35,7 @@ export default function codegenPlugin() {
           };
 
           switch (args.type) {
-            case "directives":
+            case "directives": {
               // Generate directives forwarding
               const source = args.props ?? "props";
               const permitted: string[] =
@@ -43,6 +43,7 @@ export default function codegenPlugin() {
               return DIRECTIVES.filter((d) => permitted.includes(d))
                 .map((d) => `use:${d}={${source}["use:${d}"]}`)
                 .join("\n");
+            }
             default:
               return substring;
           }
@@ -52,7 +53,7 @@ export default function codegenPlugin() {
           if (!id.endsWith("client/components/ui/index.tsx"))
             src =
               `import { ${DIRECTIVES.join(
-                ", "
+                ", ",
               )} } from "@revolt/ui/directives";\n` + src;
         }
 

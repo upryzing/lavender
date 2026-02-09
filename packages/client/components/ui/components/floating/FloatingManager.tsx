@@ -1,3 +1,4 @@
+/* eslint-disable solid/reactivity */
 import { useFloating } from "solid-floating-ui";
 import {
   For,
@@ -12,10 +13,12 @@ import { Portal } from "solid-js/web";
 import { Motion, Presence } from "solid-motionone";
 
 import { autoUpdate, flip, offset, shift } from "@floating-ui/dom";
-import { cva } from "styled-system/css";
+
+import { Keybind, KeybindAction } from "@revolt/keybinds";
 
 import { FloatingElement, floatingElements } from "../../directives";
 
+import { dismissFloatingElements } from ".";
 import { AutoComplete } from "./AutoComplete";
 import { TooltipBase } from "./Tooltip";
 import { UserCard } from "./UserCard";
@@ -38,6 +41,13 @@ export function FloatingManager() {
   onMount(() => document.addEventListener("mousemove", onMouseMove));
   onCleanup(() => document.addEventListener("mousemove", onMouseMove));
 
+  /**
+   * Whether a floating element is visible
+   */
+  function anyVisible() {
+    return floatingElements().find((el) => el.show());
+  }
+
   return (
     <Portal mount={document.getElementById("floating")!}>
       <For each={floatingElements()}>
@@ -49,6 +59,13 @@ export function FloatingManager() {
           </Presence>
         )}
       </For>
+
+      <Show when={anyVisible()}>
+        <Keybind
+          keybind={KeybindAction.CLOSE_FLOATING}
+          onPressed={dismissFloatingElements}
+        />
+      </Show>
     </Portal>
   );
 }
@@ -116,26 +133,16 @@ function Floating(props: FloatingElement & { mouseX: number; mouseY: number }) {
   });
 
   /**
-   * Handle page clicks outside of floating element
-   * @param event Event
+   * Dismiss floating element when clicking elsewhere
    */
-  function onMouseDown(event: MouseEvent) {
+  function onMouseDown() {
     const currentlyShown = props.show();
     if (!currentlyShown?.contextMenu && !currentlyShown?.userCard) return;
 
-    const parentEl = floating();
-
-    let currentEl = event.target as HTMLElement | null;
-    while (currentEl && currentEl !== parentEl) {
-      currentEl = currentEl.parentElement;
-    }
-
-    if (currentEl === null) {
-      props.hide();
-    }
+    props.hide();
   }
 
-  if (props.config().contextMenu) {
+  if (props.config().contextMenu || props.config().userCard) {
     onMount(() => document.addEventListener("mousedown", onMouseDown));
     onCleanup(() => document.removeEventListener("mousedown", onMouseDown));
   }
@@ -167,14 +174,14 @@ function Floating(props: FloatingElement & { mouseX: number; mouseY: number }) {
           position: position.strategy,
           top: `${position.y ?? 0}px`,
           left: `${position.x ?? 0}px`,
-          "z-index": "var(--layout-zIndex-floating-element)",
+          "z-index": (999 - (props.show()?.userCard ? 1 : 0)).toString(),
         }}
       >
         <Switch>
           <Match when={props.show()?.tooltip}>
             <TooltipBase>
               {typeof props.show()!.tooltip!.content === "function"
-                ? (props.show()!.tooltip!.content as Function)({})
+                ? (props.show()!.tooltip!.content as (arg1: object) => void)({})
                 : props.show()!.tooltip!.content}
             </TooltipBase>
           </Match>
@@ -182,6 +189,7 @@ function Floating(props: FloatingElement & { mouseX: number; mouseY: number }) {
             <UserCard
               user={props.show()!.userCard!.user}
               member={props.show()!.userCard!.member}
+              onClose={props.hide}
             />
           </Match>
           <Match when={props.show()?.contextMenu}>

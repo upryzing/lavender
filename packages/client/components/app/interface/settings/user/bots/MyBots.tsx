@@ -1,14 +1,16 @@
 import { ErrorBoundary, For, Suspense } from "solid-js";
 
+import { Trans } from "@lingui-solid/solid/macro";
+
 import { useClient } from "@revolt/client";
 import { createOwnBotsResource } from "@revolt/client/resources";
-import { modalController } from "@revolt/modal";
+import { useModals } from "@revolt/modal";
 import {
   Avatar,
   CategoryButton,
   CategoryButtonGroup,
+  CircularProgress,
   Column,
-  Preloader,
   iconSize,
 } from "@revolt/ui";
 
@@ -34,6 +36,7 @@ export function MyBots() {
  */
 function CreateBot() {
   const client = useClient();
+  const { openModal } = useModals();
   const { navigate } = useSettingsNavigation();
 
   return (
@@ -42,7 +45,7 @@ function CreateBot() {
         action="chevron"
         icon={<MdSmartToy {...iconSize(22)} />}
         onClick={() =>
-          modalController.push({
+          openModal({
             type: "create_bot",
             client: client(),
             onCreate(bot) {
@@ -50,17 +53,23 @@ function CreateBot() {
             },
           })
         }
-        description="You agree that your bot is subject to the Acceptable Usage Policy."
+        description={
+          <Trans>
+            You agree that your bot is subject to the Acceptable Usage Policy.
+          </Trans>
+        }
       >
-        Create Bot
+        <Trans>Create Bot</Trans>
       </CategoryButton>
       <CategoryButton
         action="external"
         icon={<MdLibraryBooks {...iconSize(22)} />}
-        onClick={() => window.open("https://developers.revolt.chat", "_blank")}
-        description="Learn more about how to create bots on Revolt."
+        onClick={() => window.open("https://developers.stoat.chat", "_blank")}
+        description={
+          <Trans>Learn more about how to create bots on Stoat.</Trans>
+        }
       >
-        Developer Documentation
+        <Trans>Developer Documentation</Trans>
       </CategoryButton>
     </CategoryButtonGroup>
   );
@@ -75,7 +84,7 @@ function ListBots() {
 
   return (
     <ErrorBoundary fallback="Failed to load bots...">
-      <Suspense fallback={<Preloader type="ring" />}>
+      <Suspense fallback={<CircularProgress />}>
         <CategoryButtonGroup>
           <For each={bots.data}>
             {(bot) => (

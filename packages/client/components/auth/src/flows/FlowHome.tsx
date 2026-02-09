@@ -1,35 +1,29 @@
 import { Match, Show, Switch } from "solid-js";
 
-import { cva } from "styled-system/css";
+import { Trans } from "@lingui-solid/solid/macro";
+import { css } from "styled-system/css";
 
-import { clientController } from "@revolt/client";
+import { useClientLifecycle } from "@revolt/client";
 import { TransitionType } from "@revolt/client/Controller";
-import { useTranslation } from "@revolt/i18n";
 import { Navigate } from "@revolt/routing";
 import { Button, Column } from "@revolt/ui";
 
-import Logo from "../../../../public/assets/wordmark_wide_500px.svg?component-solid";
-
-const logo = cva({
-  base: {
-    width: "100%",
-    objectFit: "contain",
-    fill: "var(--colours-messaging-message-box-foreground)",
-  },
-});
+import { useState } from "@revolt/state";
+import Wordmark from "../../../../public/assets/web/wordmark.svg?component-solid";
 
 /**
  * Flow for logging into an account
  */
 export default function FlowHome() {
-  const t = useTranslation();
+  const state = useState();
+  const { lifecycle, isLoggedIn, isError } = useClientLifecycle();
 
   return (
     <Switch
       fallback={
         <>
-          <Show when={clientController.isLoggedIn()}>
-            <Navigate href="/app" />
+          <Show when={isLoggedIn()}>
+            <Navigate href={state.layout.popNextPath() ?? "/app"} />
           </Show>
           <Switch
             fallback={
@@ -39,7 +33,12 @@ export default function FlowHome() {
                 </Show>
 
                 <Column gap="xl">
-                  <Logo />
+                  <Wordmark
+                    class={css({
+                      width: "100%",
+                      fill: "var(--md-sys-color-on-surface)",
+                    })}
+                  />
 
                   <Column>
                     <b
@@ -95,33 +94,62 @@ export default function FlowHome() {
                   })
                 }
               >
-                OK
-              </Button>
-            </Match>
-          </Switch>
+                <span>
+                  <Trans>
+                    Find your com
+                    <wbr />
+                    munity,
+                    <br />
+                    connect with the world.
+                  </Trans>
+                </span>
+              </b>
+              <span style={{ "text-align": "center", opacity: "0.5" }}>
+                <Trans>
+                  Stoat is one of the best ways to stay connected with your
+                  friends and community, anywhere, anytime.
+                </Trans>
+              </span>
+            </Column>
+
+            <Column>
+              <a href="/login/auth">
+                <Column>
+                  <Button>
+                    <Trans>Log In</Trans>
+                  </Button>
+                </Column>
+              </a>
+              <a href="/login/create">
+                <Column>
+                  <Button variant="tonal">
+                    <Trans>Sign Up</Trans>
+                  </Button>
+                </Column>
+              </a>
+            </Column>
+          </Column>
         </>
       }
     >
-      <Match when={clientController.isError()}>
+      <Match when={isError()}>
         <Switch fallback={"an unknown error occurred"}>
-          <Match
-            when={
-              clientController.lifecycle.permanentError === "InvalidSession"
-            }
-          >
-            <h1>You were logged out!</h1>
+          <Match when={lifecycle.permanentError === "InvalidSession"}>
+            <h1>
+              <Trans>You were logged out!</Trans>
+            </h1>
           </Match>
         </Switch>
 
         <Button
-          variant="secondary"
+          variant="filled"
           onPress={() =>
-            clientController.lifecycle.transition({
+            lifecycle.transition({
               type: TransitionType.Dismiss,
             })
           }
         >
-          OK
+          <Trans>OK</Trans>
         </Button>
       </Match>
     </Switch>

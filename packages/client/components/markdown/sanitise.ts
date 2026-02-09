@@ -76,7 +76,9 @@ export function remarkInsertBreaks() {
      * @param element Element
      * @returns Element
      */
-    function recurse(element: any): any {
+    function recurse(
+      element: Record<string, unknown> & { children: unknown[] },
+    ): unknown {
       if (element.type === "text") {
         if (element.value === "\uF800") {
           return {
@@ -90,10 +92,10 @@ export function remarkInsertBreaks() {
 
       return {
         ...element,
-        children: element.children?.map((child: typeof tree) => recurse(child)),
+        children: element.children?.map((child) => recurse(child as never)),
       };
     }
 
-    return recurse(tree) as typeof tree;
+    return recurse(tree as never) as typeof tree;
   };
 }

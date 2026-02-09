@@ -2,17 +2,7 @@
   "tabWidth": 2,
   "useTabs": false,
   "plugins": [
-    "@pandabox/prettier-plugin",
-    "@trivago/prettier-plugin-sort-imports"
+    "prettier-plugin-organize-imports"
   ],
-  "importOrder": [
-    "^solid",
-    "<THIRD_PARTY_MODULES>",
-    "^@revolt",
-    "^@material-design-icons",
-    "^\\.\\.",
-    "^[./]"
-  ],
-  "importOrderSeparation": true,
-  "importOrderSortSpecifiers": true
+  "organizeImportsTypeOrder": "first"
 }

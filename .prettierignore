@@ -1,13 +1,9 @@
 # minified files
+**/i18n/catalogs/**
 **/i18n/locales/**
 
 # auto-generated files
-packages/showcase/componentData.ts
-packages/showcase/src/stories.ts
+**/styled-system/**
 
-# configuration
-.vercel/**
-
-# built files
-**/lib/cjs/**
-coverage/**
+# test results
+**/test-results/**

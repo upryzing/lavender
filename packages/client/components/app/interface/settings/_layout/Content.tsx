@@ -1,12 +1,13 @@
 import { Accessor, JSX, Show } from "solid-js";
 
-import { cva } from "styled-system/css";
+import { css, cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
-import { Breadcrumbs, Column, iconSize, typography } from "@revolt/ui";
+import { Breadcrumbs, IconButton, Text } from "@revolt/ui";
 
 import MdClose from "@material-design-icons/svg/outlined/close.svg?component-solid";
 
+import { SettingsList } from "..";
 import { useSettingsNavigation } from "../Settings";
 
 /**
@@ -15,7 +16,8 @@ import { useSettingsNavigation } from "../Settings";
 export function SettingsContent(props: {
   onClose?: () => void;
   children: JSX.Element;
-  title: (key: string) => string;
+  list: Accessor<SettingsList<unknown>>;
+  title: (ctx: SettingsList<never>, key: string) => string;
   page: Accessor<string | undefined>;
 }) {
   const { navigate } = useSettingsNavigation();
@@ -23,29 +25,31 @@ export function SettingsContent(props: {
   return (
     <div
       use:scrollable={{
-        palette: "settings",
         class: base(),
       }}
     >
       <Show when={props.page()}>
         <InnerContent>
           <InnerColumn>
-            <span class={typography({ class: "title", size: "large" })}>
+            <Text class="title" size="large">
               <Breadcrumbs
                 elements={props.page()!.split("/")}
-                renderElement={(key) => props.title(key)}
+                renderElement={(key) =>
+                  props.title(props.list() as SettingsList<never>, key)
+                }
                 navigate={(keys) => navigate(keys.join("/"))}
               />
-            </span>
+            </Text>
             {props.children}
+            <div class={css({ minHeight: "80px" })} />
           </InnerColumn>
         </InnerContent>
       </Show>
       <Show when={props.onClose}>
         <CloseAction>
-          <CloseAnchor onClick={props.onClose}>
-            <MdClose {...iconSize(28)} />
-          </CloseAnchor>
+          <IconButton variant="tonal" onPress={props.onClose}>
+            <MdClose />
+          </IconButton>
         </CloseAction>
       </Show>
     </div>
@@ -61,7 +65,7 @@ const base = cva({
     flex: "1 1 800px",
     flexDirection: "row",
     display: "flex",
-    background: "var(--colours-settings-content-background)",
+    background: "var(--md-sys-color-surface-container-low)",
     borderStartStartRadius: "30px",
     borderEndStartRadius: "30px",
 
@@ -96,36 +100,7 @@ const InnerColumn = styled("div", {
     gap: "var(--gap-md)",
     display: "flex",
     flexDirection: "column",
-  },
-});
-
-/**
- * Button for closing settings page
- */
-const CloseAnchor = styled("a", {
-  base: {
-    width: "36px",
-    height: "36px",
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: "var(--borderRadius-full)",
-    border: "3px solid var(--colours-settings-close-anchor)",
-    transition: "var(--transitions-fast) background-color",
-    "& svg": {
-      transition: "var(--transitions-fast) background-color",
-      fill: "var(--colours-settings-close-anchor) !important",
-    },
-    "&:hover": {
-      background: "var(--colours-settings-close-anchor)",
-    },
-    "&:hover svg": {
-      fill: "var(--colours-settings-close-anchor-hover) !important",
-    },
-    "&:active": {
-      transform: "translateY(2px)",
-    },
+    marginBlockEnd: "80px",
   },
 });
 
@@ -140,6 +115,7 @@ const CloseAction = styled("div", {
     visibility: "visible",
     position: "sticky",
     top: 0,
+
     "&:after": {
       content: '"ESC"',
       marginTop: "4px",
@@ -147,7 +123,7 @@ const CloseAction = styled("div", {
       justifyContent: "center",
       width: "36px",
       fontWeight: 600,
-      color: "var(--colours-settings-content-foreground)",
+      color: "var(--md-sys-color-on-surface)",
       fontSize: "0.75rem",
     },
   },

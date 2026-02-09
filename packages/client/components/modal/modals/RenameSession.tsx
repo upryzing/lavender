@@ -1,35 +1,65 @@
-import { useTranslation } from "@revolt/i18n";
+import { createFormControl, createFormGroup } from "solid-forms";
 
-import { createFormModal } from "../form";
-import { PropGenerator } from "../types";
+import { Trans, useLingui } from "@lingui-solid/solid/macro";
+
+import { Column, Dialog, DialogProps, Form2 } from "@revolt/ui";
+
+import { useModals } from "..";
+import { Modals } from "../types";
 
 /**
  * Modal for renaming session
  */
-const RenameSession: PropGenerator<"rename_session"> = (props) => {
-  const t = useTranslation();
+export function RenameSessionModal(
+  props: DialogProps & Modals & { type: "rename_session" },
+) {
+  const { t } = useLingui();
+  const { showError } = useModals();
 
-  return createFormModal({
-    modalProps: {
-      title: "Rename Session",
-    },
-    schema: {
-      name: "text",
-    },
-    defaults: {
-      name: props.session.name,
-    },
-    data: {
-      name: {
-        field: "Name",
-        placeholder: "Enter a new name for this session",
-      },
-    },
-    callback: async ({ name }) => void (await props.session.rename(name)),
-    submit: {
-      children: t("app.special.modals.actions.update"),
-    },
+  const group = createFormGroup({
+    // eslint-disable-next-line solid/reactivity
+    name: createFormControl(props.session.name, { required: true }),
   });
-};
 
-export default RenameSession;
+  async function onSubmit() {
+    try {
+      await props.session.rename(group.controls.name.value);
+      props.onClose();
+    } catch (error) {
+      showError(error);
+    }
+  }
+
+  const submit = Form2.useSubmitHandler(group, onSubmit);
+
+  return (
+    <Dialog
+      show={props.show}
+      onClose={props.onClose}
+      title={<Trans>Rename Session</Trans>}
+      actions={[
+        { text: <Trans>Cancel</Trans> },
+        {
+          text: <Trans>Rename</Trans>,
+          onClick: () => {
+            onSubmit();
+            return false;
+          },
+          isDisabled: !Form2.canSubmit(group),
+        },
+      ]}
+      isDisabled={group.isPending}
+    >
+      <form onSubmit={submit}>
+        <Column>
+          <Form2.TextField
+            name="name"
+            control={group.controls.name}
+            label={t`Name`}
+            placeholder={t`Enter a new name for this session`}
+          />
+        </Column>
+      </form>
+    </Dialog>
+  );
+}

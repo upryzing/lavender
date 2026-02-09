@@ -1,6 +1,7 @@
-import { batch } from "solid-js";
+import { Accessor, Setter, batch, createSignal } from "solid-js";
 
 import { API, Channel, Client, Message } from "@upryzing/upryzing.js";
+import { ulid } from "ulid";
 
 import { CONFIGURATION, insecureUniqueId } from "@revolt/common";
 
@@ -65,6 +66,17 @@ export type TypeDraft = {
    * Unsent messages
    */
   outbox: Record<string, UnsentMessage[]>;
+
+  /**
+   * Current message being edited
+   * or used as a marker to load newest message as editor
+   */
+  editingMessageId?: string | true;
+
+  /**
+   * Value of message currently being edited
+   */
+  editingMessageContent?: string;
 };
 
 /**
@@ -86,13 +98,21 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
    */
   private fileCache: Record<
     string,
-    { file: File; dataUri: string | undefined }
+    {
+      file: File;
+      dataUri?: string;
+      dimensions?: [number, number];
+      autumnId?: string;
+      uploadProgress: [Accessor<number>, Setter<number>];
+    }
   >;
 
   /**
    * Current text selection
    */
   private textSelection?: TextSelection;
+
+  _setNodeReplacement?: Setter<readonly [string | "_focus"] | undefined>;
 
   /**
    * Construct store
@@ -103,6 +123,7 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
     this.fileCache = {};
 
     this.getFile = this.getFile.bind(this);
+    this.setEditingMessageContent = this.setEditingMessageContent.bind(this);
   }
 
   /**
@@ -141,7 +162,7 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
         (x) =>
           typeof x !== "object" ||
           typeof x.id !== "string" ||
-          typeof x.mention !== "boolean"
+          typeof x.mention !== "boolean",
       );
 
     const messageDrafts = input.drafts;
@@ -229,16 +250,18 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
    */
   setDraft(
     channelId: string,
-    data?: DraftData | ((data: DraftData) => DraftData)
+    data?: DraftData | ((data: DraftData) => DraftData),
   ) {
     if (typeof data === "function") {
       data = data(this.getDraft(channelId));
     }
 
     if (typeof data === "undefined") {
+      console.info("[draft] cleared!");
       return this.clearDraft(channelId);
     }
 
+    console.info("[draft] updated to ", data);
     this.set("drafts", channelId, data);
   }
 
@@ -279,8 +302,11 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
       return;
     }
 
-    // TODO: const idempotencyKey = ulid();
-    const idempotencyKey = Math.random().toString();
+    // Check if this is something we can even send
+    if (!draft.content && !draft.files?.length) return;
+
+    // Add message to the outbox
+    const idempotencyKey = ulid();
     this.set("outbox", channel.id, [
       ...this.getPendingMessages(channel.id),
       {
@@ -307,7 +333,14 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
       for (const fileId of files) {
         // Prepare for upload
         const body = new FormData();
-        const { file } = this.getFile(fileId);
+        const { file, autumnId, uploadProgress } = this.getFile(fileId);
+
+        // Use ID if already uploaded
+        if (autumnId) {
+          attachments.push(autumnId);
+          continue;
+        }
+
         body.set("file", file);
         const token = this.state.auth.getSession()?.token ?? "";
 
@@ -319,19 +352,19 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
         >((resolve) => {
           xhr.upload.addEventListener("progress", (event) => {
             if (event.lengthComputable) {
-              // TODO: show this to users
-              console.log("upload progress:", event.loaded / event.total);
+              uploadProgress[1](event.loaded / event.total);
             }
           });
 
           xhr.addEventListener("loadend", () => {
+            uploadProgress[1](1);
             resolve([xhr.readyState === 4 && xhr.status === 200, xhr.response]);
           });
 
           xhr.open(
             "POST",
-            `${client.configuration!.features.pigeon.url}/attachments`,
-            true
+            `${client.configuration!.features.autumn.url}/attachments`,
+            true,
           );
 
           const [authHeader, authHeaderValue] = client.authenticationHeader;
@@ -341,9 +374,10 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
           xhr.send(body);
         });
 
-        // TODO: keep track of uploaded files (and don't reupload those that succeded if message or something else fails)
         if (!success) throw "Upload Error";
+
         attachments.push(response.id);
+        this.fileCache[fileId].autumnId = response.id;
       }
     }
 
@@ -366,12 +400,10 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
         "outbox",
         channel.id,
         this.getPendingMessages(channel.id).filter(
-          (entry) => entry.idempotencyKey !== idempotencyKey
-        )
+          (entry) => entry.idempotencyKey !== idempotencyKey,
+        ),
       );
-
-      this.clearDraft(channel.id);
-    } catch (err) {
+    } catch {
       this.set(
         "outbox",
         channel.id,
@@ -381,8 +413,8 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
                 ...entry,
                 status: "failed",
               }
-            : entry
-        )
+            : entry,
+        ),
       );
     }
   }
@@ -404,7 +436,7 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
     return {
       content,
       replies,
-      files,
+      files: files?.slice(0, CONFIGURATION.MAX_ATTACHMENTS),
     };
   }
 
@@ -417,7 +449,7 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
   retrySend(client: Client, channel: Channel, idempotencyKey: string) {
     batch(() => {
       const draft = this.get().outbox[channel.id].find(
-        (entry) => entry.idempotencyKey === idempotencyKey
+        (entry) => entry.idempotencyKey === idempotencyKey,
       );
       // TODO: validation?
 
@@ -436,8 +468,8 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
       "outbox",
       channel.id,
       this.getPendingMessages(channel.id).filter(
-        (entry) => entry.idempotencyKey !== idempotencyKey
-      )
+        (entry) => entry.idempotencyKey !== idempotencyKey,
+      ),
     );
   }
 
@@ -501,13 +533,23 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
    * @param selfId Own user ID
    */
   addReply(message: Message, selfId: string) {
+    this._setNodeReplacement?.(["_focus"]);
+
     // Ignore if reply already exists
     if (
       this.getDraft(message.channelId).replies?.find(
-        (reply) => reply.id === message.id
+        (reply) => reply.id === message.id,
       )
-    )
+    ) {
       return;
+    }
+
+    if (
+      (this.getDraft(message.channelId).replies?.length ?? 0) >=
+      CONFIGURATION.MAX_REPLIES
+    ) {
+      return;
+    }
 
     // We should not mention ourselves, otherwise use previous mention state
     const shouldMention =
@@ -540,7 +582,7 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
           // Save current mention reply state as new default
           this.state.layout.setSectionState(
             LAYOUT_SECTIONS.MENTION_REPLY,
-            !reply.mention
+            !reply.mention,
           );
 
           return { ...reply, mention: !reply.mention };
@@ -567,14 +609,33 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
    * @param channelId Channel ID
    * @param file File to add
    */
-  addFile(channelId: string, file: File) {
+  async addFile(channelId: string, file: File) {
     const id = insecureUniqueId();
     this.fileCache[id] = {
       file,
       dataUri: ALLOWED_IMAGE_TYPES.includes(file.type)
         ? URL.createObjectURL(file)
         : undefined,
+      // we know what we're doing here...
+      // eslint-disable-next-line solid/reactivity
+      uploadProgress: createSignal(0),
     };
+
+    if (this.fileCache[id].dataUri) {
+      await new Promise((resolve, reject) => {
+        const image = new Image();
+
+        image.onload = () => {
+          this.fileCache[id].dimensions = [image.width, image.height];
+          resolve(void 0);
+        };
+
+        image.onerror = reject;
+        image.src = this.fileCache[id].dataUri!;
+      })
+        // ignore errors
+        .catch(() => {});
+    }
 
     this.setDraft(channelId, (data) => ({
       files: [...(data.files ?? []), id],
@@ -616,6 +677,16 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
   }
 
   /**
+   * Whether additional elements (attachment/reply) are present
+   * @param channelId Channel ID
+   * @returns Whether information is present
+   */
+  hasAdditionalElements(channelId: string): boolean {
+    const draft = this.getDraft(channelId);
+    return !!(draft.replies?.length || draft.files?.length);
+  }
+
+  /**
    * Remove additional information from a draft (file or reply)
    * @param channelId Channel ID
    * @returns Whether information was removed
@@ -640,5 +711,44 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
     }
 
     return false;
+  }
+
+  /**
+   * Set message ID
+   * @param message Message ID
+   */
+  setEditingMessage(message: Message | true | undefined) {
+    batch(() => {
+      if (message instanceof Message)
+        this.set("editingMessageContent", message.content);
+      else this.set("editingMessageContent", undefined);
+
+      this.set(
+        "editingMessageId",
+        message instanceof Message ? message.id : message,
+      );
+    });
+  }
+
+  /**
+   * Set editing message content
+   * @param content Content
+   */
+  setEditingMessageContent(content: string) {
+    this.set("editingMessageContent", content);
+  }
+
+  /**
+   * Message that is currently being edited
+   */
+  get editingMessageId() {
+    return this.get().editingMessageId;
+  }
+
+  /**
+   * Message edit content
+   */
+  get editingMessageContent() {
+    return this.get().editingMessageContent;
   }
 }

@@ -1,14 +1,19 @@
-import { Component, Match, Show, Switch, createMemo } from "solid-js";
-import { JSX } from "solid-js";
+import { Component, JSX, Match, Show, Switch, createMemo } from "solid-js";
 
 import { Channel, Server as ServerI } from "@upryzing/upryzing.js";
 
-import { ChannelContextMenu, ServerSidebarContextMenu } from "@revolt/app";
+import {
+  CategoryContextMenu,
+  ChannelContextMenu,
+  ServerSidebarContextMenu,
+} from "@revolt/app";
 import { useClient, useUser } from "@revolt/client";
-import { modalController } from "@revolt/modal";
-import { Route, useParams, useSmartParams } from "@revolt/routing";
-import { state } from "@revolt/state";
-import { HomeSidebar, ServerList, ServerSidebar } from "@revolt/ui";
+import { useModals } from "@revolt/modal";
+import { useLocation, useParams, useSmartParams } from "@revolt/routing";
+import { useState } from "@revolt/state";
+import { LAYOUT_SECTIONS } from "@revolt/state/stores/Layout";
+
+import { HomeSidebar, ServerList, ServerSidebar } from "./navigation";
 
 /**
  * Left-most channel navigation sidebar
@@ -20,33 +25,46 @@ export const Sidebar = (props: {
   menuGenerator: (t: ServerI | Channel) => JSX.Directives["floating"];
 }) => {
   const user = useUser();
+  const state = useState();
   const client = useClient();
+  const { openModal } = useModals();
+
   const params = useParams<{ server: string }>();
+  const location = useLocation();
 
   return (
     <div style={{ display: "flex", "flex-shrink": 0 }}>
       <ServerList
-        orderedServers={state.ordering.orderedServers}
+        orderedServers={state.ordering.orderedServers(client())}
         setServerOrder={state.ordering.setServerOrder}
-        unreadConversations={state.ordering.orderedConversations.filter(
-          // TODO: muting channels
-          (channel) => channel.unread
-        )}
+        unreadConversations={state.ordering
+          .orderedConversations(client())
+          .filter(
+            // TODO: muting channels
+            (channel) => channel.unread,
+          )}
         user={user()!}
         selectedServer={() => params.server}
         onCreateOrJoinServer={() =>
-          modalController.push({
+          openModal({
             type: "create_or_join_server",
             client: client(),
           })
         }
         menuGenerator={props.menuGenerator}
       />
-      <Switch fallback={<Home />}>
-        <Match when={params.server}>
-          <Server />
-        </Match>
-      </Switch>
+      <Show
+        when={
+          state.layout.getSectionState(LAYOUT_SECTIONS.PRIMARY_SIDEBAR, true) &&
+          !location.pathname.startsWith("/discover")
+        }
+      >
+        <Switch fallback={<Home />}>
+          <Match when={params.server}>
+            <Server />
+          </Match>
+        </Switch>
+      </Show>
     </div>
   );
 };
@@ -57,7 +75,10 @@ export const Sidebar = (props: {
 const Home: Component = () => {
   const params = useSmartParams();
   const client = useClient();
-  const conversations = createMemo(() => state.ordering.orderedConversations);
+  const state = useState();
+  const conversations = createMemo(() =>
+    state.ordering.orderedConversations(client()),
+  );
 
   return (
     <HomeSidebar
@@ -66,7 +87,7 @@ const Home: Component = () => {
       openSavedNotes={(navigate) => {
         // Check whether the saved messages channel exists already
         const channelId = [...client()!.channels.values()].find(
-          (channel) => channel.type === "SavedMessages"
+          (channel) => channel.type === "SavedMessages",
         )?.id;
 
         if (navigate) {
@@ -84,7 +105,6 @@ const Home: Component = () => {
         // Otherwise return channel ID if available
         return channelId;
       }}
-      __tempDisplayFriends={() => state.experiments.isEnabled("friends")}
     />
   );
 };
@@ -93,6 +113,7 @@ const Home: Component = () => {
  * Render sidebar for a server
  */
 const Server: Component = () => {
+  const { openModal } = useModals();
   const params = useSmartParams();
   const client = useClient();
 
@@ -106,7 +127,7 @@ const Server: Component = () => {
    * Open the server information modal
    */
   function openServerInfo() {
-    modalController.push({
+    openModal({
       type: "server_info",
       server: server(),
     });
@@ -116,7 +137,7 @@ const Server: Component = () => {
    * Open the server settings modal
    */
   function openServerSettings() {
-    modalController.push({
+    openModal({
       type: "settings",
       config: "server",
       context: server(),
@@ -134,8 +155,10 @@ const Server: Component = () => {
           contextMenu: () =>
             target instanceof Channel ? (
               <ChannelContextMenu channel={target} />
-            ) : (
+            ) : target instanceof ServerI ? (
               <ServerSidebarContextMenu server={target} />
+            ) : (
+              <CategoryContextMenu server={server()} category={target} />
             ),
         })}
       />

@@ -1,7 +1,8 @@
-import { clientController } from "@revolt/client";
-import { useTranslation } from "@revolt/i18n";
+import { Trans } from "@lingui-solid/solid/macro";
+
+import { useApi } from "@revolt/client";
 import { useNavigate, useParams } from "@revolt/routing";
-import { Button, Text } from "@revolt/ui";
+import { Button } from "@revolt/ui";
 
 import { FlowTitle } from "./Flow";
 import { Fields, Form } from "./Form";
@@ -10,7 +11,7 @@ import { Fields, Form } from "./Form";
  * Flow for confirming a new password
  */
 export default function FlowConfirmReset() {
-  const t = useTranslation();
+  const api = useApi();
   const { token } = useParams();
   const navigate = useNavigate();
 
@@ -22,7 +23,7 @@ export default function FlowConfirmReset() {
     const password = data.get("new-password") as string;
     const remove_sessions = !!(data.get("log-out") as "on" | undefined);
 
-    await clientController.api.patch("/auth/account/reset_password", {
+    await api.patch("/auth/account/reset_password", {
       password,
       token,
       remove_sessions,
@@ -33,12 +34,20 @@ export default function FlowConfirmReset() {
 
   return (
     <>
-      <FlowTitle>{t("login.reset")}</FlowTitle>
+      <FlowTitle>
+        <Trans>Reset password</Trans>
+      </FlowTitle>
       <Form onSubmit={reset}>
         <Fields fields={["new-password", "log-out"]} />
-        <Button type="submit">{t("login.reset")}</Button>
+        <Button type="submit">
+          <Trans>Reset</Trans>
+        </Button>
       </Form>
-      <a href="/login/auth">{t("login.remembered")}</a>
+      <a href="/login/auth">
+        <Button variant="text">
+          <Trans>Go back to login</Trans>
+        </Button>
+      </a>
     </>
   );
 }

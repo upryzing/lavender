@@ -1,12 +1,8 @@
 import type { SolidOptions } from "solid-dnd-directive";
+import { Setter } from "solid-js";
 
 import type { Placement } from "@floating-ui/dom";
-import type {
-  Channel,
-  Client,
-  ServerMember,
-  User,
-} from "@upryzing/upryzing.js";
+import type { Channel, Client, ServerMember, ServerRole, User } from "@upryzing/upryzing.js";
 
 declare global {
   interface Window {
@@ -114,9 +110,11 @@ declare module "solid-js" {
           member?: ServerMember;
         };
         contextMenu?: Component;
+        contextMenuHandler?: "click" | "contextmenu";
         autoComplete?: {
           state: Accessor<AutoCompleteState>;
           selection: Accessor<number>;
+          setSelection: Setter<number>;
           select: (index: number) => void;
         };
       };
@@ -131,6 +129,7 @@ declare module "solid-js" {
               users?: User[];
               members?: ServerMember[];
               channels?: Channel[];
+              roles?: ServerRole[];
             };
           };
     }

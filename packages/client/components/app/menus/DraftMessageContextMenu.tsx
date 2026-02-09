@@ -1,10 +1,10 @@
 import { Show } from "solid-js";
 
+import { Trans } from "@lingui-solid/solid/macro";
 import { Channel } from "@upryzing/upryzing.js";
 
 import { useClient } from "@revolt/client";
-import { useTranslation } from "@revolt/i18n";
-import { state } from "@revolt/state";
+import { useState } from "@revolt/state";
 import { UnsentMessage } from "@revolt/state/stores/Draft";
 
 import MdClose from "@material-design-icons/svg/outlined/close.svg?component-solid";
@@ -22,20 +22,20 @@ interface Props {
  * Context menu for draft messages
  */
 export function DraftMessageContextMenu(props: Props) {
+  const state = useState();
   const client = useClient();
-  const t = useTranslation();
 
   /**
    * Retry sending the draft message
    */
-  function retrySend(ev: MouseEvent) {
+  function retrySend() {
     state.draft.retrySend(client(), props.channel, props.draft.idempotencyKey);
   }
 
   /**
    * Delete the draft message
    */
-  function deleteMessage(ev: MouseEvent) {
+  function deleteMessage() {
     state.draft.cancelSend(props.channel, props.draft.idempotencyKey);
   }
 
@@ -44,7 +44,7 @@ export function DraftMessageContextMenu(props: Props) {
       <ContextMenu>
         <Show when={false}>
           <ContextMenuButton icon={MdClose} onClick={deleteMessage} destructive>
-            {t("app.context_menu.cancel_message")}
+            <Trans>Cancel message</Trans>
           </ContextMenuButton>
         </Show>
         <Show
@@ -53,14 +53,14 @@ export function DraftMessageContextMenu(props: Props) {
           }
         >
           <ContextMenuButton icon={MdRefresh} onClick={retrySend}>
-            {t("app.context_menu.retry_message")}
+            <Trans>Retry sending</Trans>
           </ContextMenuButton>
           <ContextMenuButton
             icon={MdDelete}
             onClick={deleteMessage}
             destructive
           >
-            {t("app.context_menu.delete_message")}
+            <Trans>Delete message</Trans>
           </ContextMenuButton>
         </Show>
       </ContextMenu>

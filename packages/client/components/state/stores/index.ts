@@ -7,10 +7,14 @@ import { TypeDraft } from "./Draft";
 import { TypeExperiments } from "./Experiments";
 import { TypeKeybinds } from "./Keybinds";
 import { TypeLayout } from "./Layout";
+import { TypeLinkSafety } from "./LinkSafety";
 import { TypeLocale } from "./Locale";
 import { TypeNotificationOptions } from "./NotificationOptions";
 import { TypeOrdering } from "./Ordering";
 import { TypeSettings } from "./Settings";
+import { TypeSynchronisation } from "./Sync";
+import { TypeTheme } from "./Theme";
+import { TypeVoice } from "./Voice";
 
 export type Store = {
   auth: TypeAuth;
@@ -18,10 +22,14 @@ export type Store = {
   experiments: TypeExperiments;
   keybinds: TypeKeybinds;
   layout: TypeLayout;
+  linkSafety: TypeLinkSafety;
   locale: TypeLocale;
   notifications: TypeNotificationOptions;
   ordering: TypeOrdering;
   settings: TypeSettings;
+  sync: TypeSynchronisation;
+  theme: TypeTheme;
+  voice: TypeVoice;
 };
 
 /**
@@ -64,8 +72,11 @@ export abstract class AbstractStore<T extends keyof Store, D> {
   /**
    * Set some value in this store
    */
-  protected set: SetStoreFunction<Store[T]> = (...args: any[]) => {
-    (this.state.set as any)(this.key, ...args);
+  protected set: SetStoreFunction<Store[T]> = (...args: unknown[]) => {
+    (this.state.set as unknown as (...args: unknown[]) => void)(
+      this.key,
+      ...args,
+    );
   };
 
   /**

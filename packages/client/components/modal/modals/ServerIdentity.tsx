@@ -1,81 +1,105 @@
-import { Accessor, createEffect, createSignal } from "solid-js";
+import { createFormControl, createFormGroup } from "solid-forms";
 
-import { ServerMember } from "@upryzing/upryzing.js";
+import { Trans, useLingui } from "@lingui-solid/solid/macro";
+import { API } from "@upryzing/upryzing.js";
 
-import { useTranslation } from "@revolt/i18n";
-import { Avatar, Column, Input, MessageContainer, Username } from "@revolt/ui";
+import { useClient } from "@revolt/client";
+import { CONFIGURATION } from "@revolt/common";
+import { Column, Dialog, DialogProps, Form2 } from "@revolt/ui";
 
-import { PropGenerator } from "../types";
-
-function Preview(props: { nickname: Accessor<string>; member: ServerMember }) {
-  createEffect(() => {
-    console.info("n:", props.nickname());
-  });
-
-  return (
-    <>
-      <span>Preview</span>
-      <MessageContainer
-        avatar={<Avatar size={36} src={props.member.animatedAvatarURL} />}
-        timestamp={new Date()}
-        username={
-          <Username
-            username={props.nickname()}
-            colour={props.member.roleColour!}
-          />
-        }
-      >
-        Hello {props.nickname()}!
-      </MessageContainer>
-    </>
-  );
-}
+import { useModals } from "..";
+import { Modals } from "../types";
 
 /**
  * Modal to update the user's server identity
  */
-const ServerIdentity: PropGenerator<"server_identity"> = (props) => {
-  const t = useTranslation();
-  const [nickname, setNickname] = createSignal(props.member.nickname ?? "");
+export function ServerIdentityModal(
+  props: DialogProps & Modals & { type: "server_identity" },
+) {
+  const { t } = useLingui();
+  const client = useClient();
+  const { showError } = useModals();
 
-  const [avatarFile, setAvatarFile] = createSignal<File>();
-
-  return {
-    title: t("app.special.popovers.server_identity.title", {
-      server: props.member.server!.name,
-    }),
-    children: (
-      <Column>
-        {/* <span>developer ui</span> */}
-        <span>{t("app.special.popovers.server_identity.nickname")}</span>
-        <Input
-          value={nickname()}
-          onChange={(e) => setNickname(e.currentTarget.value)}
-        />
-        {/* <span>{t("app.special.popovers.server_identity.avatar")}</span> */}
-        {/* <Avatar size={64} src={props.member.animatedAvatarURL} interactive /> */}
-        {/* <Preview nickname={nickname} member={props.member} /> */}
-      </Column>
+  /* eslint-disable solid/reactivity */
+  const group = createFormGroup({
+    avatar: createFormControl<string | File[] | null>(
+      props.member.animatedAvatarURL,
     ),
-    actions: [
-      {
-        children: t("app.special.modals.actions.save"),
-        async onClick() {
-          await props.member.edit(
-            nickname()
-              ? {
-                  nickname: nickname(),
-                }
-              : {
-                  remove: ["Nickname"],
-                }
+    nickname: createFormControl(props.member.nickname ?? ""),
+  });
+  /* eslint-enable solid/reactivity */
+
+  async function onSubmit() {
+    try {
+      const changes: API.DataMemberEdit = {
+        remove: [],
+      };
+
+      if (group.controls.nickname.isDirty) {
+        const nickname = group.controls.nickname.value.trim();
+        if (nickname) {
+          changes.nickname = nickname;
+        } else {
+          changes.remove!.push("Nickname");
+        }
+      }
+
+      if (group.controls.avatar.isDirty) {
+        if (!group.controls.avatar.value) {
+          changes.remove!.push("Avatar");
+        } else if (Array.isArray(group.controls.avatar.value)) {
+          changes.avatar = await client().uploadFile(
+            "avatars",
+            group.controls.avatar.value[0],
+            CONFIGURATION.DEFAULT_MEDIA_URL,
           );
+        }
+      }
 
-          return true;
+      await props.member.edit(changes);
+
+      props.onClose();
+    } catch (error) {
+      showError(error);
+    }
+  }
+
+  const submit = Form2.useSubmitHandler(group, onSubmit);
+
+  return (
+    <Dialog
+      show={props.show}
+      onClose={props.onClose}
+      title={<Trans>Change identity on {props.member.server!.name}</Trans>}
+      actions={[
+        { text: <Trans>Cancel</Trans> },
+        {
+          text: <Trans>Save</Trans>,
+          onClick: () => {
+            onSubmit();
+            return false;
+          },
+          isDisabled: !Form2.canSubmit(group),
         },
-      },
-    ],
-  };
-};
-
-export default ServerIdentity;
+      ]}
+      isDisabled={group.isPending}
+    >
+      <form onSubmit={submit}>
+        <Column>
+          <Form2.FileInput
+            control={group.controls.avatar}
+            accept="image/*"
+            label={t`Server Avatar`}
+            imageJustify={false}
+          />
+          <Form2.TextField
+            name="nickname"
+            label={t`Nickname`}
+            control={group.controls.nickname}
+            placeholder={props.member.user?.displayName}
+          />
+        </Column>
+      </form>
+    </Dialog>
+  );
+}
