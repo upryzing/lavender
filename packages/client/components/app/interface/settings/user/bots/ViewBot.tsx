@@ -1,5 +1,5 @@
 import { Trans } from "@lingui-solid/solid/macro";
-import { Bot } from "@upryzing/upryzing.js";
+import { Bot } from "upryzing.js";
 
 import { createProfileResource } from "@revolt/client/resources";
 import { useModals } from "@revolt/modal";

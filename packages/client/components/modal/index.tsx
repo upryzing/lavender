@@ -8,7 +8,7 @@ import {
 } from "solid-js";
 import { SetStoreFunction, createStore } from "solid-js/store";
 
-import type { MFA, MFATicket } from "@upryzing/upryzing.js";
+import type { MFA, MFATicket } from "upryzing.js";
 
 import { Keybind, KeybindAction } from "@revolt/keybinds";
 

@@ -6,7 +6,7 @@ import {
   TextEmbed as TextEmbedClass,
   VideoEmbed,
   WebsiteEmbed,
-} from "@upryzing/upryzing.js";
+} from "upryzing.js";
 import { css } from "styled-system/css";
 
 import { useModals } from "@revolt/modal";

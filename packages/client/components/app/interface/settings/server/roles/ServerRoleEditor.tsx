@@ -2,7 +2,7 @@ import { createFormControl, createFormGroup } from "solid-forms";
 import { For, Show, createMemo, createSignal } from "solid-js";
 
 import { Trans, useLingui } from "@lingui-solid/solid/macro";
-import { API, Server, ServerRole } from "@upryzing/upryzing.js";
+import { API, Server, ServerRole } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { useModals } from "@revolt/modal";

@@ -1,6 +1,6 @@
 import { JSX, Match, Switch, createEffect } from "solid-js";
 
-import { Server } from "@upryzing/upryzing.js";
+import { Server } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { ChannelContextMenu, ServerContextMenu } from "@revolt/app";

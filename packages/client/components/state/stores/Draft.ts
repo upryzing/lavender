@@ -1,6 +1,6 @@
 import { Accessor, Setter, batch, createSignal } from "solid-js";
 
-import { API, Channel, Client, Message } from "@upryzing/upryzing.js";
+import { API, Channel, Client, Message } from "upryzing.js";
 import { ulid } from "ulid";
 
 import { CONFIGURATION, insecureUniqueId } from "@revolt/common";

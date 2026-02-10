@@ -1,7 +1,7 @@
 import { For, Match, Switch } from "solid-js";
 
 import { Trans } from "@lingui-solid/solid/macro";
-import { User } from "@upryzing/upryzing.js";
+import { User } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { useUsers } from "@revolt/markdown/users";

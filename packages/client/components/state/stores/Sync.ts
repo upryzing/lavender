@@ -1,7 +1,7 @@
 import { batch } from "solid-js";
 
 import { ReactiveSet } from "@solid-primitives/set";
-import { Client } from "@upryzing/upryzing.js";
+import { Client } from "upryzing.js";
 
 import { State } from "..";
 

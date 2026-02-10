@@ -7,7 +7,7 @@ import {
   ServerMember,
   ServerRole,
   User,
-} from "@upryzing/upryzing.js";
+} from "upryzing.js";
 
 export interface AutoCompleteSearchSpace {
   users?: User[];

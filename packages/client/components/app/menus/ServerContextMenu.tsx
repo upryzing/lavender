@@ -2,7 +2,7 @@ import { For, Show } from "solid-js";
 
 import { Trans } from "@lingui-solid/solid/macro";
 import dayjs from "dayjs";
-import { Server } from "@upryzing/upryzing.js";
+import { Server } from "upryzing.js";
 
 import { useClient } from "@revolt/client";
 import { useModals } from "@revolt/modal";

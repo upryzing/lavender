@@ -1,7 +1,7 @@
 import { For, Show } from "solid-js";
 
 import { useQuery } from "@tanstack/solid-query";
-import { User } from "@upryzing/upryzing.js";
+import { User } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { useClient } from "@revolt/client";

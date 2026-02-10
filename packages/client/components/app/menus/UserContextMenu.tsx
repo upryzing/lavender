@@ -2,7 +2,7 @@ import { JSX, Match, Show, Switch } from "solid-js";
 
 import { Trans } from "@lingui-solid/solid/macro";
 import { useNavigate } from "@solidjs/router";
-import { Channel, Message, ServerMember, User } from "@upryzing/upryzing.js";
+import { Channel, Message, ServerMember, User } from "upryzing.js";
 
 import { useClient } from "@revolt/client";
 import { useModals } from "@revolt/modal";

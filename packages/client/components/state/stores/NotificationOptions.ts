@@ -1,6 +1,6 @@
 import { Accessor, createSignal } from "solid-js";
 
-import { Channel, Server } from "@upryzing/upryzing.js";
+import { Channel, Server } from "upryzing.js";
 
 import { State } from "..";
 

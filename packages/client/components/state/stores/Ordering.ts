@@ -1,4 +1,4 @@
-import { Client } from "@upryzing/upryzing.js";
+import { Client } from "upryzing.js";
 
 import { State } from "..";
 

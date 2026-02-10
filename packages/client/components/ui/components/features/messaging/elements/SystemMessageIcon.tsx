@@ -16,7 +16,7 @@ import {
 } from "solid-icons/bi";
 import { Match, Switch } from "solid-js";
 
-import { SystemMessage } from "@upryzing/upryzing.js";
+import { SystemMessage } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { useTime } from "@revolt/i18n";

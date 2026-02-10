@@ -1,7 +1,7 @@
 import { createFormControl, createFormGroup } from "solid-forms";
 
 import { Trans, useLingui } from "@lingui-solid/solid/macro";
-import { API } from "@upryzing/upryzing.js";
+import { API } from "upryzing.js";
 
 import { useClient } from "@revolt/client";
 import { CONFIGURATION } from "@revolt/common";

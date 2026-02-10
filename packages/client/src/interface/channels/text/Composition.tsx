@@ -11,7 +11,7 @@ import {
 } from "solid-js";
 
 import { useLingui } from "@lingui-solid/solid/macro";
-import { Channel } from "@upryzing/upryzing.js";
+import { Channel } from "upryzing.js";
 
 import { useClient } from "@revolt/client";
 import { CONFIGURATION, debounce } from "@revolt/common";

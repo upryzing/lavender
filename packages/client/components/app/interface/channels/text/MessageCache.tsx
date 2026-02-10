@@ -8,7 +8,7 @@ import {
   useContext,
 } from "solid-js";
 
-import { Channel, Client, Message } from "@upryzing/upryzing.js";
+import { Channel, Client, Message } from "upryzing.js";
 
 import { useClientLifecycle } from "@revolt/client";
 import { State } from "@revolt/client/Controller";

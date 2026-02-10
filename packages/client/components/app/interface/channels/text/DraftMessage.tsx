@@ -1,7 +1,7 @@
 import { For, Match, Switch } from "solid-js";
 
 import { Trans } from "@lingui-solid/solid/macro";
-import type { Channel } from "@upryzing/upryzing.js";
+import type { Channel } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { useClient, useUser } from "@revolt/client";

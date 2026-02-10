@@ -1,7 +1,7 @@
 import { For, Match, Show, Switch, createSignal, onMount } from "solid-js";
 
 import { useLingui } from "@lingui-solid/solid/macro";
-import { Message as MessageInterface, WebsiteEmbed } from "@upryzing/upryzing.js";
+import { Message as MessageInterface, WebsiteEmbed } from "upryzing.js";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 import { decodeTime } from "ulid";

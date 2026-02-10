@@ -1,6 +1,6 @@
 import { Component, Match, Switch, createMemo } from "solid-js";
 
-import { Channel } from "@upryzing/upryzing.js";
+import { Channel } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { useClient } from "@revolt/client";

@@ -2,7 +2,7 @@ import { createFormControl, createFormGroup } from "solid-forms";
 import { BiSolidPalette, BiSolidSpeaker } from "solid-icons/bi";
 import { For } from "solid-js";
 
-import { PublicBot, PublicChannelInvite } from "@upryzing/upryzing.js";
+import { PublicBot, PublicChannelInvite } from "upryzing.js";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 

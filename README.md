@@ -23,24 +23,24 @@ cd lavender
 # git submodule init && git submodule update
 
 # install all packages
-pnpm i --frozen-lockfile
+mise install:frozen
 
 # build deps:
 mise build:deps
 
 # ...or build a specific dep (e.g. upryzing.js updates):
-pnpm --filter @upryzing/upryzing.js run build
+pnpm --filter upryzing.js run build
 
 # customise the .env
 cp packages/client/.env.example packages/client/.env
 
 # run dev server
-pnpm run dev
+mise dev
 ```
 
 Finally, navigate to http://local.revolt.chat:5173.
 
-### Faster iteration with @upryzing/upryzing.js
+### Faster iteration with upryzing.js
 
 To make it easier to work with `uprzying.js`, you may want to temporarily make this change:
 

@@ -1,6 +1,6 @@
 import { Show } from "solid-js";
 
-import { ServerMember, User } from "@upryzing/upryzing.js";
+import { ServerMember, User } from "upryzing.js";
 import { css } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 

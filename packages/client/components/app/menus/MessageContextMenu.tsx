@@ -1,7 +1,7 @@
 import { For, Match, Show, Switch } from "solid-js";
 
 import { Trans } from "@lingui-solid/solid/macro";
-import { File, Message } from "@upryzing/upryzing.js";
+import { File, Message } from "upryzing.js";
 
 import { useClient, useUser } from "@revolt/client";
 import { CustomEmoji, UnicodeEmoji } from "@revolt/markdown/emoji";

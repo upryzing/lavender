@@ -1,7 +1,7 @@
 import { Match, Show, Switch } from "solid-js";
 
 import { Trans } from "@lingui-solid/solid/macro";
-import { Channel } from "@upryzing/upryzing.js";
+import { Channel } from "upryzing.js";
 
 import { useModals } from "@revolt/modal";
 import { useState } from "@revolt/state";

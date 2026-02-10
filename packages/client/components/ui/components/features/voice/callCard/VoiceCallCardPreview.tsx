@@ -1,7 +1,7 @@
 import { For, Show } from "solid-js";
 
 import { Trans, useLingui } from "@lingui-solid/solid/macro";
-import { Channel } from "@upryzing/upryzing.js";
+import { Channel } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { useUsers } from "@revolt/markdown/users";

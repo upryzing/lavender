@@ -11,7 +11,7 @@ import {
 
 import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { VirtualContainer } from "@minht11/solid-virtual-container";
-import type { User } from "@upryzing/upryzing.js";
+import type { User } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { UserContextMenu } from "@revolt/app";

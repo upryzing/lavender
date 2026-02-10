@@ -2,7 +2,7 @@ import { Match, Show, Switch, createMemo, splitProps } from "solid-js";
 
 import { Trans, useLingui } from "@lingui-solid/solid/macro";
 import { VirtualContainer } from "@minht11/solid-virtual-container";
-import { Channel } from "@upryzing/upryzing.js";
+import { Channel } from "upryzing.js";
 import { css } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 

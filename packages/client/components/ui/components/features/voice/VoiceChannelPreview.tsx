@@ -8,7 +8,7 @@ import {
 } from "solid-livekit-components";
 
 import { Track } from "livekit-client";
-import { Channel, VoiceParticipant } from "@upryzing/upryzing.js";
+import { Channel, VoiceParticipant } from "upryzing.js";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 

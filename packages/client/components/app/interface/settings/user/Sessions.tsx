@@ -16,7 +16,7 @@ import {
 } from "solid-js";
 
 import { Trans } from "@lingui-solid/solid/macro";
-import { Session } from "@upryzing/upryzing.js";
+import { Session } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { useClient } from "@revolt/client";

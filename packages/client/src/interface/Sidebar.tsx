@@ -1,6 +1,6 @@
 import { Component, JSX, Match, Show, Switch, createMemo } from "solid-js";
 
-import { Channel, Server as ServerI } from "@upryzing/upryzing.js";
+import { Channel, Server as ServerI } from "upryzing.js";
 
 import {
   CategoryContextMenu,

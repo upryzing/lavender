@@ -1,9 +1,9 @@
 import { Accessor, Setter, createSignal } from "solid-js";
 
-import { API, Client, ConnectionState } from "@upryzing/upryzing.js";
+import { API, Client, ConnectionState } from "upryzing.js";
 import { detect } from "detect-browser";
-import { API, Client, ConnectionState } from "@upryzing/upryzing.js";
-import { ProtocolV1 } from "@upryzing/upryzing.js/lib/events/v1";
+import { API, Client, ConnectionState } from "upryzing.js";
+import { ProtocolV1 } from "upryzing.js/lib/events/v1";
 
 import { CONFIGURATION } from "@revolt/common";
 import { ModalControllerExtended } from "@revolt/modal";

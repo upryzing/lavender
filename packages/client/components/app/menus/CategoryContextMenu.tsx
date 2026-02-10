@@ -1,8 +1,8 @@
 import { Show } from "solid-js";
 
 import { Trans } from "@lingui-solid/solid/macro";
-import type { API } from "@upryzing/upryzing.js";
-import { Channel, Server } from "@upryzing/upryzing.js";
+import type { API } from "upryzing.js";
+import { Channel, Server } from "upryzing.js";
 
 import { useModals } from "@revolt/modal";
 import { useState } from "@revolt/state";

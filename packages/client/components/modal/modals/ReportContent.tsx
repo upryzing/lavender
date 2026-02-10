@@ -2,7 +2,7 @@ import { createFormControl, createFormGroup } from "solid-forms";
 import { For, Match, Switch } from "solid-js";
 
 import { Trans, useLingui } from "@lingui-solid/solid/macro";
-import { API, Message as MessageI, Server, User } from "@upryzing/upryzing.js";
+import { API, Message as MessageI, Server, User } from "upryzing.js";
 import { cva } from "styled-system/css";
 
 import { Message } from "@revolt/app";

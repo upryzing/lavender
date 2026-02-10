@@ -1,5 +1,5 @@
 import { createQuery } from "@tanstack/solid-query";
-import { User } from "@upryzing/upryzing.js";
+import { User } from "upryzing.js";
 
 import { useClient } from ".";
 

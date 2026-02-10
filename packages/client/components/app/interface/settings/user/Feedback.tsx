@@ -17,7 +17,7 @@ import { CONFIGURATION } from "@revolt/common";
 import { useModals } from "@revolt/modal";
 import { useNavigate } from "@solidjs/router";
 import { Match, Switch } from "solid-js";
-import { PublicChannelInvite } from "@upryzing/upryzing.js";
+import { PublicChannelInvite } from "upryzing.js";
 
 /**
  * Feedback

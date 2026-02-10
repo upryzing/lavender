@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
 
 import { useNavigate } from "@solidjs/router";
-import { ServerMember, User } from "@upryzing/upryzing.js";
+import { ServerMember, User } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { UserContextMenu } from "@revolt/app";

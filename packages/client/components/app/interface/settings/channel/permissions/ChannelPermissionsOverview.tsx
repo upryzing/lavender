@@ -1,7 +1,7 @@
 import { For, createMemo } from "solid-js";
 
 import { Trans } from "@lingui-solid/solid/macro";
-import { Channel } from "@upryzing/upryzing.js";
+import { Channel } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { CategoryButton, Column, Text } from "@revolt/ui";

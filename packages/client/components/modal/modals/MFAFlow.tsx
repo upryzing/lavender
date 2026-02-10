@@ -10,7 +10,7 @@ import {
 } from "solid-js";
 
 import { Trans, useLingui } from "@lingui-solid/solid/macro";
-import type { API } from "@upryzing/upryzing.js";
+import type { API } from "upryzing.js";
 
 import {
   CategoryButton,

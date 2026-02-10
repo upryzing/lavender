@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
 
 import { Trans } from "@lingui-solid/solid/macro";
-import { Server } from "@upryzing/upryzing.js";
+import { Server } from "upryzing.js";
 
 import { useModals } from "@revolt/modal";
 

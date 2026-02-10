@@ -1,4 +1,4 @@
-import type { API } from "@upryzing/upryzing.js";
+import type { API } from "upryzing.js";
 
 export type Props = {
   /**

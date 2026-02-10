@@ -10,7 +10,7 @@ import {
   TextSystemMessage,
   UserModeratedSystemMessage,
   UserSystemMessage,
-} from "@upryzing/upryzing.js";
+} from "upryzing.js";
 
 import { useNavigate, useSmartParams } from "@revolt/routing";
 import { useState } from "@revolt/state";

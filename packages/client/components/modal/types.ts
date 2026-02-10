@@ -17,8 +17,8 @@ import {
   Session,
   User,
   VideoEmbed,
-} from "@upryzing/upryzing.js";
-import { ProtocolV1 } from "@upryzing/upryzing.js/lib/events/v1";
+} from "upryzing.js";
+import { ProtocolV1 } from "upryzing.js/lib/events/v1";
 
 import type { SettingsConfigurations } from "@revolt/app";
 

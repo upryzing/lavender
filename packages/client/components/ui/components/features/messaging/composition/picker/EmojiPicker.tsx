@@ -8,7 +8,7 @@ import {
 } from "solid-js";
 
 import { VirtualContainer } from "@minht11/solid-virtual-container";
-import { Emoji, Server } from "@upryzing/upryzing.js";
+import { Emoji, Server } from "upryzing.js";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 

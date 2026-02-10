@@ -1,6 +1,6 @@
 import { Show } from "solid-js";
 
-import { Message } from "@upryzing/upryzing.js";
+import { Message } from "upryzing.js";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 

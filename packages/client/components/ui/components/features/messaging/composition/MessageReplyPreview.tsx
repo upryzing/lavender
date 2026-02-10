@@ -1,7 +1,7 @@
 import { Match, Show, Switch } from "solid-js";
 
 import { Trans } from "@lingui-solid/solid/macro";
-import type { Message } from "@upryzing/upryzing.js";
+import type { Message } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { Row } from "@revolt/ui/components/layout";

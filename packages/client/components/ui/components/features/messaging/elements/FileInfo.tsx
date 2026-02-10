@@ -7,7 +7,7 @@ import {
 } from "solid-icons/bi";
 import { Match, Show, Switch } from "solid-js";
 
-import { File, MessageEmbed } from "@upryzing/upryzing.js";
+import { File, MessageEmbed } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { IconButton, Text } from "@revolt/ui/components/design";

@@ -12,7 +12,7 @@ import {
 } from "solid-livekit-components";
 
 import { Track } from "livekit-client";
-import { Channel } from "@upryzing/upryzing.js";
+import { Channel } from "upryzing.js";
 import { css } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
