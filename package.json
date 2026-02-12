@@ -1,6 +1,7 @@
 {
   "name": "@upryzing/lavender-mono",
   "version": "0.1.0",
+  "version-date": "2026-02-12",
   "description": "Upryzing's main web and desktop apps",
   "devDependencies": {
     "@eslint/js": "^9.39.1",
