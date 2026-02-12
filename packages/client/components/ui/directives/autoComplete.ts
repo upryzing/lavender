@@ -59,10 +59,7 @@ export type AutoCompleteState =
  * @param element Input element
  * @param configuration Configuration
  */
-export function autoComplete(
-  element: HTMLInputElement,
-  config: Accessor<JSX.Directives["autoComplete"]>,
-) {
+export function autoComplete(element: HTMLInputElement, config: Accessor) {
   if (!config()) return;
 
   const [state, setState] = createSignal<AutoCompleteState>({

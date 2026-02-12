@@ -1,7 +1,7 @@
-import { Accessor, Setter, batch, createSignal } from "solid-js";
+import { Setter, batch, createSignal } from "solid-js";
 
-import { API, Channel, Client, Message } from "upryzing.js";
 import { ulid } from "ulid";
+import { API, Channel, Client, Message } from "upryzing.js";
 
 import { CONFIGURATION, insecureUniqueId } from "@revolt/common";
 
@@ -60,12 +60,12 @@ export type TypeDraft = {
   /**
    * All active message drafts
    */
-  drafts: Record<string, DraftData>;
+  drafts: Record;
 
   /**
    * Unsent messages
    */
-  outbox: Record<string, UnsentMessage[]>;
+  outbox: Record;
 
   /**
    * Current message being edited
@@ -92,27 +92,18 @@ export const ALLOWED_IMAGE_TYPES = [
 /**
  * Message drafts store
  */
-export class Draft extends AbstractStore<"draft", TypeDraft> {
+export class Draft extends AbstractStore {
   /**
    * Keep track of cached files
    */
-  private fileCache: Record<
-    string,
-    {
-      file: File;
-      dataUri?: string;
-      dimensions?: [number, number];
-      autumnId?: string;
-      uploadProgress: [Accessor<number>, Setter<number>];
-    }
-  >;
+  private fileCache: Record;
 
   /**
    * Current text selection
    */
   private textSelection?: TextSelection;
 
-  _setNodeReplacement?: Setter<readonly [string | "_focus"] | undefined>;
+  _setNodeReplacement?: Setter;
 
   /**
    * Construct store
@@ -146,7 +137,7 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
   /**
    * Validate the given data to see if it is compliant and return a compliant object
    */
-  clean(input: Partial<TypeDraft>): TypeDraft {
+  clean(input: Partial): TypeDraft {
     const drafts: TypeDraft["drafts"] = {};
     const outbox: TypeDraft["outbox"] = {};
 
@@ -289,18 +280,7 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
    * @param existingDraft The existing draft to send
    */
   async sendDraft(client: Client, channel: Channel, existingDraft?: DraftData) {
-    const draft = existingDraft ?? this.getDraft(channel.id);
-
-    // Try sending the message
-    const { content, replies, files } = draft;
-
-    if (
-      (content === undefined || content?.trim() === "") &&
-      (files === undefined || files?.length == 0)
-    ) {
-      console.log("Invalid message, not sending");
-      return;
-    }
+    const draft = existingDraft ?? this.popDraft(channel.id);
 
     // Check if this is something we can even send
     if (!draft.content && !draft.files?.length) return;
@@ -315,6 +295,9 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
         status: "sending",
       } as UnsentMessage,
     ]);
+
+    // Try sending the message
+    const { content, replies, files } = draft;
 
     // Construct message object
     const attachments: string[] = [];
@@ -342,7 +325,6 @@ export class Draft extends AbstractStore<"draft", TypeDraft> {
         }
 
         body.set("file", file);
-        const token = this.state.auth.getSession()?.token ?? "";
 
         // We have to use XMLHttpRequest because modern fetch duplex streams require QUIC or HTTP/2
         const xhr = new XMLHttpRequest();

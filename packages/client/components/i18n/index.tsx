@@ -24,7 +24,7 @@ export async function loadAndSwitchLocale(
       Languages[key].i18n === "en"
         ? en
         : (await import(`./catalogs/${Languages[key].i18n}/messages.ts`))
-          .messages;
+            .messages;
 
     i18n.load({
       [key]: data,

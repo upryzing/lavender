@@ -3,4 +3,4 @@
 #MISE depends=["build"]
 set -e
 
-pnpm --filter client exec vite preview --host
+pnpm --filter lavender exec vite preview --host

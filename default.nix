@@ -20,22 +20,13 @@ let
     ];
   };
 
-  # Rolling updates, not deterministic.
-  # pkgs = import (fetchTarball("channel:nixpkgs-unstable")) {};
 in pkgs.mkShell {
-  name = "upryzingEnv";
-
-  buildInputs = [
-    # Tools
-    pkgs.git
-
-    # Node
-    pkgs.nodejs
-    pkgs.nodejs.pkgs.pnpm
-
-    # mdbook
-    pkgs.mdbook
-    pkgs.mdbook-mermaid
+  packages = with pkgs; [
+    mise
+    cargo-binstall
+    (writeShellScriptBin "fish" ''
+      exec ${pkgs.fish}/bin/fish -C 'mise activate fish | source' "$@"
+    '')
   ];
 
   shellHook = ''

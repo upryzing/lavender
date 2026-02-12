@@ -3,4 +3,4 @@
 #MISE wait_for=["build:deps:lingui"]
 set -e
 
-pnpm --filter client exec lingui compile --typescript
+pnpm --filter lavender exec lingui compile --typescript

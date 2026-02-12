@@ -63,7 +63,7 @@ export function MenuButton(props: Props & JSX.HTMLAttributes<HTMLDivElement>) {
           size: local.size,
         })]: true,
       }}
-    // @codegen directives props=other include=floating
+      // @codegen directives props=other include=floating
     >
       <Ripple />
       {/* <Base {...other} align> */}

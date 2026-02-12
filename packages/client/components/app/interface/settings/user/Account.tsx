@@ -264,7 +264,7 @@ function ManageAccount() {
   const { mfaFlow } = useModals();
   const { logout } = useClientLifecycle();
 
-  const stillOwnSpaces = createMemo(
+  const stillOwnServers = createMemo(
     () =>
       client().servers.filter((server) => server.owner?.self || false).length >
       0,
@@ -305,8 +305,8 @@ function ManageAccount() {
         <Trans>Disable Account</Trans>
       </CategoryButton>
       <CategoryButton
-        action={stillOwnSpaces() ? undefined : "chevron"}
-        disabled={mfa.isLoading || stillOwnSpaces()}
+        action={stillOwnServers() ? undefined : "chevron"}
+        disabled={mfa.isLoading || stillOwnServers()}
         onClick={deleteAccount}
         icon={<MdDelete {...iconSize(22)} fill="var(--md-sys-color-error)" />}
         description={
@@ -320,7 +320,7 @@ function ManageAccount() {
         <Switch fallback={<Trans>Delete Account</Trans>}>
           <Match when={stillOwnServers()}>
             <Trans>
-              Cannot delete account until spaces are deleted or transferred
+              Cannot delete account until servers are deleted or transferred
             </Trans>
           </Match>
         </Switch>

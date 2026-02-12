@@ -4,4 +4,4 @@
 #MISE wait_for=["build:deps"]
 set -e
 
-pnpm --filter client exec vite build
+pnpm --filter lavender exec vite build

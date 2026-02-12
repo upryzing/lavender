@@ -280,8 +280,8 @@ export function UserContextMenu(props: {
               <Trans>Edit your identity</Trans>
             </Match>
           </Switch>
-        </ContextMenuButton >
-      </Show >
+        </ContextMenuButton>
+      </Show>
 
       <Show when={props.member}>
         <Show
@@ -406,7 +406,7 @@ export function UserContextMenu(props: {
           <Trans>Copy user ID</Trans>
         </ContextMenuButton>
       </Show>
-    </ContextMenu >
+    </ContextMenu>
   );
 }
 
@@ -418,7 +418,7 @@ export function UserContextMenu(props: {
 export function floatingUserMenus(
   user: User,
   member?: ServerMember,
-  contextMessage?: Message
+  contextMessage?: Message,
 ): JSX.Directives["floating"] & object {
   return {
     userCard: {

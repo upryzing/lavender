@@ -14,7 +14,7 @@ export interface TypeOrdering {
 /**
  * Handles ordering of items in the app interface.
  */
-export class Ordering extends AbstractStore<"ordering", TypeOrdering> {
+export class Ordering extends AbstractStore {
   /**
    * Construct store
    * @param state State
@@ -43,7 +43,7 @@ export class Ordering extends AbstractStore<"ordering", TypeOrdering> {
   /**
    * Validate the given data to see if it is compliant and return a compliant object
    */
-  clean(input: Partial<TypeOrdering>): TypeOrdering {
+  clean(input: Partial): TypeOrdering {
     const ordering: TypeOrdering = this.default();
 
     if (Array.isArray(input.servers)) {

@@ -14,9 +14,6 @@ export const FloatingIndicator = styled("div", {
     userSelect: "none",
     alignItems: "center",
 
-    // for <Ripple />:
-    position: "relative",
-
     width: "100%",
     gap: "var(--gap-md)",
     padding: "var(--gap-md)",

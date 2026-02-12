@@ -2,4 +2,4 @@
 #MISE description="Run end-to-end tests for web"
 set -e
 
-pnpm --filter client exec playwright test
+pnpm --filter lavender exec playwright test

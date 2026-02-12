@@ -60,9 +60,9 @@ export function userInformation(user?: User, member?: ServerMember) {
  * @returns User information
  */
 export function useUsers(
-  ids: string[] | Accessor<string[]>,
+  ids: string[] | Accessor,
   filterNull?: boolean,
-): Accessor<(UserInformation | undefined)[]> {
+): Accessor {
   const clientAccessor = useClient();
 
   // TODO: use a context here for when we do multi view :)
@@ -96,9 +96,7 @@ export function useUsers(
  * @param id ID
  * @returns User information
  */
-export function useUser(
-  id: string | Accessor<string>,
-): Accessor<UserInformation> {
+export function useUser(id: string | Accessor): Accessor {
   const users = useUsers(typeof id === "function" ? () => [id()] : [id]);
   return () => users()[0] ?? { username: "Unknown User" };
 }

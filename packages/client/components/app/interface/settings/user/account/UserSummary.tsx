@@ -9,12 +9,6 @@ import { Avatar, CategoryButton, IconButton, iconSize } from "@revolt/ui";
 import MdCakeFill from "@material-design-icons/svg/filled/cake.svg?component-solid";
 import MdEdit from "@material-design-icons/svg/outlined/edit.svg?component-solid";
 
-const banner = cva({
-  base: {
-    background: "var(--colours-settings-background)",
-  },
-});
-
 export function UserSummary(props: {
   user: User;
   showBadges?: boolean;
@@ -71,12 +65,12 @@ export function UserSummary(props: {
                 }}
               >
                 <MdCakeFill {...iconSize(14)} />
-              </span >
-            </ProfileBadges >
-          </BottomBar >
-        </Show >
-      </AccountBox >
-    </CategoryButton.Group >
+              </span>
+            </ProfileBadges>
+          </BottomBar>
+        </Show>
+      </AccountBox>
+    </CategoryButton.Group>
   );
 }
 

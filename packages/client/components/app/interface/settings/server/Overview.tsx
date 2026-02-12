@@ -323,8 +323,8 @@ export default function ServerOverview(props: ServerSettingsProps) {
               <CircularProgress />
             </Show>
           </Row>
-        </Column >
-      </form >
-    </Column >
+        </Column>
+      </form>
+    </Column>
   );
 }

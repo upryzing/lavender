@@ -16,9 +16,9 @@ import { Modals } from "../types";
 type Element =
   | string
   | {
-    type: "image";
-    src: string;
-  };
+      type: "image";
+      src: string;
+    };
 
 /**
  * Changelog post

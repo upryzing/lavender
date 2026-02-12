@@ -25,74 +25,25 @@ export default function FlowHome() {
           <Show when={isLoggedIn()}>
             <Navigate href={state.layout.popNextPath() ?? "/app"} />
           </Show>
-          <Switch
-            fallback={
-              <>
-                <Show when={clientController.isLoggedIn()}>
-                  <Navigate href="/app" />
-                </Show>
 
-                <Column gap="xl">
-                  <Wordmark
-                    class={css({
-                      width: "100%",
-                      fill: "var(--md-sys-color-on-surface)",
-                    })}
-                  />
+          <Column gap="xl">
+            <Wordmark
+              class={css({
+                width: "100%",
+                fill: "var(--md-sys-color-on-surface)",
+              })}
+            />
 
-                  <Column>
-                    <b
-                      style={{
-                        "font-weight": 800,
-                        "font-size": "1.4em",
-                        display: "flex",
-                        "flex-direction": "column",
-                        "align-items": "center",
-                      }}
-                    >
-                      <span>Your conversations, your way.</span>
-                    </b>
-                    <span style={{ "text-align": "center", opacity: "0.5" }}>
-                      Connect with Upryzing.
-                      {/* [TODO] Add translations for multiple languages */}
-                    </span>
-                  </Column>
-
-                  <Column>
-                    <a href="/login/auth">
-                      <Column>
-                        <Button>Log In</Button>
-                      </Column>
-                    </a>
-                    <a href="/login/create">
-                      <Column>
-                        <Button variant="secondary">Sign Up</Button>
-                      </Column>
-                    </a>
-                  </Column>
-                </Column>
-              </>
-            }
-          >
-            <Match when={clientController.isError()}>
-              <Switch fallback={"an unknown error occurred"}>
-                <Match
-                  when={
-                    clientController.lifecycle.permanentError ===
-                    "InvalidSession"
-                  }
-                >
-                  <h1>You were logged out!</h1>
-                </Match>
-              </Switch>
-
-              <Button
-                variant="secondary"
-                onPress={() =>
-                  clientController.lifecycle.transition({
-                    type: TransitionType.Dismiss,
-                  })
-                }
+            <Column>
+              <b
+                style={{
+                  "font-weight": 800,
+                  "font-size": "1.4em",
+                  display: "flex",
+                  "flex-direction": "column",
+                  "align-items": "center",
+                  "text-align": "center",
+                }}
               >
                 <span>
                   <Trans>

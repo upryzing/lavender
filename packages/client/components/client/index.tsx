@@ -96,7 +96,7 @@ export function useClientLifecycle() {
 
 /**
  * Get the currently active client if one is available
- * @returns upryzing.js Client
+ * @returns Client
  */
 export function useClient(): Accessor<Client> {
   const controller = useContext(clientContext);

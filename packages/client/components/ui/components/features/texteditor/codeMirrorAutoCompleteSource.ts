@@ -15,7 +15,6 @@ import {
 import { useState } from "@revolt/state";
 
 import emojiMapping from "../../../emojiMapping.json";
-import { AutoCompleteSearchSpace } from "../../utils/autoComplete";
 
 import { isInCodeBlock } from "./codeMirrorCommon";
 
@@ -35,9 +34,7 @@ const RE_mentionValidFor = /(?<!\w)@\w*/;
 const RE_roleValidFor = /(?<!\w)@\w*/;
 const RE_channelValidFor = /(?<!\w)#\w*/;
 
-export function codeMirrorAutoCompleteSource(
-  searchSpace: Accessor<AutoCompleteSearchSpace>,
-) {
+export function codeMirrorAutoCompleteSource(searchSpace: Accessor) {
   const state = useState();
   const client = useClient();
 
@@ -45,7 +42,11 @@ export function codeMirrorAutoCompleteSource(
     return ([] as Completion[]).concat(
       MAPPED_EMOJI_KEYS.map((emoji) => ({
         ...emoji,
-        apply: `${UNICODE_EMOJI_PACK_PUA[state.settings.getValue("appearance:unicode_emoji")!] ?? ""}${emoji.apply as string}`,
+        apply: `${
+          UNICODE_EMOJI_PACK_PUA[
+            state.settings.getValue("appearance:unicode_emoji")!
+          ] ?? ""
+        }${emoji.apply as string}`,
         url: unicodeEmojiUrl(
           state.settings.getValue("appearance:unicode_emoji"),
           emoji.apply as string,

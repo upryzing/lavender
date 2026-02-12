@@ -137,7 +137,6 @@ export function LegacyCheckbox(props: Props) {
   const checked = () => local.value ?? controlledValue();
 
   return (
-    // @ts-expect-error legacy component
     <Base {...others}>
       <Content>
         <Show when={local.title}>

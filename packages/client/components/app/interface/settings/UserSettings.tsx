@@ -276,11 +276,12 @@ const Config: SettingsConfiguration<{ server: Server }> = {
               icon: <MdScience {...iconSize(20)} />,
               title: <Trans>Advanced</Trans>,
             },
+            /*
             {
               href: "https://ko-fi.com/stoatchat",
               icon: <MdCoffee {...iconSize(20)} />,
               title: <Trans>Donate</Trans>,
-            },
+            },*/
             {
               id: "logout",
               icon: (

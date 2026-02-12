@@ -96,10 +96,10 @@ export function HomePage() {
   const navigate = useNavigate();
   const client = useClient();
 
-  // check if we're web.upryzing.app; if so, check if the user is in the Lounge
+  // check if we're stoat.chat; if so, check if the user is in the Lounge
   const showLoungeButton = CONFIGURATION.IS_UPRYZING;
   const isInLounge =
-    client()!.servers.get("01JESQYCPY76XFN67R79YGCWMR") !== undefined;
+    client()!.servers.get("01F7ZSBSFHQ8TA81725KQCSDDP") !== undefined;
 
   return (
     <Base>
@@ -177,11 +177,13 @@ export function HomePage() {
                 </CategoryButton>
               </Match>
             </Switch>
+            {/*
             <CategoryButton
               variant="tertiary"
               onClick={() =>
-                //window.open("https://wiki.revolt.chat/notes/project/financial-support/?utm_source=revoltapp")
-                console.log("unk")
+                window.open(
+                  "https://wiki.revolt.chat/notes/project/financial-support/",
+                )
               }
               description={
                 <Trans>Support the project by donating - thank you!</Trans>
@@ -190,6 +192,7 @@ export function HomePage() {
             >
               <Trans>Donate to Stoat</Trans>
             </CategoryButton>
+            */}
           </SeparatedColumn>
           <SeparatedColumn>
             <Show when={CONFIGURATION.IS_UPRYZING}>
@@ -202,9 +205,9 @@ export function HomePage() {
                 }
                 icon={<MdExplore />}
               >
-                <Trans>Discover Upryzing</Trans>
+                <Trans>Discover Stoat</Trans>
               </CategoryButton>
-            </Show> */}
+            </Show>
             <CategoryButton
               onClick={() =>
                 openModal({
@@ -220,7 +223,7 @@ export function HomePage() {
               }
               icon={<MdRateReview {...iconSize(22)} />}
             >
-              <Trans>Give feedback on Upryzing</Trans>
+              <Trans>Give feedback on Stoat</Trans>
             </CategoryButton>
             <CategoryButton
               onClick={() => openModal({ type: "settings", config: "user" })}
@@ -233,14 +236,14 @@ export function HomePage() {
             >
               <Trans>Open settings</Trans>
             </CategoryButton>
-          </SeparatedColumn >
-        </Buttons >
+          </SeparatedColumn>
+        </Buttons>
         <Show when={IS_DEV}>
           <Button onPress={() => navigate("/dev")}>
             Open Development Page
           </Button>
         </Show>
-      </div >
-    </Base >
+      </div>
+    </Base>
   );
 }

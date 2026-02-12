@@ -3,5 +3,5 @@
 set -e
 
 if [[ -z "${PLAYWRIGHT_BROWSERS_PATH}" ]]; then
-pnpm --filter client exec playwright install
+pnpm --filter lavender exec playwright install
 fi

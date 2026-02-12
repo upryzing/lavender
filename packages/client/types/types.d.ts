@@ -2,7 +2,13 @@ import type { SolidOptions } from "solid-dnd-directive";
 import { Setter } from "solid-js";
 
 import type { Placement } from "@floating-ui/dom";
-import type { Channel, Client, ServerMember, ServerRole, User } from "upryzing.js";
+import type {
+  Channel,
+  Client,
+  ServerMember,
+  ServerRole,
+  User,
+} from "upryzing.js";
 
 declare global {
   interface Window {
@@ -18,8 +24,6 @@ declare module "solid-js" {
       scrollable:
         | true
         | {
-            enable: boolean;
-
             /**
              * Colour customisation
              */
@@ -44,16 +48,6 @@ declare module "solid-js" {
              * Pass-through class names
              */
             class?: string;
-
-            /**
-             * Set custom foreground on track
-             */
-            foreground?: string;
-
-            /**
-             * Set custom background on track
-             */
-            background?: string;
           };
       invisibleScrollable:
         | true
@@ -112,9 +106,9 @@ declare module "solid-js" {
         contextMenu?: Component;
         contextMenuHandler?: "click" | "contextmenu";
         autoComplete?: {
-          state: Accessor<AutoCompleteState>;
-          selection: Accessor<number>;
-          setSelection: Setter<number>;
+          state: Accessor;
+          selection: Accessor;
+          setSelection: Setter;
           select: (index: number) => void;
         };
       };
@@ -123,7 +117,7 @@ declare module "solid-js" {
         | {
             client?: Client;
             onKeyDown?: (
-              event: KeyboardEvent & { currentTarget: HTMLTextAreaElement }
+              event: KeyboardEvent & { currentTarget: HTMLTextAreaElement },
             ) => void;
             searchSpace?: {
               users?: User[];

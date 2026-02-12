@@ -1,6 +1,5 @@
 import { Accessor, Setter, createSignal } from "solid-js";
 
-import { API, Client, ConnectionState } from "upryzing.js";
 import { detect } from "detect-browser";
 import { API, Client, ConnectionState } from "upryzing.js";
 import { ProtocolV1 } from "upryzing.js/lib/events/v1";
@@ -70,22 +69,20 @@ export type Transition =
 
 type PolicyAttentionRequired = [
   ProtocolV1["types"]["policyChange"][],
-  () => Promise<void>,
+  () => Promise,
 ];
 
 class Lifecycle {
   #controller: ClientController;
 
-  readonly state: Accessor<State>;
-  #setStateSetter: Setter<State>;
+  readonly state: Accessor;
+  #setStateSetter: Setter;
 
-  readonly loadedOnce: Accessor<boolean>;
-  #setLoadedOnce: Setter<boolean>;
+  readonly loadedOnce: Accessor;
+  #setLoadedOnce: Setter;
 
-  readonly policyAttentionRequired: Accessor<
-    undefined | PolicyAttentionRequired
-  >;
-  #policyAttentionRequired: Setter<undefined | PolicyAttentionRequired>;
+  readonly policyAttentionRequired: Accessor;
+  #policyAttentionRequired: Setter;
 
   client: Client;
 
@@ -137,53 +134,18 @@ class Lifecycle {
         this.#controller.state.notifications.isChannelMuted(channel),
     });
 
-    let useBaseConfig = !CONFIGURATION.REQUEST_CONFIG;
-
-    if (!useBaseConfig) {
-      fetch(CONFIGURATION.DEFAULT_API_URL)
-        .then((response) => {
-          if (!response.ok) throw new Error(response.statusText);
-
-          return response.json();
-        })
-        .then((conf) => {
-          if (!conf.features.dove) {
-            conf.features.dove = conf.features.january;
-            delete conf.features.january;
-          }
-
-          if (!conf.features.pigeon) {
-            conf.features.pigeon = conf.features.autumn;
-            delete conf.features.autumn;
-          }
-
-          this.client.configuration = conf;
-        })
-        .catch((error) => {
-          console.error(error);
-
-          useBaseConfig = true;
-        });
-    }
-
-    if (useBaseConfig) {
-      this.client.configuration = {
-        revolt: String(),
-        app: String(),
-        build: {} as never,
-        features: {
-          dove: {
-            enabled: true,
-            url: CONFIGURATION.DEFAULT_PROXY_URL,
-          },
-          pigeon: {
-            enabled: true,
-            url: CONFIGURATION.DEFAULT_MEDIA_URL,
-          },
-          captcha: {} as never,
-          email: true,
-          invite_only: CONFIGURATION.INVITE_ONLY,
-          voso: {} as never,
+    this.client.configuration = {
+      revolt: String(),
+      app: String(),
+      build: {} as never,
+      features: {
+        pigeon: {
+          enabled: true,
+          url: CONFIGURATION.DEFAULT_MEDIA_URL,
+        },
+        dove: {
+          enabled: true,
+          url: CONFIGURATION.DEFAULT_PROXY_URL,
         },
         captcha: {} as never,
         email: true,
@@ -422,7 +384,7 @@ class Lifecycle {
 
   private onPolicyChanges(
     changes: ProtocolV1["types"]["policyChange"][],
-    ack: () => Promise<void>,
+    ack: () => Promise,
   ) {
     this.#policyAttentionRequired([
       changes,
@@ -546,9 +508,9 @@ export default class ClientController {
         os = "iPadOS";
       }
 
-      friendly_name = `Upryzing for Web (${name} on ${os})`;
+      friendly_name = `Stoat for Web (${name} on ${os})`;
     } else {
-      friendly_name = "Upryzing for Web (Unknown Device)";
+      friendly_name = "Stoat for Web (Unknown Device)";
     }
 
     // Try to login with given credentials

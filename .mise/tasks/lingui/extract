@@ -2,4 +2,4 @@
 #MISE description="Extract i18n catalog from source code"
 set -e
 
-pnpm --filter client exec lingui extract
+pnpm --filter lavender exec lingui extract

@@ -8,8 +8,7 @@ import { Column, Dialog, DialogProps, Form2, Text } from "@revolt/ui";
 import { useModals } from "..";
 import { Modals } from "../types";
 
-// TODO: what in the god damn
-const RE_INVITE_URL = /(?:invite|web.upryzing.app)\/([a-z0-9]+)/gi;
+const RE_INVITE_URL = /(?:invite|stt.gg)\/([a-z0-9]+)/gi;
 
 /**
  * Modal to join a server

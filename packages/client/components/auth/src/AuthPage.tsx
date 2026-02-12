@@ -1,14 +1,4 @@
-<<<<<<< HEAD
-import {
-  BiLogos500px,
-  BiLogosGithub,
-  BiLogosHtml5,
-  BiLogosMastodon,
-  BiLogosTwitter,
-} from "solid-icons/bi";
-=======
 import { BiLogosGithub } from "solid-icons/bi";
->>>>>>> upstr/main
 import { JSX } from "solid-js";
 
 import { Trans } from "@lingui-solid/solid/macro";
@@ -123,65 +113,12 @@ const Bullet = styled("div", {
 });
 
 /**
-<<<<<<< HEAD
- * Revolt Wordmark
- */
-const Logo = styled("img", {
-  base: {
-    height: "24px",
-  },
-});
-
-let a = true;
-
-/**
-=======
->>>>>>> upstr/main
  * Authentication page
  */
 export function AuthPage(props: { children: JSX.Element }) {
   const state = useState();
 
   return (
-<<<<<<< HEAD
-    <Base style={{ "--url": `url('${background}')` }}>
-      <Nav>
-        <div />
-        <Button
-          size="icon"
-          onPress={() => {
-            a = !a;
-            (window as any)._demo_setDarkMode(a);
-          }}
-        >
-          <MdDarkMode {...iconSize("24px")} />
-        </Button>
-      </Nav>
-      {/*<Nav>
-        <Logo src={wideSvg} />
-        <LocaleSelector />
-      </Nav>*/}
-      <FlowBase>{props.children}</FlowBase>
-      <Nav>
-        <NavItems variant="stack">
-          <NavItems>
-            <LinkWithIcon href="https://github.com/upryzing" target="_blank">
-              <BiLogosGithub size={24} />
-            </LinkWithIcon>
-            <LinkWithIcon
-              href="https://bsky.app/profile/upryzing.app"
-              target="_blank"
-            >
-              <BiLogosTwitter size={24} />
-              {
-                // eslint-disable-next-line spellcheck/spell-checker
-                /* No bsky icon in solid-icons */
-              }
-            </LinkWithIcon>
-            <LinkWithIcon href="https://lea.pet/@upryzing" target="_blank">
-              <BiLogosMastodon size={24} />
-            </LinkWithIcon>
-=======
     <div
       style={{
         display: "flex",
@@ -236,7 +173,6 @@ export function AuthPage(props: { children: JSX.Element }) {
                 <Trans>Privacy Policy</Trans>
               </a>
             </NavItems>
->>>>>>> upstr/main
           </NavItems>
           <NavItems variant="hide">
             <Trans>Image by {"@fakurian"}</Trans>

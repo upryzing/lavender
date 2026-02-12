@@ -40,15 +40,15 @@ import { TextSearchSidebar } from "./TextSearchSidebar";
  */
 export type SidebarState =
   | {
-    state: "search";
-    query: string;
-  }
+      state: "search";
+      query: string;
+    }
   | {
-    state: "pins";
-  }
+      state: "pins";
+    }
   | {
-    state: "default";
-  };
+      state: "default";
+    };
 
 /**
  * Channel component

@@ -27,13 +27,11 @@ export default function FlowCreate() {
     const email = data.get("email") as string;
     const password = data.get("password") as string;
     const captcha = data.get("captcha") as string;
-    const invite = data.get("invite") as string;
 
     await api.post("/auth/account/create", {
       email,
       password,
       captcha,
-      invite,
     });
 
     // FIXME: should tell client if email was sent
@@ -51,8 +49,8 @@ export default function FlowCreate() {
         <Trans>Hello!</Trans>
       </FlowTitle>
       <Form onSubmit={create} captcha={CONFIGURATION.HCAPTCHA_SITEKEY}>
-        <Fields fields={["email", "password", "invite"]} />
-        <Row align justify="center">
+        <Fields fields={["email", "password"]} />
+        <Row justify>
           <a href="..">
             <Button variant="text">
               <MdArrowBack {...iconSize("1.2em")} /> <Trans>Back</Trans>

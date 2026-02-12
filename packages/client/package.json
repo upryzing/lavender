@@ -3,18 +3,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "prepare": "panda codegen",
-    "setup:assetsold": "node scripts/copyAssets.mjs",
-    "setup:assets": "exit 0",
-    "dev": "pnpm run setup:assets && vite --host",
-    "build": "pnpm run setup:assets && vite build",
-    "build:prod": "pnpm run setup:assets && BASE_PATH=/web/ vite build",
-    "typecheck": "tsc --noEmit",
-    "serve": "vite preview",
-    "test": "vitest",
-    "coverage": "vitest run --coverage",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "prepare": "panda codegen"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^2.0.2",

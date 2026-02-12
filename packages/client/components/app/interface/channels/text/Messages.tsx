@@ -15,7 +15,6 @@ import {
   splitProps,
 } from "solid-js";
 
-import { Channel, Message as MessageInterface } from "upryzing.js";
 import isEqual from "lodash.isequal";
 import { Channel, Message as MessageInterface } from "upryzing.js";
 import { styled } from "styled-system/jsx";

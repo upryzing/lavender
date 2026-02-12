@@ -42,10 +42,7 @@ function generateSearchSpaceFrom(
   return {};
 }
 
-export function useSearchSpace(
-  object: Accessor<Client | Server | Channel | Message>,
-  client: Accessor<Client>,
-): Accessor<AutoCompleteSearchSpace> {
+export function useSearchSpace(object: Accessor, client: Accessor): Accessor {
   const memoised = createMemo(() =>
     generateSearchSpaceFrom(object(), client()),
   );

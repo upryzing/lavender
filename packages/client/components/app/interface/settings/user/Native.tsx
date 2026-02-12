@@ -40,11 +40,6 @@ declare global {
   }
 }
 
-import MdCancelPresentation from "@material-design-icons/svg/outlined/cancel_presentation.svg?component-solid";
-import MdDesktopWindows from "@material-design-icons/svg/outlined/desktop_windows.svg?component-solid";
-import MdExitToApp from "@material-design-icons/svg/outlined/exit_to_app.svg?component-solid";
-import MdWebAsset from "@material-design-icons/svg/outlined/web_asset.svg?component-solid";
-
 /**
  * Desktop Configuration Page
  */
@@ -72,7 +67,7 @@ export default function Native() {
           }
           icon={<Symbol>exit_to_app</Symbol>}
           description={
-            <Trans>Launch Upryzing when you log into your computer.</Trans>
+            <Trans>Launch Stoat when you log into your computer.</Trans>
           }
         >
           <Trans>Start with Computer</Trans>
@@ -86,7 +81,7 @@ export default function Native() {
           }
           icon={<Symbol>cancel_presentation</Symbol>}
           description={
-            <Trans>Instead of closing, Upryzing will hide in your tray.</Trans>
+            <Trans>Instead of closing, Stoat will hide in your tray.</Trans>
           }
         >
           <Trans>Minimise to Tray</Trans>
@@ -99,7 +94,7 @@ export default function Native() {
             })
           }
           icon={<Symbol>web_asset</Symbol>}
-          description={<Trans>Let Upryzing use its own custom titlebar.</Trans>}
+          description={<Trans>Let Stoat use its own custom titlebar.</Trans>}
         >
           <Trans>Custom window frame</Trans>
         </CategoryButton>
@@ -114,7 +109,7 @@ export default function Native() {
             })
           }
           icon={<Symbol>groups_2</Symbol>}
-          description={<Trans>Rep Upryzing using Discord rich presence.</Trans>}
+          description={<Trans>Rep Stoat using Discord rich presence.</Trans>}
         >
           <Trans>Discord RPC</Trans>
         </CategoryButton>
@@ -157,7 +152,7 @@ export default function Native() {
             </>
           }
         >
-          <Trans>Upryzing for Desktop</Trans>
+          <Trans>Stoat for Desktop</Trans>
         </CategoryButton>
       </CategoryButton.Group>
     </Column>

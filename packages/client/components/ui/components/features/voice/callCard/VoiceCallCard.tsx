@@ -74,8 +74,8 @@ export function VoiceCallCardContext(props: { children: JSX.Element }) {
           "--padding-x": "32px",
           "--padding-y": "96px",
           transform: `translate(${position.corner === "top-left" || position.corner === "bottom-left"
-            ? "calc(var(--padding-x) + var(--offset-x))"
-            : "calc(100vw - var(--padding-x) - var(--width) + var(--offset-x))"
+              ? "calc(var(--padding-x) + var(--offset-x))"
+              : "calc(100vw - var(--padding-x) - var(--width) + var(--offset-x))"
             }, ${position.corner === "top-left" || position.corner === "top-right"
               ? "calc(var(--padding-y) + var(--offset-y))"
               : "calc(100vh - var(--padding-y) - var(--height) + var(--offset-y))"

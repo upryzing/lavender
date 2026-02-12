@@ -1,8 +1,8 @@
 import { ComponentProps, JSX, createEffect, createSignal, on } from "solid-js";
 
-import rehypeShiki from "@shikijs/rehype";
 import "katex/dist/katex.min.css";
 import { html } from "property-information";
+import rehypeHighlight from "rehype-highlight";
 import rehypeKatex from "rehype-katex";
 import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
@@ -225,9 +225,7 @@ const htmlPipeline = HTML_UNIFIED_PLUGINS.reduce(
     output: "html",
     errorColor: "var(--md-sys-color-error)",
   })
-  .use(rehypeShiki, {
-    theme: "github-dark",
-  });
+  .use(rehypeHighlight);
 
 const replyPipeline = unified()
   .use(remarkParse)
@@ -296,7 +294,7 @@ export function Markdown(props: MarkdownProps) {
    * Render some given Markdown content
    * @param content content
    */
-  async function render(content = "") {
+  function render(content = "") {
     const file = new VFile();
     file.value = sanitise(content);
 

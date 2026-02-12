@@ -203,16 +203,6 @@ export function Message(props: Props) {
               </Symbol>
             </Tooltip>
           </Match>
-          <Match when={props.message.member?.timeout}>
-            <Tooltip
-              content={`User has been timed out for ${dayjs(
-                props.message.member?.timeout
-              ).toNow(true)}`}
-              placement="top"
-            >
-              <MdSchedule {...iconSize(16)} />
-            </Tooltip>
-          </Match>
           <Match when={props.message.isSuppressed}>
             <Tooltip content={t`Silent`} placement="top">
               <Symbol size={16} fill>
@@ -227,13 +217,13 @@ export function Message(props: Props) {
             }
           >
             <NewUser>
-              <Tooltip content={t`New to Stoat`} placement="top">
+              <Tooltip content={t`New to Upryzing`} placement="top">
                 <Symbol size={16} fill>
                   spa
                 </Symbol>
               </Tooltip>
             </NewUser>
-          </Match >
+          </Match>
           <Match
             when={
               props.message.member &&
@@ -241,7 +231,7 @@ export function Message(props: Props) {
             }
           >
             <NewUser>
-              <Tooltip content={t`New to the server`} placement="top">
+              <Tooltip content={t`New to the space`} placement="top">
                 <Symbol size={16}>spa</Symbol>
               </Tooltip>
             </NewUser>
@@ -250,20 +240,32 @@ export function Message(props: Props) {
             <span />
             <span>placeholder &middot; </span>
           </Match> */}
-        </Switch >
+          <Match
+            when={
+              props.message.author &&
+              Array.isArray(props.message.author.pronouns) &&
+              props.message.author.pronouns.length > 0
+            }
+          >
+            <span>
+              {props.message.author?.pronouns?.join(" · ")}
+              {" • "}
+            </span>
+          </Match>
+        </Switch>
       }
       compact={
         !!props.message.systemMessage ||
         state.settings.getValue("appearance:compact_mode")
       }
       infoMatch={
-        < Match when={props.message.systemMessage} >
+        <Match when={props.message.systemMessage}>
           <SystemMessageIcon
             systemMessage={props.message.systemMessage!}
             createdAt={props.message.createdAt}
             isServer={!!props.message.server}
           />
-        </Match >
+        </Match>
       }
     >
       <Show when={props.message.systemMessage}>
@@ -316,7 +318,7 @@ export function Message(props: Props) {
           })
         }
       />
-    </MessageContainer >
+    </MessageContainer>
   );
 }
 

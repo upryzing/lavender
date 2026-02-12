@@ -165,7 +165,7 @@ export function FileDropAnywhereCollector(props: Props) {
         [
           item,
           index * (80 / items().length) -
-          (items().length - 1) * (40 / items().length),
+            (items().length - 1) * (40 / items().length),
         ] as [DataTransferItem, number],
     );
 

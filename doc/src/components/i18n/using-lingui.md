@@ -45,8 +45,8 @@ Learn more in the [Lingui documentation](https://lingui.dev/guides/plurals).
 To update the catalogs, one must run:
 
 ```bash
-pnpm --filter client lingui:extract && \
-pnpm --filter client lingui:compile
+pnpm --filter lavender lingui:extract && \
+pnpm --filter lavender lingui:compile
 ```
 
 **NB. don't run this yourself!** \

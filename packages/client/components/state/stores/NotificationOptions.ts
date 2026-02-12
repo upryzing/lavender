@@ -41,34 +41,31 @@ export interface TypeNotificationOptions {
   /**
    * Per-server settings
    */
-  server: Record<string, NotificationState | undefined>;
+  server: Record;
 
   /**
    * Per-channel settings
    */
-  channel: Record<string, NotificationState | undefined>;
+  channel: Record;
 
   /**
    * Server mute settings
    */
-  server_mutes: Record<string, MuteState | undefined>;
+  server_mutes: Record;
 
   /**
    * Channel mute settings
    */
-  channel_mutes: Record<string, MuteState | undefined>;
+  channel_mutes: Record;
 }
 
 /**
  * Manages the user's notification preferences.
  */
-export class NotificationOptions extends AbstractStore<
-  "notifications",
-  TypeNotificationOptions
-> {
-  private activeNotifications: Record<string, Notification> = {};
+export class NotificationOptions extends AbstractStore {
+  private activeNotifications: Record = {};
 
-  #now: Accessor<number>;
+  #now: Accessor;
 
   /**
    * Construct new Experiments store.
@@ -107,7 +104,7 @@ export class NotificationOptions extends AbstractStore<
   /**
    * Validate the given data to see if it is compliant and return a compliant object
    */
-  clean(input: Partial<TypeNotificationOptions>): TypeNotificationOptions {
+  clean(input: Partial): TypeNotificationOptions {
     const server: TypeNotificationOptions["server"] = {};
     const channel: TypeNotificationOptions["channel"] = {};
     const server_mutes: TypeNotificationOptions["server_mutes"] = {};
@@ -186,7 +183,7 @@ export class NotificationOptions extends AbstractStore<
    */
   computeForServer(server?: Server) {
     return server
-      ? (this.get().server[server.id] ?? DEFAULT_SERVER_STATE)
+      ? this.get().server[server.id] ?? DEFAULT_SERVER_STATE
       : undefined;
   }
 

@@ -167,6 +167,7 @@ export const ServerList = (props: Props) => {
           </a>
           <UserMenu anchor={menuButton} />
         </Tooltip>
+        {/* We are NOT legacy app in here
         <Show when={!window.native}>
           <Tooltip placement="right" content="Switch back to legacy app">
             <a href="https://app.revolt.chat" class={entryContainer()}>
@@ -174,6 +175,7 @@ export const ServerList = (props: Props) => {
             </a>
           </Tooltip>
         </Show>
+        */}
         <For each={props.unreadConversations.slice(0, 9)}>
           {(conversation) => (
             <Tooltip placement="right" content={conversation.displayName}>
@@ -302,7 +304,7 @@ export const ServerList = (props: Props) => {
             <Avatar size={42} fallback={<MdAdd />} />
           </a>
         </Tooltip>
-        <Show when={CONFIGURATION.IS_STOAT}>
+        <Show when={CONFIGURATION.IS_UPRYZING}>
           <Tooltip placement="right" content={"Find new servers to join"}>
             <a
               href={state.layout.getLastActiveDiscoverPath()}

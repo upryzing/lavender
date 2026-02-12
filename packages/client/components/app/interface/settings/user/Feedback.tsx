@@ -27,7 +27,7 @@ export function Feedback() {
   const navigate = useNavigate();
   const client = useClient();
 
-  const showLoungeButton = CONFIGURATION.IS_STOAT;
+  const showLoungeButton = CONFIGURATION.IS_UPRYZING;
   const isInLounge =
     client()!.servers.get("01F7ZSBSFHQ8TA81725KQCSDDP") !== undefined;
 
@@ -46,10 +46,9 @@ export function Feedback() {
           >
             <Trans>Roadmap</Trans>
           </CategoryButton>
-        </Link>
-        */}
+        </Link> */}
         <Link
-          href="https://github.com/orgs/upryzing/discussions"
+          href="https://github.com/orgs/stoatchat/discussions/categories/feature-suggestions"
           target="_blank"
         >
           <CategoryButton
@@ -64,7 +63,7 @@ export function Feedback() {
           </CategoryButton>
         </Link>
         <Link
-          href="https://github.com/upryzing/lavender/issues/new/choose"
+          href="https://github.com/orgs/stoatchat/discussions/categories/feedback"
           target="_blank"
         >
           <CategoryButton
@@ -77,7 +76,7 @@ export function Feedback() {
           </CategoryButton>
         </Link>
         <Link
-          href="https://github.com/orgs/upryzing/projects/4"
+          href="https://github.com/stoatchat/for-web/issues?q=is%3Aissue%20state%3Aopen%20type%3ABug"
           target="_blank"
         >
           <CategoryButton
@@ -123,12 +122,12 @@ export function Feedback() {
               }
               icon={<MdGroups3 />}
             >
-              <Trans>Join the Upryzing Lounge</Trans>
+              <Trans>Join the Stoat Lounge</Trans>
             </CategoryButton>
           </Match>
         </Switch>
-      </CategoryButtonGroup >
-    </Column >
+      </CategoryButtonGroup>
+    </Column>
   );
 }
 

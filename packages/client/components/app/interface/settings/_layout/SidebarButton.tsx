@@ -57,6 +57,11 @@ export const SidebarButtonContent = styled("div", {
 
 export const SidebarButtonIcon = styled("div", {
   base: {
-    fill: "var(--colours-settings-foreground)",
+    display: "flex",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    flexShrink: 0,
+    gap: "2px",
   },
 });
