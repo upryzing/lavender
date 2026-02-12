@@ -173,7 +173,7 @@ export function UserContextMenu(props: {
   }
 
   /**
-   * Open user in Stoat Admin Panel
+   * Open user in Upryzing Admin Panel
    */
   function openAdminPanel() {
     window.open(

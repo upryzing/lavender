@@ -66,7 +66,7 @@ function CreateBot() {
         icon={<MdLibraryBooks {...iconSize(22)} />}
         onClick={() => window.open("https://developers.stoat.chat", "_blank")}
         description={
-          <Trans>Learn more about how to create bots on Stoat.</Trans>
+          <Trans>Learn more about how to create bots on Upryzing.</Trans>
         }
       >
         <Trans>Developer Documentation</Trans>
@@ -98,7 +98,7 @@ function ListBots() {
                 }
                 onClick={() => navigate(`bots/${bot.id}`)}
                 action="chevron"
-                // description={bot.id}
+              // description={bot.id}
               >
                 {bot.user!.displayName}
               </CategoryButton>

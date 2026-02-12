@@ -1,6 +1,6 @@
 # Session Lifecycle
 
-To ensure reliability for users on Stoat, clients should implement the following rigid specification for maintaining a session. At a high-level, it should be implemented as a state machine.
+To ensure reliability for users on Upryzing, clients should implement the following rigid specification for maintaining a session. At a high-level, it should be implemented as a state machine.
 
 <style>
 .mermaid { background: white; border-radius: 4px; }
@@ -87,8 +87,8 @@ The following listeners need to be registered that emit the given transitions:
 
 | Listener                                     | Transition          |
 | -------------------------------------------- | ------------------- |
-| Connected to Stoat (and initial data loaded) | `SOCKET_CONNECTED`  |
-| Connection to Stoat dropped                  | `SOCKET_DROPPED`    |
+| Connected to Upryzing (and initial data loaded) | `SOCKET_CONNECTED`  |
+| Connection to Upryzing dropped                  | `SOCKET_DROPPED`    |
 | Received logout event from socket            | `LOGOUT`            |
 | Connection failed                            | `TEMPORARY_FAILURE` |
 | Connection failed (session invalid)          | `PERMANENT_FAILURE` |

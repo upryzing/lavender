@@ -67,7 +67,7 @@ export default function Native() {
           }
           icon={<Symbol>exit_to_app</Symbol>}
           description={
-            <Trans>Launch Stoat when you log into your computer.</Trans>
+            <Trans>Launch Upryzing when you log into your computer.</Trans>
           }
         >
           <Trans>Start with Computer</Trans>
@@ -81,7 +81,7 @@ export default function Native() {
           }
           icon={<Symbol>cancel_presentation</Symbol>}
           description={
-            <Trans>Instead of closing, Stoat will hide in your tray.</Trans>
+            <Trans>Instead of closing, Upryzing will hide in your tray.</Trans>
           }
         >
           <Trans>Minimise to Tray</Trans>
@@ -94,7 +94,7 @@ export default function Native() {
             })
           }
           icon={<Symbol>web_asset</Symbol>}
-          description={<Trans>Let Stoat use its own custom titlebar.</Trans>}
+          description={<Trans>Let Lavender Desktop use its own custom titlebar.</Trans>}
         >
           <Trans>Custom window frame</Trans>
         </CategoryButton>
@@ -109,7 +109,7 @@ export default function Native() {
             })
           }
           icon={<Symbol>groups_2</Symbol>}
-          description={<Trans>Rep Stoat using Discord rich presence.</Trans>}
+          description={<Trans>Rep Upryzing using Discord rich presence.</Trans>}
         >
           <Trans>Discord RPC</Trans>
         </CategoryButton>
@@ -152,7 +152,7 @@ export default function Native() {
             </>
           }
         >
-          <Trans>Stoat for Desktop</Trans>
+          <Trans>Lavender Desktop</Trans>
         </CategoryButton>
       </CategoryButton.Group>
     </Column>

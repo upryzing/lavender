@@ -56,7 +56,7 @@ export default function FlowLogin() {
       <Switch
         fallback={
           <>
-            <FlowTitle subtitle={<Trans>Sign into Stoat</Trans>} emoji="wave">
+            <FlowTitle subtitle={<Trans>Sign into Upryzing</Trans>} emoji="wave">
               <Trans>Welcome!</Trans>
             </FlowTitle>
             <Form onSubmit={performLogin}>

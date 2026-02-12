@@ -88,7 +88,7 @@ export function MessageContextMenu(props: { message?: Message; file?: File }) {
   }
 
   /**
-   * Open message in Stoat Admin Panel
+   * Open message in Upryzing Admin Panel
    */
   function openAdminPanel() {
     window.open(

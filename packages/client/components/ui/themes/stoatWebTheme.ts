@@ -1,11 +1,11 @@
 import { SelectedTheme } from "@revolt/state/stores/Theme";
 
 /**
- * Generate Stoat for Web variables
+ * Generate Lavender variables
  * @param theme Theme
  * @returns CSS Variables
  */
-export function createStoatWebVariables(theme: SelectedTheme) {
+export function createUpryzingWebVariables(theme: SelectedTheme) {
   return {
     // helper variables
     "--unset-fg": "red",
@@ -53,7 +53,7 @@ export function createStoatWebVariables(theme: SelectedTheme) {
  * @param prefix Prefix
  * @returns New object
  */
-function reduceWithPrefix(object: Record<string, string>, prefix: string) {
+function reduceWithPrefix(object: Record, prefix: string) {
   return Object.entries(object).reduce(
     (d, [k, v]) => ({ ...d, [`${prefix}${k}`]: v }),
     {},

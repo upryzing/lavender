@@ -35,7 +35,7 @@ export function ProfileBadges(props: { user: User }) {
               use:floating={{
                 tooltip: {
                   placement: "top",
-                  content: t`Stoat Founder`,
+                  content: t`Upryzing Founder`,
                 },
               }}
               src={badgeFounder}

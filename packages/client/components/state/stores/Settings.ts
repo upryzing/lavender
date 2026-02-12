@@ -10,7 +10,7 @@ import { AbstractStore } from ".";
 interface SettingsDefinition {
   /**
    * Whether to enable desktop notifications
-   * Stoat will try to get notification permission after login if it doesn't already.
+   * Upryzing will try to get notification permission after login if it doesn't already.
    * TODO: implement
    */
   // "notifications:desktop": boolean;
@@ -49,7 +49,7 @@ interface SettingsDefinition {
   "appearance:compact_mode": boolean;
 
   /**
-   * Indicate new users to Stoat
+   * Indicate new users to Upryzing
    * TODO: implement
    */
   // "appearance:show_account_age": boolean;
@@ -77,18 +77,16 @@ type ValueType<T extends keyof SettingsDefinition> =
   SettingsDefinition[T] extends boolean
     ? "boolean"
     : SettingsDefinition[T] extends number
-      ? "number"
-      : SettingsDefinition[T] extends string
-        ? "string"
-        : (
-            v: Partial<SettingsDefinition[T]>,
-          ) => SettingsDefinition[T] | undefined;
+    ? "number"
+    : SettingsDefinition[T] extends string
+    ? "string"
+    : (v: Partial) => SettingsDefinition[T] | undefined;
 
 /**
  * Expected types of settings keys, enforce some sort of validation is present for all keys.
  * If we cannot validate the value as a primitive, clean it up using a function.
  */
-const EXPECTED_TYPES: { [K in keyof SettingsDefinition]: ValueType<K> } = {
+const EXPECTED_TYPES: { [K in keyof SettingsDefinition]: ValueType } = {
   "appearance:unicode_emoji": "string",
   "appearance:show_send_button": "boolean",
   "appearance:compact_mode": "boolean",
@@ -100,7 +98,7 @@ const EXPECTED_TYPES: { [K in keyof SettingsDefinition]: ValueType<K> } = {
 /**
  * In reality, this is a partial so we map it accordingly here.
  */
-export type TypeSettings = Partial<SettingsDefinition>;
+export type TypeSettings = Partial;
 
 /**
  * Default values for settings, if applicable.
@@ -110,7 +108,7 @@ const DEFAULT_VALUES: TypeSettings = {};
 /**
  * Settings store
  */
-export class Settings extends AbstractStore<"settings", TypeSettings> {
+export class Settings extends AbstractStore {
   /**
    * Construct store
    * @param state State
@@ -142,7 +140,7 @@ export class Settings extends AbstractStore<"settings", TypeSettings> {
   /**
    * Validate the given data to see if it is compliant and return a compliant object
    */
-  clean(input: Partial<TypeSettings>): TypeSettings {
+  clean(input: Partial): TypeSettings {
     const settings: TypeSettings = this.default();
 
     for (const key of Object.keys(input) as (keyof TypeSettings)[]) {
