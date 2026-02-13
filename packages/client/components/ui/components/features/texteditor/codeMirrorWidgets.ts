@@ -52,7 +52,7 @@ export function codeMirrorWidgets() {
         widget = new EmojiWidget(unicodeEmojiUrl(pack, str));
       } else if (emojiId) {
         widget = new EmojiWidget(
-          `${client?.configuration?.features.autumn.url}/emojis/${emojiId}`,
+          `${client?.configuration?.features.pigeon.url}/emojis/${emojiId}`,
         );
       } else if (userId) {
         const member = serverId

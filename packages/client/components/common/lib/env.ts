@@ -48,10 +48,12 @@ export default {
    * hCaptcha site key to use if enabled
    */
   HCAPTCHA_SITEKEY: import.meta.env.VITE_HCAPTCHA_SITEKEY as string,
+
   /**
    * Maximum number of replies a message can have
    */
   MAX_REPLIES: (import.meta.env.VITE_CFG_MAX_REPLIES as number) ?? 5,
+
   /**
    * Maximum number of attachments a message can have
    */

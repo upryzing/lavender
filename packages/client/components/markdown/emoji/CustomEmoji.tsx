@@ -20,7 +20,7 @@ export function CustomEmoji(
    * Resolve emoji URL
    */
   const url = () =>
-    `${client()?.configuration?.features.autumn.url}/emojis/${local.id}`;
+    `${client()?.configuration?.features.pigeon.url}/emojis/${local.id}`;
 
   return (
     <EmojiBase

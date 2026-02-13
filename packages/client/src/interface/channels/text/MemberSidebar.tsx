@@ -21,6 +21,8 @@ import {
   typography,
 } from "@revolt/ui";
 
+import { CONFIGURATION } from "@revolt/common";
+
 interface Props {
   /**
    * Channel
@@ -58,7 +60,7 @@ export function MemberSidebar(props: Props) {
 /**
  * Servers to not fetch all members for
  */
-const IGNORE_ALL = ["01F7ZSBSFHQ8TA81725KQCSDDP", "01F80118K1F2EYD9XAMCPQ0BCT"];
+const IGNORE_ALL = ["01JESQYCPY76XFN67R79YGCWMR"];
 
 /**
  * Server Member Sidebar
@@ -72,7 +74,7 @@ export function ServerMemberSidebar(props: Props) {
       () => props.channel.serverId,
       (serverId) =>
         props.channel.server?.syncMembers(
-          IGNORE_ALL.includes(serverId) ? true : false,
+          (CONFIGURATION.IS_UPRYZING && IGNORE_ALL.includes(serverId)) ? true : false,
         ),
     ),
   );
