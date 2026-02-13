@@ -1,19 +1,27 @@
-import { For, JSX, Match, Show, Switch } from "solid-js";
+import { For, JSX, Match, Switch } from "solid-js";
 
-import { ServerMember } from "@upryzing/upryzing.js";
+import { ServerMember } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { CustomEmoji, UnicodeEmoji } from "@revolt/markdown/emoji";
+import { useState } from "@revolt/state";
 
 import { AutoCompleteState } from "../../directives";
-import { Avatar, Column, Row } from "../design";
+import { Avatar } from "../design";
+import { Column } from "../layout";
+import { ColouredText } from "../utils";
 
 /**
  * Auto complete popup
+ *
+ * @deprecated use TextEditor instead
  */
 export function AutoComplete(
-  props: Exclude<JSX.Directives["floating"]["autoComplete"], undefined>
+  props: Exclude<JSX.Directives["floating"]["autoComplete"], undefined>,
 ) {
+  const state = useState();
+  const emoji_pack = state.settings.getValue("appearance:unicode_emoji");
+
   return (
     <Base>
       <Switch>
@@ -25,12 +33,17 @@ export function AutoComplete(
             }
           >
             {(match, index) => (
-              <Entry selected={index() === props.selection()}>
+              <Entry
+                selected={index() === props.selection()}
+                onMouseDown={() => props.select(index())}
+                onMouseEnter={() => props.setSelection(index())}
+              >
                 <Switch
                   fallback={
                     <>
                       <UnicodeEmoji
                         emoji={(match as { codepoint: string }).codepoint}
+                        pack={emoji_pack}
                       />{" "}
                       <Name>:{match.shortcode}:</Name>
                     </>
@@ -56,7 +69,11 @@ export function AutoComplete(
             }
           >
             {(match, index) => (
-              <Entry selected={index() === props.selection()}>
+              <Entry
+                selected={index() === props.selection()}
+                onMouseDown={() => props.select(index())}
+                onMouseEnter={() => props.setSelection(index())}
+              >
                 <Avatar src={match.user.animatedAvatarURL} size={24} />{" "}
                 <Name>{match.user.displayName}</Name>
                 {match.user instanceof ServerMember &&
@@ -67,6 +84,31 @@ export function AutoComplete(
                       {match.user.user?.discriminator}
                     </>
                   )}
+              </Entry>
+            )}
+          </For>
+        </Match>
+        <Match when={props.state().matched === "role"}>
+          <For
+            each={
+              (
+                props.state() as AutoCompleteState & {
+                  matched: "role";
+                }
+              ).matches
+            }
+          >
+            {(match, index) => (
+              <Entry
+                selected={index() === props.selection()}
+                onMouseDown={() => props.select(index())}
+                onMouseEnter={() => props.setSelection(index())}
+              >
+                <Name>
+                  <ColouredText colour={match.role.colour}>
+                    {match.role.name}
+                  </ColouredText>
+                </Name>
               </Entry>
             )}
           </For>
@@ -82,7 +124,11 @@ export function AutoComplete(
             }
           >
             {(match, index) => (
-              <Entry selected={index() === props.selection()}>
+              <Entry
+                selected={index() === props.selection()}
+                onMouseDown={() => props.select(index())}
+                onMouseEnter={() => props.setSelection(index())}
+              >
                 <Name>#{match.channel.name}</Name>
               </Entry>
             )}
@@ -109,7 +155,7 @@ const Entry = styled("div", {
     selected: {
       true: {
         background:
-          "var(--colours-component-context-menu-item-hover-background)",
+          "color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent)",
       },
     },
   },
@@ -131,9 +177,9 @@ const Base = styled(Column, {
   base: {
     "--emoji-size": "1.4em",
     padding: "var(--gap-md) 0",
-    borderRadius: "var(--borderRadius-md)",
-    backdropFilter: "var(--effects-blur-md)",
-    color: "var(--colours-component-context-menu-foreground)",
-    background: "var(--colours-component-context-menu-background)",
+    borderRadius: "var(--borderRadius-xs)",
+    color: "var(--md-sys-color-on-surface)",
+    background: "var(--md-sys-color-surface-container)",
+    boxShadow: "0 0 3px var(--md-sys-color-shadow)",
   },
 });

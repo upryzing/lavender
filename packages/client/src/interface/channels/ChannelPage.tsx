@@ -1,12 +1,10 @@
 import { Component, Match, Switch, createMemo } from "solid-js";
 
-import { Channel } from "@upryzing/upryzing.js";
+import { Channel } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { useClient } from "@revolt/client";
-import { TextWithEmoji } from "@revolt/markdown";
 import { Navigate, useParams } from "@revolt/routing";
-import { Header, Typography } from "@revolt/ui";
 
 import { AgeGate } from "./AgeGate";
 import { TextChannel } from "./text/TextChannel";
@@ -45,29 +43,26 @@ export const ChannelPage: Component = () => {
 
   return (
     <Base>
-      <AgeGate
-        enabled={channel().mature}
-        contentId={channel().id}
-        contentName={"#" + channel().name}
-        contentType="channel"
-      >
-        <Switch fallback="Unknown channel type!">
-          <Match when={!channel()}>
-            <Navigate href={"../.."} />
-          </Match>
-          <Match when={TEXT_CHANNEL_TYPES.includes(channel()!.type)}>
+      <Switch fallback="Unknown channel type!">
+        <Match when={!channel()}>
+          <Navigate href={"../.."} />
+        </Match>
+        <Match when={TEXT_CHANNEL_TYPES.includes(channel()!.type)}>
+          <AgeGate
+            enabled={channel().mature}
+            contentId={channel().id}
+            contentName={"#" + channel().name}
+            contentType="channel"
+          >
             <TextChannel channel={channel()} />
-          </Match>
-          <Match when={channel()!.type === "VoiceChannel"}>
+          </AgeGate>
+        </Match>
+        {/* <Match when={channel()!.type === "VoiceChannel"}>
             <Header placement="primary">
-              <TextWithEmoji content={channel().name!} />
+              <ChannelHeader channel={channel()} />
             </Header>
-            <Typography variant="legacy-modal-title">
-              Legacy voice channels are not supported!
-            </Typography>
-          </Match>
-        </Switch>
-      </AgeGate>
+          </Match> */}
+      </Switch>
     </Base>
   );
 };

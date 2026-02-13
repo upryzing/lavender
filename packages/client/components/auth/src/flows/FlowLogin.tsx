@@ -1,54 +1,45 @@
-import { Match, Show, Switch } from "solid-js";
+import { Match, Switch } from "solid-js";
 
-import { styled } from "styled-system/jsx";
+import { Trans } from "@lingui-solid/solid/macro";
+import { css } from "styled-system/css";
 
+import { useClientLifecycle } from "@revolt/client";
 import { State, TransitionType } from "@revolt/client/Controller";
-import { useTranslation } from "@revolt/i18n";
+import { useModals } from "@revolt/modal";
 import { Navigate } from "@revolt/routing";
-import {
-  Button,
-  Column,
-  Preloader,
-  Row,
-  Typography,
-  iconSize,
-  typography,
-} from "@revolt/ui";
+import { Button, CircularProgress, Column, Row, iconSize } from "@revolt/ui";
 
 import MdArrowBack from "@material-design-icons/svg/filled/arrow_back.svg?component-solid";
 
-import RevoltSvg from "../../../../public/assets/wordmark_wide_500px.svg?component-solid";
-import { clientController } from "../../../client";
+import Wordmark from "../../../../public/assets/web/wordmark.svg?component-solid";
 
+import { useState } from "@revolt/state";
 import { FlowTitle } from "./Flow";
 import { Fields, Form } from "./Form";
-
-const Logo = styled(RevoltSvg, {
-  base: {
-    height: "0.8em",
-    display: "inline",
-    fill: "var(--colours-messaging-message-box-foreground)",
-  },
-});
 
 /**
  * Flow for logging into an account
  */
 export default function FlowLogin() {
-  const t = useTranslation();
+  const state = useState();
+  const modals = useModals();
+  const { lifecycle, isLoggedIn, login, selectUsername } = useClientLifecycle();
 
   /**
    * Log into account
    * @param data Form Data
    */
-  async function login(data: FormData) {
+  async function performLogin(data: FormData) {
     const email = data.get("email") as string;
     const password = data.get("password") as string;
 
-    await clientController.login({
-      email,
-      password,
-    });
+    await login(
+      {
+        email,
+        password,
+      },
+      modals,
+    );
   }
 
   /**
@@ -57,7 +48,7 @@ export default function FlowLogin() {
    */
   async function select(data: FormData) {
     const username = data.get("username") as string;
-    await clientController.selectUsername(username);
+    await selectUsername(username);
   }
 
   return (
@@ -65,37 +56,61 @@ export default function FlowLogin() {
       <Switch
         fallback={
           <>
-            <FlowTitle subtitle={t("login.subtitle")} emoji="wave">
-              {t("login.welcome")}
+            <FlowTitle subtitle={<Trans>Sign into Upryzing</Trans>} emoji="wave">
+              <Trans>Welcome!</Trans>
             </FlowTitle>
-            <Form onSubmit={login}>
+            <Form onSubmit={performLogin}>
               <Fields fields={["email", "password"]} />
               <Column gap="xl" align>
-                <a href="/login/reset">{t("login.reset")}</a>
-                <a href="/login/resend">{t("login.resend")}</a>
+                <a href="/login/reset">
+                  <Button variant="text">
+                    <Trans>Reset password</Trans>
+                  </Button>
+                </a>
+                <a href="/login/resend">
+                  <Button variant="text">
+                    <Trans>Resend verification</Trans>
+                  </Button>
+                </a>
               </Column>
               <Row align justify>
                 <a href="..">
-                  <Button variant="plain">
-                    <MdArrowBack {...iconSize("1.2em")} /> Back
+                  <Button variant="text">
+                    <MdArrowBack {...iconSize("1.2em")} /> <Trans>Back</Trans>
                   </Button>
                 </a>
-                <Button type="submit">{t("login.title")}</Button>
+                <Button type="submit">
+                  <Trans>Login</Trans>
+                </Button>
               </Row>
             </Form>
           </>
         }
       >
-        <Match when={clientController.isLoggedIn()}>
-          <Navigate href="/app" />
+        <Match when={isLoggedIn()}>
+          <Navigate href={state.layout.popNextPath() ?? "/app"} />
         </Match>
-        <Match when={clientController.lifecycle.state() === State.LoggingIn}>
-          <Preloader type="ring" />
+        <Match when={lifecycle.state() === State.LoggingIn}>
+          <CircularProgress />
         </Match>
-        <Match when={clientController.lifecycle.state() === State.Onboarding}>
-          <FlowTitle subtitle={t("app.special.modals.onboarding.pick")}>
+        <Match when={lifecycle.state() === State.Onboarding}>
+          <FlowTitle
+            subtitle={
+              <Trans>
+                Pick a username that you want people to be able to find you by.
+                This can be changed later in your user settings.
+              </Trans>
+            }
+          >
             <Row gap="sm">
-              {t("app.special.modals.onboarding.welcome")} <Logo />
+              <Trans>Welcome to</Trans>{" "}
+              <Wordmark
+                class={css({
+                  height: "0.8em",
+                  display: "inline",
+                  fill: "var(--md-sys-color-on-surface)",
+                })}
+              />
             </Row>
           </FlowTitle>
 
@@ -103,17 +118,17 @@ export default function FlowLogin() {
             <Fields fields={["username"]} />
             <Row align justify>
               <Button
-                variant="plain"
+                variant="text"
                 onPress={() =>
-                  clientController.lifecycle.transition({
+                  lifecycle.transition({
                     type: TransitionType.Cancel,
                   })
                 }
               >
-                <MdArrowBack {...iconSize("1.2em")} /> Cancel
+                <MdArrowBack {...iconSize("1.2em")} /> <Trans>Cancel</Trans>
               </Button>
               <Button type="submit">
-                {t("app.special.modals.actions.confirm")}
+                <Trans>Confirm</Trans>
               </Button>
             </Row>
           </Form>

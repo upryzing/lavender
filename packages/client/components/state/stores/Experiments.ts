@@ -5,44 +5,22 @@ import { AbstractStore } from ".";
 /**
  * Union type of available experiments.
  */
-export type Experiment =
-  | "file_uploads"
-  | "friends"
-  | "account_switcher"
-  | "gif_picker"
-  | "user_card"
-  | "emoji_picker"
-  | "plugins"
-  | "voice_chat";
+export type Experiment = "gif_picker" | "plugins";
 
 /**
  * Currently active experiments.
  */
-export const AVAILABLE_EXPERIMENTS: Experiment[] = [
-  "file_uploads",
-  "friends",
-  "account_switcher",
-  "gif_picker",
-  "user_card",
-  "emoji_picker",
-  "plugins",
-  "voice_chat",
-];
+export const AVAILABLE_EXPERIMENTS: Experiment[] = ["gif_picker", "plugins"];
 
 /**
  * Experiments enabled by default.
  */
-export const DEFAULT_EXPERIMENTS: Experiment[] = ["file_uploads"];
+export const DEFAULT_EXPERIMENTS: Experiment[] = [];
 
 /**
  * Always-on development-mode experiments.
  */
-export const ALWAYS_ON_DEVELOPMENT_EXPERIMENTS: Experiment[] = [
-  "file_uploads",
-  "friends",
-  "gif_picker",
-  "user_card",
-];
+export const ALWAYS_ON_DEVELOPMENT_EXPERIMENTS: Experiment[] = [];
 
 /**
  * Definitions for experiments listed by {@link Experiment}.
@@ -50,36 +28,12 @@ export const ALWAYS_ON_DEVELOPMENT_EXPERIMENTS: Experiment[] = [
 export const EXPERIMENTS: {
   [key in Experiment]: { title: string; description: string };
 } = {
-  file_uploads: {
-    title: "File Uploads",
-    description: "Enable file uploads when messaging.",
-  },
-  friends: {
-    title: "Friends Menu",
-    description: "Enable the friends menu in home.",
-  },
-  account_switcher: {
-    title: "Account Switcher",
-    description: "Enable the account switcher on the login page.",
-  },
   gif_picker: {
-    title: "GIF Picker",
-    description: "Search and send GIFs from GIFBox!",
-  },
-  user_card: {
-    title: "Member Pop-out Card",
-    description: "Click on members to see more information about them.",
-  },
-  emoji_picker: {
-    title: "Emoji Picker Placeholder",
-    description: "Search and add emoji to your messages.",
+    title: "GIF Picker Placeholder",
+    description: "Not available yet.",
   },
   plugins: {
     title: "Plugins v2 Placeholder",
-    description: "Not available yet.",
-  },
-  voice_chat: {
-    title: "Voice Chat Placeholder",
     description: "Not available yet.",
   },
 };
@@ -177,7 +131,7 @@ export class Experiments extends AbstractStore<"experiments", TypeExperiments> {
   disable(experiment: Experiment) {
     if (this.isEnabled(experiment)) {
       this.set("enabled", (enabled) =>
-        enabled.filter((entry) => entry !== experiment)
+        enabled.filter((entry) => entry !== experiment),
       );
     }
   }

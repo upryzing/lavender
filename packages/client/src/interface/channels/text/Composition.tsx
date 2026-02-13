@@ -1,33 +1,35 @@
 import {
-  BiRegularPlus,
-  BiSolidFileGif,
-  BiSolidHappyBeaming,
-  BiSolidSend,
-} from "solid-icons/bi";
-import { For, Match, Show, Switch, onCleanup, onMount } from "solid-js";
+  For,
+  Match,
+  Show,
+  Switch,
+  createEffect,
+  createMemo,
+  createSignal,
+  on,
+  onCleanup,
+} from "solid-js";
 
-import { Channel } from "@upryzing/upryzing.js";
+import { useLingui } from "@lingui-solid/solid/macro";
+import { Channel } from "upryzing.js";
 
 import { useClient } from "@revolt/client";
-import { debounce } from "@revolt/common";
-import { useTranslation } from "@revolt/i18n";
-import { modalController } from "@revolt/modal";
-import { state } from "@revolt/state";
+import { CONFIGURATION, debounce } from "@revolt/common";
+import { Keybind, KeybindAction, createKeybind } from "@revolt/keybinds";
+import { useModals } from "@revolt/modal";
+import { useState } from "@revolt/state";
 import {
-  Button,
-  CompositionPicker,
+  CompositionMediaPicker,
   FileCarousel,
   FileDropAnywhereCollector,
   FilePasteCollector,
-  InlineIcon,
+  IconButton,
   MessageBox,
   MessageReplyPreview,
+  humanFileSize,
 } from "@revolt/ui";
-
-import {
-  registerKeybindWithPriority,
-  unregisterKeybindWithPriority,
-} from "../../../shared/lib/priorityKeybind";
+import { Symbol } from "@revolt/ui/components/utils/Symbol";
+import { useSearchSpace } from "@revolt/ui/components/utils/autoComplete";
 
 interface Props {
   /**
@@ -42,21 +44,21 @@ interface Props {
 }
 
 /**
- * Tests for code block delimiters (``` at start of line)
- */
-const RE_CODE_DELIMITER = new RegExp("^```", "gm");
-
-/**
  * Message composition engine
  */
 export function MessageComposition(props: Props) {
-  const t = useTranslation();
+  const state = useState();
+  const { t } = useLingui();
   const client = useClient();
+  const { openModal } = useModals();
 
-  /**
-   * Reference to the message input box
-   */
-  let ref: HTMLTextAreaElement | undefined;
+  createKeybind(KeybindAction.CHAT_JUMP_END, () =>
+    setNodeReplacement(["_focus"]),
+  );
+
+  createKeybind(KeybindAction.CHAT_FOCUS_COMPOSITION, () =>
+    setNodeReplacement(["_focus"]),
+  );
 
   /**
    * Get the draft for the current channel
@@ -65,6 +67,51 @@ export function MessageComposition(props: Props) {
   function draft() {
     return state.draft.getDraft(props.channel.id);
   }
+
+  // Whether the send button should be active/clickable
+  const canSend = createMemo(() => {
+    const draftContent = draft()?.content ?? "";
+    const draftFiles = draft()?.files ?? [];
+
+    return draftContent.trim().length > 0 || draftFiles.length > 0;
+  });
+
+  // TEMP
+  function currentValue() {
+    return draft()?.content ?? "";
+  }
+
+  const [initialValue, setInitialValue] = createSignal([
+    currentValue(),
+  ] as const);
+
+  const [nodeReplacement, setNodeReplacement] =
+    createSignal<readonly [string | "_focus"]>();
+
+  // bind this composition instance to the global node replacement signal
+  state.draft._setNodeReplacement = setNodeReplacement;
+  onCleanup(() => (state.draft._setNodeReplacement = undefined));
+
+  createEffect(
+    on(
+      () => props.channel,
+      () => setInitialValue([currentValue()]),
+      { defer: true },
+    ),
+  );
+
+  createEffect(
+    on(
+      () => currentValue(),
+      (value) => {
+        if (value === "") {
+          setInitialValue([""]);
+        }
+      },
+      { defer: true },
+    ),
+  );
+  // END TEMP
 
   /**
    * Keep track of last time we sent a typing packet
@@ -113,9 +160,22 @@ export function MessageComposition(props: Props) {
    * @param useContent Content to send
    */
   async function sendMessage(useContent?: unknown) {
+    stopTyping();
     props.onMessageSend?.();
 
     if (typeof useContent === "string") {
+      const currentDraft = draft();
+      if (
+        currentDraft?.replies?.length &&
+        !currentDraft.content &&
+        !currentDraft.files?.length
+      ) {
+        state.draft.setDraft(props.channel.id, {
+          ...currentDraft,
+          content: useContent,
+        });
+        return state.draft.sendDraft(client(), props.channel);
+      }
       return props.channel.sendMessage(useContent);
     }
 
@@ -131,185 +191,47 @@ export function MessageComposition(props: Props) {
   }
 
   /**
-   * Determine whether we are in a code block
-   * @param cursor Cursor position
-   * @returns Whether we are in a code block
-   */
-  function isInCodeBlock(cursor: number): boolean {
-    const contentBeforeCursor = (draft().content ?? "").substring(0, cursor);
-
-    let delimiterCount = 0;
-    for (const _delimiter of contentBeforeCursor.matchAll(RE_CODE_DELIMITER)) {
-      delimiterCount++;
-    }
-
-    // Odd number of ``` delimiters before cursor => we are in code block
-    return delimiterCount % 2 === 1;
-  }
-
-  /**
-   * Handle key presses in input box
-   * @param event Keyboard Event
-   */
-  function onKeyDownMessageBox(
-    event: KeyboardEvent & { currentTarget: HTMLTextAreaElement }
-  ) {
-    const insideCodeBlock = isInCodeBlock(event.currentTarget.selectionStart);
-    const usingBracketIndent =
-      (event.ctrlKey || event.metaKey) &&
-      (event.key === "[" || event.key === "]");
-
-    if (
-      (event.key === "Tab" || usingBracketIndent) &&
-      !event.isComposing &&
-      insideCodeBlock
-    ) {
-      // Handle code block indentation.
-      event.preventDefault();
-
-      const indent = "  "; // 2 spaces
-
-      const selectStart = event.currentTarget.selectionStart;
-      const selectEnd = event.currentTarget.selectionEnd;
-      let selectionStartColumn = 0;
-      let selectionEndColumn = 0;
-
-      const lines = (draft().content ?? "").split("\n");
-      const selectLines = [];
-
-      // Get indexes of selected lines
-      let selectionBegun = false;
-      let lineIndex = 0;
-      for (let i = 0; i < lines.length; i++) {
-        const currentLine = lines[i];
-        const endOfLine = lineIndex + currentLine.length;
-
-        if (selectStart >= lineIndex && selectStart <= endOfLine) {
-          selectionBegun = true;
-          selectionStartColumn = selectStart - lineIndex;
-        }
-
-        if (selectionBegun) selectLines.push(i);
-
-        if (selectEnd <= endOfLine) {
-          selectionEndColumn = selectEnd - lineIndex;
-          break;
-        }
-
-        lineIndex += currentLine.length + 1; // add 1 to account for missing newline char
-      }
-
-      if ((event.shiftKey && event.key === "Tab") || event.key === "[") {
-        const whitespaceRegex = new RegExp(`(?<=^ *) {1,${indent.length}}`);
-
-        // Used to ensure selection remains the same after indentation changes
-        let charsRemoved = 0;
-        let charsRemovedFirstLine = 0;
-
-        // Remove indentation on selected lines, where possible.
-        for (let i = 0; i < selectLines.length; i++) {
-          const selectedLineIndex = selectLines[i];
-          const currentLine = lines[selectedLineIndex];
-          const result = whitespaceRegex.exec(currentLine);
-
-          // If result == null, there's no more spacing to remove on this line.
-          if (result != null) {
-            lines[selectedLineIndex] = currentLine.substring(result[0].length);
-            charsRemoved += result[0].length;
-            if (i === 0) charsRemovedFirstLine = result[0].length;
-          }
-        }
-
-        setContent(lines.join("\n"));
-
-        // Update selection positions.
-        event.currentTarget.selectionStart =
-          selectStart - charsRemovedFirstLine;
-        event.currentTarget.selectionEnd = selectEnd - charsRemoved;
-      } else {
-        // Used to ensure selection remains the same after indentation changes
-        let indentsAdded = 0;
-
-        // Add indentation to selected lines.
-        for (const selectedLineIndex of selectLines) {
-          const currentLine = lines[selectedLineIndex];
-
-          if (selectStart === selectEnd && event.key === "Tab") {
-            // Insert spacing at current position instead of line start
-            const beforeIndent = currentLine.slice(0, selectionStartColumn);
-            const afterIndent = currentLine.slice(selectionEndColumn);
-
-            lines[selectedLineIndex] = beforeIndent + indent + afterIndent;
-          } else {
-            // Insert spacing at beginning of selected line
-            lines[selectedLineIndex] = indent + currentLine;
-          }
-
-          indentsAdded++;
-        }
-
-        setContent(lines.join("\n"));
-
-        // Update selection positions.
-        event.currentTarget.selectionStart = selectStart + indent.length;
-        event.currentTarget.selectionEnd =
-          selectEnd + indent.length * indentsAdded;
-      }
-    }
-
-    if (
-      event.key === "Enter" &&
-      !event.shiftKey &&
-      !event.isComposing &&
-      !insideCodeBlock /*&& props.ref*/
-    ) {
-      event.preventDefault();
-      sendMessage();
-      stopTyping();
-    } else {
-      delayedStopTyping();
-    }
-  }
-
-  /**
-   * Handle ESC key being pressed
-   * @param event Keyboard Event
-   */
-  function onKeyDown(event: KeyboardEvent) {
-    if (event.key === "Escape") {
-      if (state.draft.popFromDraft(props.channel.id)) {
-        event.preventDefault();
-      }
-    } else if (
-      // Don't take focus from other input elements
-      !(event.target instanceof HTMLInputElement) &&
-      // Don't take focus from modals
-      !modalController.isOpen() &&
-      // Only focus if pasting to allow copying of text elsewhere
-      (!(event.ctrlKey || event.metaKey) || event.key.toLowerCase() === "v")
-    ) {
-      ref?.focus();
-    }
-  }
-
-  // Bind onKeyDown to the document
-  onMount(() => registerKeybindWithPriority("Escape", onKeyDown));
-  onCleanup(() => unregisterKeybindWithPriority(onKeyDown));
-
-  /**
    * Handle files being added to the draft.
    * @param files List of files
    */
   function onFiles(files: File[]) {
+    const rejectedFiles: File[] = [];
+    const validFiles: File[] = [];
+
     for (const file of files) {
-      if (file.size > 20_000_000) {
-        alert("file too large");
+      if (file.size > CONFIGURATION.MAX_FILE_SIZE) {
+        console.log("File too large:", file);
+        rejectedFiles.push(file);
+      } else {
+        validFiles.push(file);
       }
     }
 
-    const validFiles = Array.from(files).filter(
-      (file) => file.size <= 20_000_000
-    );
+    if (rejectedFiles.length > 0) {
+      const maxSizeFormatted = humanFileSize(CONFIGURATION.MAX_FILE_SIZE);
+
+      if (rejectedFiles.length === 1) {
+        const file = rejectedFiles[0];
+        const fileSize = humanFileSize(file.size);
+        const error = new Error(
+          t`The file "${file.name}" (${fileSize}) exceeds the maximum size limit of ${maxSizeFormatted}.`,
+        );
+        error.name = "File too large";
+        openModal({
+          type: "error2",
+          error,
+        });
+      } else {
+        const error = new Error(
+          t`${rejectedFiles.length} files exceed the maximum size limit of ${maxSizeFormatted} and were not uploaded.`,
+        );
+        error.name = "Files too large";
+        openModal({
+          type: "error2",
+          error,
+        });
+      }
+    }
 
     for (const file of validFiles) {
       state.draft.addFile(props.channel.id, file);
@@ -352,8 +274,16 @@ export function MessageComposition(props: Props) {
     state.draft.removeFile(props.channel.id, fileId);
   }
 
+  const searchSpace = useSearchSpace(() => props.channel, client);
+
   return (
     <>
+      <Show when={state.draft.hasAdditionalElements(props.channel.id)}>
+        <Keybind
+          keybind={KeybindAction.CHAT_REMOVE_COMPOSITION_ELEMENT}
+          onPressed={() => state.draft.popFromDraft(props.channel.id)}
+        />
+      </Show>
       <FileCarousel
         files={draft().files ?? []}
         getFile={state.draft.getFile}
@@ -390,94 +320,75 @@ export function MessageComposition(props: Props) {
         }}
       </For>
       <MessageBox
-        ref={ref}
+        initialValue={initialValue()}
+        nodeReplacement={nodeReplacement()}
+        onSendMessage={() => sendMessage()}
+        onTyping={delayedStopTyping}
+        onEditLastMessage={() => state.draft.setEditingMessage(true)}
         content={draft()?.content ?? ""}
         setContent={setContent}
         actionsStart={
-          <Switch fallback={<InlineIcon size="short" />}>
-            <Match
-              when={
-                props.channel.havePermission("UploadFiles") &&
-                state.experiments.isEnabled("file_uploads")
-              }
-            >
-              <InlineIcon size="wide">
-                <Button variant="plain" size="fluid" onPress={addFile}>
-                  <BiRegularPlus size={24} />
-                </Button>
-              </InlineIcon>
+          <Switch fallback={<MessageBox.InlineIcon size="short" />}>
+            <Match when={props.channel.havePermission("UploadFiles")}>
+              <MessageBox.InlineIcon size="wide">
+                <IconButton onPress={addFile}>
+                  <Symbol>add</Symbol>
+                </IconButton>
+              </MessageBox.InlineIcon>
             </Match>
           </Switch>
         }
         actionsEnd={
-          <CompositionPicker sendGIFMessage={sendMessage}>
+          <CompositionMediaPicker
+            onMessage={sendMessage}
+            onTextReplacement={(text) => setNodeReplacement([text])}
+          >
             {(triggerProps) => (
               <>
-                <Show when={state.experiments.isEnabled("gif_picker")}>
-                  <InlineIcon size="normal">
-                    <Button
-                      variant="plain"
-                      size="fluid"
-                      onPress={triggerProps.onClickGif}
-                    >
-                      <BiSolidFileGif size={24} />
-                    </Button>
-                  </InlineIcon>
-                </Show>
-                <Show when={state.experiments.isEnabled("emoji_picker")}>
-                  <InlineIcon size="normal">
-                    <Button
-                      variant="plain"
-                      size="fluid"
-                      onPress={triggerProps.onClickEmoji}
-                    >
-                      <BiSolidHappyBeaming size={24} />
-                    </Button>
-                  </InlineIcon>
-                </Show>
-                <Show
-                  when={state.settings.getValue("appearance:show_send_button")}
-                >
-                  <InlineIcon size="normal">
-                    <Button variant="plain" size="fluid" onPress={sendMessage}>
-                      <BiSolidSend size={24} />
-                    </Button>
-                  </InlineIcon>
-                </Show>
+                <MessageBox.InlineIcon size="normal">
+                  <IconButton onPress={triggerProps.onClickGif}>
+                    <Symbol>gif</Symbol>
+                  </IconButton>
+                </MessageBox.InlineIcon>
+                <MessageBox.InlineIcon size="normal">
+                  <IconButton onPress={triggerProps.onClickEmoji}>
+                    <Symbol>emoticon</Symbol>
+                  </IconButton>
+                </MessageBox.InlineIcon>
 
                 <div ref={triggerProps.ref} />
               </>
             )}
-          </CompositionPicker>
+          </CompositionMediaPicker>
         }
         placeholder={
           props.channel.type === "SavedMessages"
-            ? t("app.main.channel.message_saved")
+            ? t`Save to your notes`
             : props.channel.type === "DirectMessage"
-            ? t("app.main.channel.message_who", {
-                person: props.channel.recipient?.username as string,
-              })
-            : t("app.main.channel.message_where", {
-                channel_name: props.channel.name as string,
-              })
+              ? t`Message ${props.channel.recipient?.username}`
+              : t`Message ${props.channel.name}`
         }
         sendingAllowed={props.channel.havePermission("SendMessage")}
-        autoCompleteConfig={{
-          onKeyDown: onKeyDownMessageBox,
-          client: client(),
-          searchSpace: props.channel.server
-            ? {
-                members: client().serverMembers.filter(
-                  (member) => member.id.server === props.channel.serverId
-                ),
-                channels: props.channel.server.channels,
-              }
-            : props.channel.type === "Group"
-            ? { users: props.channel.recipients, channels: [] }
-            : { channels: [] },
-        }}
+        autoCompleteSearchSpace={searchSpace}
         updateDraftSelection={(start, end) =>
           state.draft.setSelection(props.channel.id, start, end)
+        }
+        hasActionsAppend={
+          state.settings.getValue("appearance:show_send_button") || false
+        }
+        actionsAppend={
+          <Show when={state.settings.getValue("appearance:show_send_button")}>
+            <IconButton
+              _compositionSendMessage
+              size="sm"
+              variant={canSend() ? "filled" : "tonal"}
+              shape="square"
+              isDisabled={!canSend()}
+              onPress={sendMessage}
+            >
+              <Symbol fill={true}>send</Symbol>
+            </IconButton>
+          </Show>
         }
       />
       <FilePasteCollector onFiles={onFiles} />

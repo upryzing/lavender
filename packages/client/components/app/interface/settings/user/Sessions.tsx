@@ -15,28 +15,28 @@ import {
   onMount,
 } from "solid-js";
 
-import { Session } from "@upryzing/upryzing.js";
+import { Trans } from "@lingui-solid/solid/macro";
+import { Session } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { useClient } from "@revolt/client";
-import { getController } from "@revolt/common";
+import { useModals } from "@revolt/modal";
 import {
   CategoryButton,
   CategoryButtonGroup,
   CategoryCollapse,
+  CircularProgress,
   Column,
-  Preloader,
   Time,
   iconSize,
 } from "@revolt/ui";
 
-import MdAutoMode from "@material-design-icons/svg/outlined/auto_mode.svg?component-solid";
 import MdLogout from "@material-design-icons/svg/outlined/logout.svg?component-solid";
 
 /**
  * Sessions
  */
-export default function Sessions() {
+export function Sessions() {
   const client = useClient();
   onMount(() => client().sessions.fetch());
 
@@ -46,12 +46,12 @@ export default function Sessions() {
   const otherSessions = createMemo(() =>
     client()
       .sessions.filter((session) => !session.current)
-      .sort((a, b) => +b.createdAt - +a.createdAt)
+      .sort((a, b) => +b.createdAt - +a.createdAt),
   );
 
   return (
     <Column gap="lg">
-      <Switch fallback={<Preloader type="ring" />}>
+      <Switch fallback={<CircularProgress />}>
         <Match when={client().sessions.size()}>
           <ManageCurrentSession otherSessions={otherSessions} />
           <ListOtherSessions otherSessions={otherSessions} />
@@ -66,6 +66,7 @@ export default function Sessions() {
  */
 function ManageCurrentSession(props: { otherSessions: Accessor<Session[]> }) {
   const client = useClient();
+  const { openModal } = useModals();
 
   /**
    * Resolve current session
@@ -75,7 +76,7 @@ function ManageCurrentSession(props: { otherSessions: Accessor<Session[]> }) {
   return (
     <CategoryButtonGroup>
       <CategoryCollapse
-        title="Current Session"
+        title={<Trans>Current Session</Trans>}
         description={currentSession()?.name}
         icon={<SessionIcon session={currentSession()} />}
       >
@@ -84,45 +85,42 @@ function ManageCurrentSession(props: { otherSessions: Accessor<Session[]> }) {
           action="chevron"
           onClick={() =>
             currentSession() &&
-            getController("modal").push({
+            openModal({
               type: "rename_session",
               session: currentSession()!,
             })
           }
         >
-          Rename
+          <Trans>Rename</Trans>
         </CategoryButton>
       </CategoryCollapse>
-      <CategoryButton
+      {/* <CategoryButton
         action="chevron"
         icon={
           <MdAutoMode
             {...iconSize(24)}
-            fill="var(--customColours-error-color)"
+            fill="var(--md-sys-color-error)"
           />
         }
-        description="Keeps your last sessions active and automatically logs you out of other ones"
+        description={Keeps your last sessions active and automatically logs you out of other ones"}
       >
         Keep Last Active Sessions
-      </CategoryButton>
+      </CategoryButton> */}
       <Show when={props.otherSessions().length}>
         <CategoryButton
           action="chevron"
           onClick={() =>
-            getController("modal").push({
+            openModal({
               type: "sign_out_sessions",
               client: client(),
             })
           }
-          icon={
-            <MdLogout
-              {...iconSize(24)}
-              fill="var(--customColours-error-color)"
-            />
+          icon={<MdLogout {...iconSize(24)} fill="var(--md-sys-color-error)" />}
+          description={
+            <Trans>Logs you out of all sessions except this device.</Trans>
           }
-          description="Logs you out of all sessions except this device."
         >
-          Log Out Other Sessions
+          <Trans>Log Out Other Sessions</Trans>
         </CategoryButton>
       </Show>
     </CategoryButtonGroup>
@@ -133,6 +131,8 @@ function ManageCurrentSession(props: { otherSessions: Accessor<Session[]> }) {
  * List other logged in sessions
  */
 function ListOtherSessions(props: { otherSessions: Accessor<Session[]> }) {
+  const { openModal } = useModals();
+
   return (
     <Show when={props.otherSessions().length}>
       <Column>
@@ -143,29 +143,29 @@ function ListOtherSessions(props: { otherSessions: Accessor<Session[]> }) {
                 icon={<SessionIcon session={session} />}
                 title={<Capitalise>{session.name}</Capitalise>}
                 description={
-                  <>
+                  <Trans>
                     Created <Time value={session.createdAt} format="relative" />
-                  </>
+                  </Trans>
                 }
               >
                 <CategoryButton
                   icon="blank"
                   action="chevron"
                   onClick={() =>
-                    getController("modal").push({
+                    openModal({
                       type: "rename_session",
                       session,
                     })
                   }
                 >
-                  Rename
+                  <Trans>Rename</Trans>
                 </CategoryButton>
                 <CategoryButton
                   icon="blank"
                   action="chevron"
                   onClick={() => session.delete()}
                 >
-                  Log Out
+                  <Trans>Log Out</Trans>
                 </CategoryButton>
               </CategoryCollapse>
             )}

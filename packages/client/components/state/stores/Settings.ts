@@ -1,3 +1,8 @@
+import {
+  UNICODE_EMOJI_PACKS,
+  UnicodeEmojiPacks,
+} from "@revolt/markdown/emoji/UnicodeEmoji";
+
 import { State } from "..";
 
 import { AbstractStore } from ".";
@@ -5,7 +10,7 @@ import { AbstractStore } from ".";
 interface SettingsDefinition {
   /**
    * Whether to enable desktop notifications
-   * Revolt will try to get notification permission after login if it doesn't already.
+   * Upryzing will try to get notification permission after login if it doesn't already.
    * TODO: implement
    */
   // "notifications:desktop": boolean;
@@ -17,10 +22,9 @@ interface SettingsDefinition {
   // "notifications:sounds": SoundOptions;
 
   /**
-   * Selected emoji pack
-   * TODO: implement
+   * Selected unicode emoji
    */
-  // "appearance:emoji": EmojiPack;
+  "appearance:unicode_emoji": UnicodeEmojiPacks;
 
   // TODO: this should be part of theme
   // "appearance:ligatures": boolean;
@@ -45,10 +49,25 @@ interface SettingsDefinition {
   "appearance:compact_mode": boolean;
 
   /**
-   * Indicate new users to Revolt
+   * Indicate new users to Upryzing
    * TODO: implement
    */
   // "appearance:show_account_age": boolean;
+
+  /**
+   * Whether to include 'copy ID' in context menus
+   */
+  "advanced:copy_id": boolean;
+
+  /**
+   * Whether to include admin panel links in context menus
+   */
+  "advanced:admin_panel": boolean;
+
+  /**
+   * Last read changelog index
+   */
+  "changelog:last_index": number;
 }
 
 /**
@@ -57,23 +76,29 @@ interface SettingsDefinition {
 type ValueType<T extends keyof SettingsDefinition> =
   SettingsDefinition[T] extends boolean
     ? "boolean"
+    : SettingsDefinition[T] extends number
+    ? "number"
     : SettingsDefinition[T] extends string
     ? "string"
-    : (v: Partial<SettingsDefinition[T]>) => SettingsDefinition[T] | undefined;
+    : (v: Partial) => SettingsDefinition[T] | undefined;
 
 /**
  * Expected types of settings keys, enforce some sort of validation is present for all keys.
  * If we cannot validate the value as a primitive, clean it up using a function.
  */
-const EXPECTED_TYPES: { [K in keyof SettingsDefinition]: ValueType<K> } = {
+const EXPECTED_TYPES: { [K in keyof SettingsDefinition]: ValueType } = {
+  "appearance:unicode_emoji": "string",
   "appearance:show_send_button": "boolean",
   "appearance:compact_mode": "boolean",
+  "advanced:copy_id": "boolean",
+  "advanced:admin_panel": "boolean",
+  "changelog:last_index": "number",
 };
 
 /**
  * In reality, this is a partial so we map it accordingly here.
  */
-export type TypeSettings = Partial<SettingsDefinition>;
+export type TypeSettings = Partial;
 
 /**
  * Default values for settings, if applicable.
@@ -83,7 +108,7 @@ const DEFAULT_VALUES: TypeSettings = {};
 /**
  * Settings store
  */
-export class Settings extends AbstractStore<"settings", TypeSettings> {
+export class Settings extends AbstractStore {
   /**
    * Construct store
    * @param state State
@@ -103,13 +128,19 @@ export class Settings extends AbstractStore<"settings", TypeSettings> {
    * Generate default values
    */
   default(): TypeSettings {
-    return {};
+    return {
+      "appearance:unicode_emoji": "fluent-3d",
+      "appearance:show_send_button": true,
+      "appearance:compact_mode": false,
+      "advanced:copy_id": false,
+      "advanced:admin_panel": false,
+    };
   }
 
   /**
    * Validate the given data to see if it is compliant and return a compliant object
    */
-  clean(input: Partial<TypeSettings>): TypeSettings {
+  clean(input: Partial): TypeSettings {
     const settings: TypeSettings = this.default();
 
     for (const key of Object.keys(input) as (keyof TypeSettings)[]) {
@@ -117,13 +148,17 @@ export class Settings extends AbstractStore<"settings", TypeSettings> {
 
       if (typeof expectedType === "function") {
         const cleanedValue = (expectedType as (value: unknown) => unknown)(
-          input[key]
+          input[key],
         );
         if (cleanedValue) {
           settings[key] = cleanedValue as never;
         }
+      } else if (key === "appearance:unicode_emoji") {
+        if (UNICODE_EMOJI_PACKS.includes(input[key] as never)) {
+          settings[key] = input[key];
+        }
       } else if (typeof input[key] === expectedType) {
-        settings[key] = input[key];
+        settings[key] = input[key] as never;
       }
     }
 

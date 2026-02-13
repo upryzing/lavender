@@ -1,11 +1,11 @@
 import { createEffect, createSignal } from "solid-js";
 
-import { Dayjs } from "dayjs";
+import { type Dayjs } from "dayjs";
 import type { Handler } from "mdast-util-to-hast";
 import { Plugin } from "unified";
 import { visit } from "unist-util-visit";
 
-import { dayjs } from "@revolt/i18n";
+import { dayjs, timeLocale } from "@revolt/i18n/dayjs";
 
 import { time as Time } from "../elements";
 
@@ -37,7 +37,7 @@ export function RenderTimestamp(props: { format: string; date: Dayjs }) {
   createEffect(() => {
     // Update every second if we are rendering relative time
     if (props.format === "R") {
-      let interval = setInterval(update, 1000);
+      const interval = setInterval(update, 1000);
       return () => clearInterval(interval);
     }
   });
@@ -60,7 +60,7 @@ export function RenderTimestamp(props: { format: string; date: Dayjs }) {
 /**
  * Regex for matching timestamps
  */
-const RE_TIMESTAMP = /<t:([0-9]+)(?::(\w))?>/g;
+export const RE_TIMESTAMP = /<t:([0-9]+)(?::(\w))?>/g;
 
 export const remarkTimestamps: Plugin = () => (tree) => {
   visit(
@@ -69,9 +69,9 @@ export const remarkTimestamps: Plugin = () => (tree) => {
     (
       node: { type: "text"; value: string },
       idx,
-      parent: { children: any[] }
+      parent: { children: unknown[] },
     ) => {
-      let elements = node.value.split(RE_TIMESTAMP);
+      const elements = node.value.split(RE_TIMESTAMP);
       if (elements.length === 1) return; // no matches
 
       // Generate initial node
@@ -92,7 +92,9 @@ export const remarkTimestamps: Plugin = () => (tree) => {
       // Process all timestamps
       for (let i = 0; i < elements.length / 3; i++) {
         // Process timestamp
-        const date = dayjs.unix(parseInt(elements[i * 3]));
+        const date = dayjs
+          .unix(parseInt(elements[i * 3]))
+          .locale(timeLocale()[1]);
 
         // Insert components
         newNodes.push({
@@ -109,7 +111,7 @@ export const remarkTimestamps: Plugin = () => (tree) => {
 
       parent.children.splice(idx, 1, ...newNodes);
       return idx + newNodes.length;
-    }
+    },
   );
 };
 

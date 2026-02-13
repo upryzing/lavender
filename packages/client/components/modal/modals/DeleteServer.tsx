@@ -1,36 +1,45 @@
-import { useClient } from "@revolt/client";
-import { useTranslation } from "@revolt/i18n";
+import { Trans } from "@lingui-solid/solid/macro";
+import { useMutation } from "@tanstack/solid-query";
 
-import { modalController } from "..";
-import { createFormModal } from "../form";
-import { PropGenerator } from "../types";
+import { useClient } from "@revolt/client";
+import { Dialog, DialogProps } from "@revolt/ui";
+
+import { useModals } from "..";
+import { Modals } from "../types";
 
 /**
  * Modal to delete a server
  */
-const DeleteServer: PropGenerator<"delete_server"> = (props) => {
-  const t = useTranslation();
+export function DeleteServerModal(
+  props: DialogProps & Modals & { type: "delete_server" },
+) {
   const client = useClient();
+  const { showError, mfaFlow } = useModals();
 
-  return createFormModal({
-    modalProps: {
-      title: t("app.special.modals.prompt.confirm_delete", {
-        name: props.server.name,
-      }),
-      description: t("app.special.modals.prompt.confirm_delete_long"),
-    },
-    schema: {},
-    data: {},
-    callback: async () => {
+  const deleteServer = useMutation(() => ({
+    mutationFn: async () => {
       const mfa = await client().account.mfa();
-      await modalController.mfaFlow(mfa as never);
+      await mfaFlow(mfa as never);
       await props.server.delete(); // TODO: should use ticket in API
     },
-    submit: {
-      variant: "error",
-      children: t("app.special.modals.actions.delete"),
-    },
-  });
-};
+    onError: showError,
+  }));
 
-export default DeleteServer;
+  return (
+    <Dialog
+      show={props.show}
+      onClose={props.onClose}
+      title={<Trans>Delete {props.server.name}?</Trans>}
+      actions={[
+        { text: <Trans>Cancel</Trans> },
+        {
+          text: <Trans>Delete</Trans>,
+          onClick: () => deleteServer.mutateAsync(),
+        },
+      ]}
+      isDisabled={deleteServer.isPending}
+    >
+      <Trans>Once it's deleted, there's no going back.</Trans>
+    </Dialog>
+  );
+}

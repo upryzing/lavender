@@ -1,22 +1,18 @@
-import { For, Match, Show, Switch, onMount } from "solid-js";
+import { For, Match, Show, Switch, createSignal, onMount } from "solid-js";
 
-import {
-  Message as MessageInterface,
-  WebsiteEmbed,
-} from "@upryzing/upryzing.js";
+import { useLingui } from "@lingui-solid/solid/macro";
+import { Message as MessageInterface, WebsiteEmbed } from "upryzing.js";
 import { cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 import { decodeTime } from "ulid";
 
 import { useClient } from "@revolt/client";
-import { dayjs, useTranslation } from "@revolt/i18n";
+import { useTime } from "@revolt/i18n";
 import { Markdown } from "@revolt/markdown";
-import { state } from "@revolt/state";
+import { useState } from "@revolt/state";
 import {
   Attachment,
   Avatar,
-  BreakText,
-  Column,
   Embed,
   MessageContainer,
   MessageReply,
@@ -25,22 +21,16 @@ import {
   SystemMessageIcon,
   Tooltip,
   Username,
-  iconSize,
 } from "@revolt/ui";
-
-import MdCloud from "@material-design-icons/svg/filled/cloud.svg?component-solid";
-import MdLink from "@material-design-icons/svg/filled/link.svg?component-solid";
-import MdNotificationsOff from "@material-design-icons/svg/filled/notifications_off.svg?component-solid";
-import MdSchedule from "@material-design-icons/svg/filled/schedule.svg?component-solid";
-import MdShield from "@material-design-icons/svg/filled/shield.svg?component-solid";
-import MdSmartToy from "@material-design-icons/svg/filled/smart_toy.svg?component-solid";
-import MdSpa from "@material-design-icons/svg/filled/spa.svg?component-solid";
+import { Symbol } from "@revolt/ui/components/utils/Symbol";
 
 import { MessageContextMenu } from "../../../menus/MessageContextMenu";
 import {
   floatingUserMenus,
   floatingUserMenusFromMessage,
 } from "../../../menus/UserContextMenu";
+
+import { EditMessage } from "./EditMessage";
 
 /**
  * Regex for matching URLs
@@ -63,14 +53,28 @@ interface Props {
    * Whether to highlight this message
    */
   highlight?: boolean;
+
+  /**
+   * Whether to replace content with editor
+   */
+  editing?: boolean;
+
+  /**
+   * Whether this message is a link
+   */
+  isLink?: boolean;
 }
 
 /**
  * Render a Message with or without a tail
  */
 export function Message(props: Props) {
-  const t = useTranslation();
+  const dayjs = useTime();
+  const state = useState();
+  const { t } = useLingui();
   const client = useClient();
+
+  const [isHovering, setIsHovering] = createSignal(false);
 
   /**
    * Determine whether this message only contains a GIF
@@ -79,7 +83,10 @@ export function Message(props: Props) {
     props.message.embeds &&
     props.message.embeds.length === 1 &&
     props.message.embeds[0].type === "Website" &&
-    (props.message.embeds[0] as WebsiteEmbed).specialContent?.type === "GIF" &&
+    ((props.message.embeds[0] as WebsiteEmbed).specialContent?.type === "GIF" ||
+      (props.message.embeds[0] as WebsiteEmbed).originalUrl?.startsWith(
+        "https://tenor.com",
+      )) &&
     props.message.content &&
     !props.message.content.replace(RE_URL, "").length;
 
@@ -97,10 +104,17 @@ export function Message(props: Props) {
 
   return (
     <MessageContainer
+      message={props.message}
+      onHover={setIsHovering}
       username={
         <div use:floating={floatingUserMenusFromMessage(props.message)}>
           <Username
-            username={props.message.username}
+            username={
+              props.message.member?.nickname ??
+              props.message.author?.displayName ??
+              props.message.author?.username ??
+              props.message.username
+            }
             colour={props.message.roleColour!}
           />
         </div>
@@ -110,7 +124,14 @@ export function Message(props: Props) {
           class={avatarContainer()}
           use:floating={floatingUserMenusFromMessage(props.message)}
         >
-          <Avatar size={36} src={props.message.avatarURL} />
+          <Avatar
+            size={36}
+            src={
+              isHovering()
+                ? props.message.animatedAvatarURL
+                : props.message.avatarURL
+            }
+          />
         </div>
       }
       contextMenu={() => <MessageContextMenu message={props.message} />}
@@ -118,6 +139,8 @@ export function Message(props: Props) {
       edited={props.message.editedAt}
       mentioned={props.message.mentioned}
       highlight={props.highlight}
+      editing={props.editing}
+      isLink={props.isLink}
       tail={props.tail || state.settings.getValue("appearance:compact_mode")}
       header={
         <Show when={props.message.replyIds}>
@@ -137,7 +160,7 @@ export function Message(props: Props) {
               return (
                 <MessageReply
                   mention={props.message.mentionIds?.includes(
-                    message()!.authorId!
+                    message()!.authorId!,
                   )}
                   message={message()}
                 />
@@ -154,45 +177,37 @@ export function Message(props: Props) {
               props.message.authorId === "01FHGJ3NPP7XANQQH8C2BE44ZY"
             }
           >
-            <Tooltip content={t("app.main.channel.bridged")} placement="top">
-              <MdLink {...iconSize(16)} />
+            <Tooltip
+              content={t`Message was sent on another platform`}
+              placement="top"
+            >
+              <Symbol size={16}>link</Symbol>
             </Tooltip>
           </Match>
           <Match when={props.message.author?.privileged}>
-            <Tooltip content={t("app.main.channel.team")} placement="top">
-              <MdShield {...iconSize(16)} />
+            <Tooltip content={t`Official Communication`} placement="top">
+              <Symbol size={16}>brightness_alert</Symbol>
             </Tooltip>
           </Match>
           <Match when={props.message.author?.bot}>
-            <Tooltip content={t("app.main.channel.bot")} placement="top">
-              <MdSmartToy {...iconSize(16)} />
+            <Tooltip content={t`Bot`} placement="top">
+              <Symbol size={16} fill>
+                smart_toy
+              </Symbol>
             </Tooltip>
           </Match>
           <Match when={props.message.webhook}>
-            <Tooltip
-              content={
-                "Webhook"
-
-                // TODO: missing i18n
-              }
-              placement="top"
-            >
-              <MdCloud {...iconSize(16)} />
-            </Tooltip>
-          </Match>
-          <Match when={props.message.member?.timeout}>
-            <Tooltip
-              content={`User has been timed out for ${dayjs(
-                props.message.member?.timeout
-              ).toNow(true)}`}
-              placement="top"
-            >
-              <MdSchedule {...iconSize(16)} />
+            <Tooltip content={t`Webhook`} placement="top">
+              <Symbol size={16} fill>
+                cloud
+              </Symbol>
             </Tooltip>
           </Match>
           <Match when={props.message.isSuppressed}>
-            <Tooltip content={"Silent" /* TODO: i18n */} placement="top">
-              <MdNotificationsOff {...iconSize(16)} />
+            <Tooltip content={t`Silent`} placement="top">
+              <Symbol size={16} fill>
+                notifications_off
+              </Symbol>
             </Tooltip>
           </Match>
           <Match
@@ -202,11 +217,10 @@ export function Message(props: Props) {
             }
           >
             <NewUser>
-              <Tooltip
-                content={t("app.main.channel.new_to_upryzing")}
-                placement="top"
-              >
-                <MdSpa {...iconSize(16)} />
+              <Tooltip content={t`New to Upryzing`} placement="top">
+                <Symbol size={16} fill>
+                  spa
+                </Symbol>
               </Tooltip>
             </NewUser>
           </Match>
@@ -217,14 +231,15 @@ export function Message(props: Props) {
             }
           >
             <NewUser>
-              <Tooltip
-                content={t("app.main.channel.new_to_space")}
-                placement="top"
-              >
-                <MdSpa {...iconSize(16)} />
+              <Tooltip content={t`New to the space`} placement="top">
+                <Symbol size={16}>spa</Symbol>
               </Tooltip>
             </NewUser>
           </Match>
+          {/* <Match when={props.message.authorId === "01EX2NCWQ0CHS3QJF0FEQS1GR4"}>
+            <span />
+            <span>placeholder &middot; </span>
+          </Match> */}
           <Match
             when={
               props.message.author &&
@@ -232,7 +247,6 @@ export function Message(props: Props) {
               props.message.author.pronouns.length > 0
             }
           >
-            <span />
             <span>
               {props.message.author?.pronouns?.join(" · ")}
               {" • "}
@@ -254,47 +268,56 @@ export function Message(props: Props) {
         </Match>
       }
     >
-      <Column gap="sm">
-        <Show when={props.message.systemMessage}>
-          <SystemMessage
-            systemMessage={props.message.systemMessage!}
-            menuGenerator={(user) =>
-              user
-                ? floatingUserMenus(
-                    user!,
-                    // TODO: try to fetch on demand member
-                    props.message.server?.getMember(user!.id)
-                  )
-                : {}
-            }
-            isServer={!!props.message.server}
-          />
-        </Show>
-        <Show when={props.message.content && !isOnlyGIF()}>
+      <Show when={props.message.systemMessage}>
+        <SystemMessage
+          systemMessage={props.message.systemMessage!}
+          menuGenerator={(user) =>
+            user
+              ? floatingUserMenus(
+                user!,
+                // TODO: try to fetch on demand member
+                props.message.server?.getMember(user!.id),
+              )
+              : {}
+          }
+          isServer={!!props.message.server}
+        />
+      </Show>
+      <Switch>
+        <Match when={props.editing}>
+          <EditMessage message={props.message} />
+        </Match>
+        <Match when={props.message.content && !isOnlyGIF()}>
           <BreakText>
             <Markdown content={props.message.content!} />
           </BreakText>
-        </Show>
-        <Show when={props.message.attachments}>
-          <For each={props.message.attachments}>
-            {(attachment) => <Attachment file={attachment} />}
-          </For>
-        </Show>
-        <Show when={props.message.embeds}>
-          <For each={props.message.embeds}>
-            {(embed) => <Embed embed={embed} />}
-          </For>
-        </Show>
-        <Reactions
-          reactions={
-            props.message.reactions as never as Map<string, Set<string>>
-          }
-          interactions={props.message.interactions}
-          userId={client().user!.id}
-          addReaction={react}
-          removeReaction={unreact}
-        />
-      </Column>
+        </Match>
+      </Switch>
+      <Show when={props.message.attachments}>
+        <For each={props.message.attachments}>
+          {(attachment) => (
+            <Attachment message={props.message} file={attachment} />
+          )}
+        </For>
+      </Show>
+      <Show when={props.message.embeds}>
+        <For each={props.message.embeds}>
+          {(embed) => <Embed embed={embed} />}
+        </For>
+      </Show>
+      <Reactions
+        reactions={props.message.reactions as never as Map<string, Set<string>>}
+        interactions={props.message.interactions}
+        userId={client().user!.id}
+        addReaction={react}
+        removeReaction={unreact}
+        sendGIF={(content) =>
+          props.message?.channel?.sendMessage({
+            content,
+            replies: [{ id: props.message.id, mention: true }],
+          })
+        }
+      />
     </MessageContainer>
   );
 }
@@ -304,7 +327,7 @@ export function Message(props: Props) {
  */
 const NewUser = styled("div", {
   base: {
-    color: "var(--customColours-success-color)",
+    fill: "var(--md-sys-color-primary)",
   },
 });
 
@@ -314,6 +337,21 @@ const NewUser = styled("div", {
 const avatarContainer = cva({
   base: {
     height: "fit-content",
-    borderRadius: "var(--borderRadius-full)",
+    borderRadius: "var(--borderRadius-circle)",
+  },
+});
+
+/**
+ * Break all text and prevent overflow from math blocks
+ */
+const BreakText = styled("div", {
+  base: {
+    wordBreak: "break-word",
+
+    "& .math": {
+      overflowX: "auto",
+      overflowY: "hidden",
+      maxHeight: "100vh",
+    },
   },
 });

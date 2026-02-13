@@ -23,21 +23,24 @@ cd lavender
 # git submodule init && git submodule update
 
 # install all packages
-pnpm i --frozen-lockfile
+mise install:frozen
 
 # build deps:
-pnpm build:deps
+mise build:deps
 
-# ...or build a specific dep (e.g. @upryzing/upryzing.js updates):
-# pnpm --filter @upryzing/upryzing.js run build
+# ...or build a specific dep (e.g. upryzing.js updates):
+pnpm --filter upryzing.js run build
+
+# customise the .env
+cp packages/client/.env.example packages/client/.env
 
 # run dev server
-pnpm dev:web
+mise dev
 ```
 
 Finally, navigate to http://local.revolt.chat:5173.
 
-### Faster iteration with @upryzing/upryzing.js
+### Faster iteration with upryzing.js
 
 To make it easier to work with `uprzying.js`, you may want to temporarily make this change:
 
@@ -58,10 +61,10 @@ Any edits to the `uprzying.js` codebase will immediately be reflected while deve
 pnpm i --frozen-lockfile
 
 # build dependencies
-pnpm build:deps
+pnpm run build:deps
 
 # build for web
-pnpm build:web
+pnpm run build
 
 # ... when building for production, use this instead of :web
 pnpm build:prod
@@ -76,7 +79,10 @@ The app currently needs the following routes:
 - `/login`
 - `/pwa`
 - `/dev`
+- `/discover`
 - `/settings`
+- `/invite`
+- `/bot`
 - `/friends`
 - `/server`
 - `/channel`

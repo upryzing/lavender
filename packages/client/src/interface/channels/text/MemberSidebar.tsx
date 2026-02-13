@@ -1,13 +1,12 @@
-import { For, Match, Show, Switch, createMemo, onMount } from "solid-js";
+import { Match, Show, Switch, createEffect, createMemo, on } from "solid-js";
 
+import { useLingui } from "@lingui-solid/solid/macro";
 import { VirtualContainer } from "@minht11/solid-virtual-container";
-import { Channel, ServerMember, User } from "@upryzing/upryzing.js";
-import { cva } from "styled-system/css";
+import { Channel, ServerMember, User } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
 import { floatingUserMenus } from "@revolt/app/menus/UserContextMenu";
 import { useClient } from "@revolt/client";
-import { useTranslation } from "@revolt/i18n";
 import { TextWithEmoji } from "@revolt/markdown";
 import { userInformation } from "@revolt/markdown/users";
 import {
@@ -18,16 +17,22 @@ import {
   Row,
   Tooltip,
   UserStatus,
-  UserStatusGraphic,
   Username,
   typography,
 } from "@revolt/ui";
+
+import { CONFIGURATION } from "@revolt/common";
 
 interface Props {
   /**
    * Channel
    */
   channel: Channel;
+
+  /**
+   * Scroll target element
+   */
+  scrollTargetElement: HTMLDivElement;
 }
 
 /**
@@ -37,10 +42,16 @@ export function MemberSidebar(props: Props) {
   return (
     <Switch>
       <Match when={props.channel.type === "Group"}>
-        <GroupMemberSidebar channel={props.channel} />
+        <GroupMemberSidebar
+          channel={props.channel}
+          scrollTargetElement={props.scrollTargetElement}
+        />
       </Match>
       <Match when={props.channel.type === "TextChannel"}>
-        <ServerMemberSidebar channel={props.channel} />
+        <ServerMemberSidebar
+          channel={props.channel}
+          scrollTargetElement={props.scrollTargetElement}
+        />
       </Match>
     </Switch>
   );
@@ -49,29 +60,33 @@ export function MemberSidebar(props: Props) {
 /**
  * Servers to not fetch all members for
  */
-const IGNORE_ALL = ["01F7ZSBSFHQ8TA81725KQCSDDP", "01F80118K1F2EYD9XAMCPQ0BCT"];
+const IGNORE_ALL = ["01JESQYCPY76XFN67R79YGCWMR"];
 
 /**
  * Server Member Sidebar
  */
 export function ServerMemberSidebar(props: Props) {
   const client = useClient();
-  let scrollTargetElement!: HTMLDivElement;
 
-  onMount(() =>
-    props.channel.server?.syncMembers(
-      IGNORE_ALL.includes(props.channel.serverId) ? true : false
-    )
+  // todo: useQuery
+  createEffect(
+    on(
+      () => props.channel.serverId,
+      (serverId) =>
+        props.channel.server?.syncMembers(
+          (CONFIGURATION.IS_UPRYZING && IGNORE_ALL.includes(serverId)) ? true : false,
+        ),
+    ),
   );
 
   // Stage 1: Find roles and members
   const stage1 = createMemo(() => {
     const hoistedRoles = props.channel.server!.orderedRoles.filter(
-      (role) => role.hoist
+      (role) => role.hoist,
     );
 
     const members = client().serverMembers.filter(
-      (member) => member.id.server === props.channel.serverId
+      (member) => member.id.server === props.channel.serverId,
     );
 
     return [members, hoistedRoles] as const;
@@ -82,7 +97,7 @@ export function ServerMemberSidebar(props: Props) {
     const [members] = stage1();
     if (props.channel.potentiallyRestrictedChannel) {
       return members.filter((member) =>
-        member.hasPermission(props.channel, "ViewChannel")
+        member.hasPermission(props.channel, "ViewChannel"),
       );
     } else {
       return members;
@@ -150,8 +165,8 @@ export function ServerMemberSidebar(props: Props) {
       members: [...entry.members].sort(
         (a, b) =>
           (a.nickname ?? a.user?.displayName)?.localeCompare(
-            b.nickname ?? b.user?.displayName ?? ""
-          ) || 0
+            b.nickname ?? b.user?.displayName ?? "",
+          ) || 0,
       ),
     }));
   });
@@ -207,64 +222,54 @@ export function ServerMemberSidebar(props: Props) {
   });
 
   return (
-    <div
-      ref={scrollTargetElement}
-      // @ts-expect-error this is a hack; replace with plain element & panda-css
-      use:scrollable={{
-        direction: "y",
-        showOnHover: true,
-        class: base(),
-      }}
-    >
-      <Container>
-        <MemberTitle bottomMargin="yes">
-          <Row align>
-            <UserStatus size="0.7em" status="Online" />
-            {
-              client().serverMembers.filter(
-                (member) =>
-                  (member.id.server === props.channel.serverId &&
-                    member.user?.online) ||
-                  false
-              ).length
-            }{" "}
-            members online
-          </Row>
-        </MemberTitle>
+    <Container>
+      <MemberTitle bottomMargin="yes">
+        <Row align>
+          <UserStatus size="0.7em" status="Online" />
+          {
+            client().serverMembers.filter(
+              (member) =>
+                (member.id.server === props.channel.serverId &&
+                  member.user?.online) ||
+                false,
+            ).length
+          }{" "}
+          members online
+        </Row>
+      </MemberTitle>
 
-        <Deferred>
-          <VirtualContainer
-            items={elements()}
-            scrollTarget={scrollTargetElement}
-            itemSize={{ height: 42 }}
-          >
-            {(item) => (
-              <div
-                style={{
-                  ...item.style,
-                  width: "100%",
-                }}
+      <Deferred>
+        <VirtualContainer
+          items={elements()}
+          scrollTarget={props.scrollTargetElement}
+          itemSize={{ height: 42 }}
+        >
+          {(item) => (
+            <div
+              style={{
+                ...item.style,
+                width: "100%",
+              }}
+            >
+              <Switch
+                fallback={
+                  <CategoryTitle>
+                    {(item.item as { name: string }).name} {"–"}{" "}
+                    {(item.item as { count: number }).count}
+                  </CategoryTitle>
+                }
               >
-                <Switch
-                  fallback={
-                    <CategoryTitle>
-                      {(item.item as { name: string }).name} {"–"}{" "}
-                      {(item.item as { count: number }).count}
-                    </CategoryTitle>
-                  }
-                >
-                  <Match when={item.item.t === 1}>
-                    <Member
-                      member={(item.item as { member: ServerMember }).member}
-                    />
-                  </Match>
-                </Switch>
-              </div>
-            )}
-          </VirtualContainer>
-        </Deferred>
-      </Container>
-    </div>
+                <Match when={item.item.t === 1}>
+                  <Member
+                    member={(item.item as { member: ServerMember }).member}
+                  />
+                </Match>
+              </Switch>
+            </div>
+          )}
+        </VirtualContainer>
+      </Deferred>
+    </Container>
   );
 }
 
@@ -272,67 +277,42 @@ export function ServerMemberSidebar(props: Props) {
  * Group Member Sidebar
  */
 export function GroupMemberSidebar(props: Props) {
-  let scrollTargetElement!: HTMLDivElement;
-
   return (
-    <div
-      class={base()}
-      ref={scrollTargetElement}
-      // @ts-expect-error this is a hack; replace with plain element & panda-css
-      use:scrollable={{
-        direction: "y",
-        showOnHover: true,
-      }}
-    >
-      <Container>
-        <MemberTitle>
-          <Row align>{props.channel.recipientIds.size} members</Row>
-        </MemberTitle>
+    <Container>
+      <MemberTitle>
+        <Row align>{props.channel.recipientIds.size} members</Row>
+      </MemberTitle>
 
-        <Deferred>
-          <VirtualContainer
-            items={props.channel.recipients.toSorted((a, b) =>
-              a.displayName.localeCompare(b.displayName)
-            )}
-            scrollTarget={scrollTargetElement}
-            itemSize={{ height: 42 }}
-          >
-            {(item) => (
-              <div
-                style={{
-                  ...item.style,
-                  width: "100%",
-                }}
-              >
-                <Member user={item.item} />
-              </div>
-            )}
-          </VirtualContainer>
-        </Deferred>
-      </Container>
-    </div>
+      <Deferred>
+        <VirtualContainer
+          items={props.channel.recipients.toSorted((a, b) =>
+            a.displayName.localeCompare(b.displayName),
+          )}
+          scrollTarget={props.scrollTargetElement}
+          itemSize={{ height: 42 }}
+        >
+          {(item) => (
+            <div
+              style={{
+                ...item.style,
+                width: "100%",
+              }}
+            >
+              <Member user={item.item} />
+            </div>
+          )}
+        </VirtualContainer>
+      </Deferred>
+    </Container>
   );
 }
-
-/**
- * Base styles
- */
-const base = cva({
-  base: {
-    flexShrink: 0,
-    width: "var(--layout-width-channel-sidebar)",
-    // margin: "var(--gap-md)",
-    borderRadius: "var(--borderRadius-lg)",
-    color: "var(--colours-sidebar-channels-foreground)",
-    // background: "var(--colours-sidebar-channels-background)",
-  },
-});
 
 /**
  * Container styles
  */
 const Container = styled("div", {
   base: {
+    paddingRight: "var(--gap-md)",
     width: "var(--layout-width-channel-sidebar)",
   },
 });
@@ -343,6 +323,7 @@ const Container = styled("div", {
 const CategoryTitle = styled("div", {
   base: {
     padding: "28px 14px 0",
+    color: "var(--md-sys-color-on-surface)",
 
     ...typography.raw({ class: "label", size: "small" }),
   },
@@ -355,6 +336,7 @@ const MemberTitle = styled("div", {
   base: {
     marginTop: "12px",
     marginLeft: "14px",
+    color: "var(--md-sys-color-on-surface)",
 
     ...typography.raw({ class: "label", size: "small" }),
   },
@@ -384,27 +366,35 @@ const NameStatusStack = styled("div", {
  * Member
  */
 function Member(props: { user?: User; member?: ServerMember }) {
-  const t = useTranslation();
+  const { t } = useLingui();
 
   /**
    * Create user information
    */
   const user = () =>
-    userInformation(props.user ?? props.member?.user!, props.member);
+    userInformation((props.user ?? props.member?.user)!, props.member);
 
   /**
    * Get user status
    */
   const status = () =>
-    (props.user ?? props.member?.user)?.statusMessage((presence) =>
-      t(`app.status.${presence.toLowerCase()}` as any)
+    (props.user ?? props.member?.user)?.statusMessage((s) =>
+      s === "Online"
+        ? t`Online`
+        : s === "Busy"
+          ? t`Busy`
+          : s === "Focus"
+            ? t`Focus`
+            : s === "Idle"
+              ? t`Idle`
+              : t`Offline`,
     );
 
   return (
     <div
       use:floating={floatingUserMenus(
-        props.user ?? props.member?.user!,
-        props.member
+        (props.user ?? props.member?.user)!,
+        props.member,
       )}
     >
       <MenuButton
@@ -418,7 +408,7 @@ function Member(props: { user?: User; member?: ServerMember }) {
             size={32}
             holepunch="bottom-right"
             overlay={
-              <UserStatusGraphic
+              <UserStatus.Graphic
                 status={(props.user ?? props.member?.user)?.presence}
               />
             }

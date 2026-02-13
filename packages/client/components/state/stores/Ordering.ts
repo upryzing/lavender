@@ -1,4 +1,4 @@
-import { getController } from "@revolt/common";
+import { Client } from "upryzing.js";
 
 import { State } from "..";
 
@@ -14,7 +14,7 @@ export interface TypeOrdering {
 /**
  * Handles ordering of items in the app interface.
  */
-export class Ordering extends AbstractStore<"ordering", TypeOrdering> {
+export class Ordering extends AbstractStore {
   /**
    * Construct store
    * @param state State
@@ -43,7 +43,7 @@ export class Ordering extends AbstractStore<"ordering", TypeOrdering> {
   /**
    * Validate the given data to see if it is compliant and return a compliant object
    */
-  clean(input: Partial<TypeOrdering>): TypeOrdering {
+  clean(input: Partial): TypeOrdering {
     const ordering: TypeOrdering = this.default();
 
     if (Array.isArray(input.servers)) {
@@ -61,8 +61,7 @@ export class Ordering extends AbstractStore<"ordering", TypeOrdering> {
    * All known servers with ordering applied
    * @returns List of Server objects
    */
-  get orderedServers() {
-    const client = getController("client").getCurrentClient();
+  orderedServers(client: Client) {
     const known = new Set(client?.servers.keys() ?? []);
     const ordered = [...this.get().servers];
 
@@ -92,16 +91,14 @@ export class Ordering extends AbstractStore<"ordering", TypeOrdering> {
    * All known active DM conversations ordered by last updated
    * @returns List of Channel objects
    */
-  get orderedConversations() {
-    const client = getController("client").getCurrentClient();
-
+  orderedConversations(client: Client) {
     return (
-      client?.channels
+      client.channels
         .toList()
         .filter(
           (channel) =>
             (channel.type === "DirectMessage" && channel.active) ||
-            channel.type === "Group"
+            channel.type === "Group",
         )
         .sort((a, b) => +b.updatedAt - +a.updatedAt) ?? []
     );

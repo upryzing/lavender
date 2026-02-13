@@ -1,32 +1,46 @@
-import { Show } from "solid-js";
+import { For, Show } from "solid-js";
 
-import { Server } from "@upryzing/upryzing.js";
+import { Trans } from "@lingui-solid/solid/macro";
+import dayjs from "dayjs";
+import { Server } from "upryzing.js";
 
 import { useClient } from "@revolt/client";
-import { getController } from "@revolt/common";
-import { useTranslation } from "@revolt/i18n";
+import { useModals } from "@revolt/modal";
+import { useState } from "@revolt/state";
+import { Column, Text, Time } from "@revolt/ui";
 
+import MdAlternateEmail from "@material-design-icons/svg/outlined/alternate_email.svg?component-solid";
 import MdBadge from "@material-design-icons/svg/outlined/badge.svg?component-solid";
 import MdFace from "@material-design-icons/svg/outlined/face.svg?component-solid";
 import MdLogout from "@material-design-icons/svg/outlined/logout.svg?component-solid";
 import MdMarkChatRead from "@material-design-icons/svg/outlined/mark_chat_read.svg?component-solid";
+import MdNotificationsActive from "@material-design-icons/svg/outlined/notifications_active.svg?component-solid";
+import MdNotificationsOff from "@material-design-icons/svg/outlined/notifications_off.svg?component-solid";
 import MdPersonAdd from "@material-design-icons/svg/outlined/person_add.svg?component-solid";
 import MdReport from "@material-design-icons/svg/outlined/report.svg?component-solid";
 import MdSettings from "@material-design-icons/svg/outlined/settings.svg?component-solid";
 import MdShield from "@material-design-icons/svg/outlined/shield.svg?component-solid";
 
+import MdDoNotDisturbOff from "@material-symbols/svg-400/outlined/do_not_disturb_off.svg?component-solid";
+import MdDoNotDisturbOn from "@material-symbols/svg-400/outlined/do_not_disturb_on.svg?component-solid";
+import MdNotificationSettings from "@material-symbols/svg-400/outlined/notification_settings.svg?component-solid";
+import MdRadioButtonChecked from "@material-symbols/svg-400/outlined/radio_button_checked-fill.svg?component-solid";
+import MdRadioButtonUnchecked from "@material-symbols/svg-400/outlined/radio_button_unchecked.svg?component-solid";
+
 import {
   ContextMenu,
   ContextMenuButton,
   ContextMenuDivider,
+  ContextMenuSubMenu,
 } from "./ContextMenu";
 
 /**
  * Context menu for servers
  */
 export function ServerContextMenu(props: { server: Server }) {
+  const state = useState();
   const client = useClient();
-  const t = useTranslation();
+  const { openModal } = useModals();
 
   /**
    * Mark server as read
@@ -43,12 +57,12 @@ export function ServerContextMenu(props: { server: Server }) {
     const channel = props.server.orderedChannels
       .find((category) =>
         category.channels.find((channel) =>
-          channel.havePermission("InviteOthers")
-        )
+          channel.havePermission("InviteOthers"),
+        ),
       )!
       .channels.find((channel) => channel.havePermission("InviteOthers"))!;
 
-    getController("modal").push({
+    openModal({
       type: "create_invite",
       channel,
     });
@@ -58,7 +72,7 @@ export function ServerContextMenu(props: { server: Server }) {
    * Open server settings
    */
   function editIdentity() {
-    getController("modal").push({
+    openModal({
       type: "server_identity",
       member: props.server.member!,
     });
@@ -68,7 +82,7 @@ export function ServerContextMenu(props: { server: Server }) {
    * Open server settings
    */
   function openSettings() {
-    getController("modal").push({
+    openModal({
       type: "settings",
       config: "server",
       context: props.server,
@@ -79,7 +93,7 @@ export function ServerContextMenu(props: { server: Server }) {
    * Report the server
    */
   function report() {
-    getController("modal").push({
+    openModal({
       type: "report_content",
       target: props.server,
       client: client(),
@@ -90,19 +104,19 @@ export function ServerContextMenu(props: { server: Server }) {
    * Leave the server
    */
   function leave() {
-    getController("modal").push({
+    openModal({
       type: "leave_server",
       server: props.server,
     });
   }
 
   /**
-   * Open server in Revolt Admin Panel
+   * Open server in Upryzing Admin Panel
    */
   function openAdminPanel() {
     window.open(
-      `https://admin.revolt.chat/panel/inspect/server/${props.server.id}`,
-      "_blank"
+      `https://legacy-admin.stoatinternal.com/panel/inspect/server/${props.server.id}`,
+      "_blank",
     );
   }
 
@@ -118,7 +132,7 @@ export function ServerContextMenu(props: { server: Server }) {
    */
   const permissionInviteOthers = () =>
     props.server.channels.find((channel) =>
-      channel.havePermission("InviteOthers")
+      channel.havePermission("InviteOthers"),
     );
 
   /**
@@ -148,24 +162,130 @@ export function ServerContextMenu(props: { server: Server }) {
     <ContextMenu>
       <Show when={props.server.unread}>
         <ContextMenuButton icon={MdMarkChatRead} onClick={markAsRead}>
-          {t("app.context_menu.mark_as_read")}
+          <Trans>Mark as read</Trans>
         </ContextMenuButton>
         <ContextMenuDivider />
       </Show>
 
+      <Show
+        when={!state.notifications.isMuted(props.server)}
+        fallback={
+          <ContextMenuButton
+            onClick={() =>
+              state.notifications.setServerMute(props.server, undefined)
+            }
+            symbol={MdDoNotDisturbOff}
+            _titleCase={false}
+          >
+            <Column gap="none">
+              <Trans>Unmute Server</Trans>
+              <Show
+                when={state.notifications.getServerMute(props.server)?.until}
+              >
+                <Text class="label" size="small">
+                  <Trans>
+                    Muted until{" "}
+                    <Time
+                      format="datetime"
+                      value={
+                        state.notifications.getServerMute(props.server)!.until
+                      }
+                    />
+                  </Trans>
+                </Text>
+              </Show>
+            </Column>
+          </ContextMenuButton>
+        }
+      >
+        <ContextMenuSubMenu
+          onClick={() => state.notifications.setServerMute(props.server, {})}
+          buttonContent={<Trans>Mute Server</Trans>}
+          symbol={MdDoNotDisturbOn}
+        >
+          <For
+            each={
+              [
+                [15, <Trans>For 15 minutes</Trans>],
+                [60, <Trans>For 1 hour</Trans>],
+                [180, <Trans>For 3 hours</Trans>],
+                [480, <Trans>For 8 hours</Trans>],
+                [1440, <Trans>For 24 hours</Trans>],
+                [undefined, <Trans>Until I turn it back on</Trans>],
+              ] as const
+            }
+          >
+            {([timeMin, i18n]) => (
+              <ContextMenuButton
+                onClick={() =>
+                  state.notifications.setServerMute(props.server, {
+                    until: timeMin
+                      ? +dayjs().add(timeMin, "minutes")
+                      : undefined,
+                  })
+                }
+                _titleCase={false}
+              >
+                {i18n}
+              </ContextMenuButton>
+            )}
+          </For>
+        </ContextMenuSubMenu>
+      </Show>
+
+      <ContextMenuSubMenu
+        symbol={MdNotificationSettings}
+        buttonContent={<Trans>Notifications</Trans>}
+      >
+        <ContextMenuButton
+          icon={MdNotificationsActive}
+          onClick={() => state.notifications.setServer(props.server, "all")}
+          actionSymbol={
+            state.notifications.computeForServer(props.server) === "all"
+              ? MdRadioButtonChecked
+              : MdRadioButtonUnchecked
+          }
+        >
+          <Trans>All Messages</Trans>
+        </ContextMenuButton>
+        <ContextMenuButton
+          icon={MdAlternateEmail}
+          onClick={() => state.notifications.setServer(props.server, "mention")}
+          actionSymbol={
+            state.notifications.computeForServer(props.server) === "mention"
+              ? MdRadioButtonChecked
+              : MdRadioButtonUnchecked
+          }
+        >
+          <Trans>Mentions Only</Trans>
+        </ContextMenuButton>
+        <ContextMenuButton
+          icon={MdNotificationsOff}
+          onClick={() => state.notifications.setServer(props.server, "none")}
+          actionSymbol={
+            state.notifications.computeForServer(props.server) === "none"
+              ? MdRadioButtonChecked
+              : MdRadioButtonUnchecked
+          }
+        >
+          <Trans>None</Trans>
+        </ContextMenuButton>
+      </ContextMenuSubMenu>
+      <ContextMenuDivider />
+
       <Show when={permissionInviteOthers()}>
         <ContextMenuButton icon={MdPersonAdd} onClick={createInvite}>
-          {t("app.context_menu.create_invite")}
+          <Trans>Create invite</Trans>
         </ContextMenuButton>
       </Show>
       <Show when={permissionEditIdentity()}>
         <ContextMenuButton icon={MdFace} onClick={editIdentity}>
-          {t("app.context_menu.edit_your_identity")}
+          <Trans>Edit your identity</Trans>
         </ContextMenuButton>
       </Show>
       <Show when={permissionServerSettings()}>
         <ContextMenuButton icon={MdSettings} onClick={openSettings}>
-          {t("app.context_menu.open_server_settings")}
+          <Trans>Open server settings</Trans>
         </ContextMenuButton>
       </Show>
       <Show
@@ -179,20 +299,33 @@ export function ServerContextMenu(props: { server: Server }) {
       </Show>
 
       <ContextMenuButton icon={MdReport} onClick={report} destructive>
-        {t("app.context_menu.report_server")}
+        <Trans>Report server</Trans>
       </ContextMenuButton>
       <Show when={!props.server.owner?.self}>
         <ContextMenuButton icon={MdLogout} onClick={leave} destructive>
-          {t("app.context_menu.leave_server")}
+          <Trans>Leave server</Trans>
         </ContextMenuButton>
       </Show>
-      <ContextMenuDivider />
-      <ContextMenuButton icon={MdShield} onClick={openAdminPanel}>
-        Admin Panel
-      </ContextMenuButton>
-      <ContextMenuButton icon={MdBadge} onClick={copyId}>
-        {t("app.context_menu.copy_sid")}
-      </ContextMenuButton>
+
+      <Show
+        when={
+          state.settings.getValue("advanced:admin_panel") &&
+          state.settings.getValue("advanced:copy_id")
+        }
+      >
+        <ContextMenuDivider />
+      </Show>
+
+      <Show when={state.settings.getValue("advanced:admin_panel")}>
+        <ContextMenuButton icon={MdShield} onClick={openAdminPanel}>
+          <Trans>Admin Panel</Trans>
+        </ContextMenuButton>
+      </Show>
+      <Show when={state.settings.getValue("advanced:copy_id")}>
+        <ContextMenuButton icon={MdBadge} onClick={copyId}>
+          <Trans>Copy server ID</Trans>
+        </ContextMenuButton>
+      </Show>
     </ContextMenu>
   );
 }

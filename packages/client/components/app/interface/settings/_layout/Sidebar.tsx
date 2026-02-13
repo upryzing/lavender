@@ -1,4 +1,4 @@
-import { Accessor, For, Setter, Show, createMemo, onMount } from "solid-js";
+import { Accessor, For, Setter, Show, onMount } from "solid-js";
 
 import { styled } from "styled-system/jsx";
 
@@ -12,7 +12,6 @@ import { useSettingsNavigation } from "../Settings";
 import {
   SidebarButton,
   SidebarButtonContent,
-  SidebarButtonIcon,
   SidebarButtonTitle,
 } from "./SidebarButton";
 
@@ -20,8 +19,7 @@ import {
  * Settings Sidebar Layout
  */
 export function SettingsSidebar(props: {
-  context: never;
-  list: (context: never) => SettingsList;
+  list: Accessor<SettingsList<unknown>>;
 
   setPage: Setter<string | undefined>;
   page: Accessor<string | undefined>;
@@ -29,16 +27,11 @@ export function SettingsSidebar(props: {
   const { navigate } = useSettingsNavigation();
 
   /**
-   * Generate list of categories / links
-   */
-  const list = createMemo(() => props.list(props.context));
-
-  /**
    * Select first page on load
    */
   onMount(() => {
     if (!props.page()) {
-      props.setPage(list().entries[0].entries[0].id);
+      props.setPage(props.list().entries[0].entries[0].id);
     }
   });
 
@@ -47,8 +40,8 @@ export function SettingsSidebar(props: {
       <div use:invisibleScrollable>
         <Content>
           <Column gap="lg">
-            {list().prepend}
-            <For each={list().entries}>
+            {props.list().prepend}
+            <For each={props.list().entries}>
               {(category) => (
                 <Show when={!category.hidden}>
                   <Column>
@@ -68,9 +61,7 @@ export function SettingsSidebar(props: {
                             >
                               <Ripple />
                               <SidebarButtonTitle>
-                                <SidebarButtonIcon>
-                                  {entry.icon}
-                                </SidebarButtonIcon>
+                                {entry.icon}
                                 <SidebarButtonContent>
                                   <OverflowingText>
                                     {entry.title}
@@ -96,7 +87,7 @@ export function SettingsSidebar(props: {
                 </Show>
               )}
             </For>
-            {list().append}
+            {props.list().append}
           </Column>
         </Content>
       </div>
@@ -113,8 +104,6 @@ const Base = styled("div", {
     flex: "1 0 218px",
     paddingLeft: "8px",
     justifyContent: "flex-end",
-
-    color: "var(--colours-settings-foreground)",
   },
 });
 
@@ -151,6 +140,7 @@ const CategoryTitle = styled("span", {
     fontWeight: 700,
     margin: "0 8px",
     marginInlineEnd: "20px",
-    color: "var(--colours-settings-sidebar-category)",
+
+    color: "var(--md-sys-color-outline)",
   },
 });

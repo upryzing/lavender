@@ -1,8 +1,9 @@
-import devtools from "solid-devtools/vite";
-
+import { lingui as linguiSolidPlugin } from "@lingui-solid/vite-plugin";
+import devtools from "@solid-devtools/transform";
 import { readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { defineConfig } from "vite";
+import babelMacrosPlugin from "vite-plugin-babel-macros";
 import Inspect from "vite-plugin-inspect";
 import { VitePWA } from "vite-plugin-pwa";
 import solidPlugin from "vite-plugin-solid";
@@ -20,20 +21,26 @@ export default defineConfig({
       autoname: true,
     }),
     codegenPlugin(),
+    babelMacrosPlugin(),
+    linguiSolidPlugin(),
     solidPlugin(),
     solidSvg({
       defaultAsComponent: false,
     }),
     VitePWA({
       srcDir: "src",
-      filename: "sw.ts",
+      registerType: "autoUpdate",
+      filename: "serviceWorker.ts",
       strategies: "injectManifest",
+      injectManifest: {
+        maximumFileSizeToCacheInBytes: 4000000,
+      },
       manifest: {
         name: "Upryzing",
         short_name: "Upryzing",
         description: "Your conversations, your way. Connect with Upryzing.",
         categories: ["communication", "chat", "messaging"],
-        start_url: "/pwa",
+        start_url: base + "/pwa",
         orientation: "portrait",
         display_override: ["window-controls-overlay"],
         display: "standalone",
@@ -41,23 +48,23 @@ export default defineConfig({
         theme_color: "#101823",
         icons: [
           {
-            src: `${base}assets/icons/android-chrome-192x192.png`,
+            src: `${base}assets/web/android-chrome-192x192.png`,
             type: "image/png",
             sizes: "192x192",
           },
           {
-            src: `${base}assets/icons/android-chrome-512x512.png`,
+            src: `${base}assets/web/android-chrome-512x512.png`,
             type: "image/png",
             sizes: "512x512",
           },
           {
-            src: `${base}assets/icons/monochrome.svg`,
+            src: `${base}assets/web/monochrome.svg`,
             type: "image/svg+xml",
             sizes: "48x48 72x72 96x96 128x128 256x256",
             purpose: "monochrome",
           },
           {
-            src: `${base}assets/icons/masking-512x512.png`,
+            src: `${base}assets/web/masking-512x512.png`,
             type: "image/png",
             sizes: "512x512",
             purpose: "maskable",
@@ -72,6 +79,7 @@ export default defineConfig({
     rollupOptions: {
       external: ["hast"],
     },
+    sourcemap: true,
   },
   optimizeDeps: {
     exclude: ["hast"],
@@ -84,7 +92,7 @@ export default defineConfig({
           ...p,
           [`@revolt/${f}`]: resolve(__dirname, "components", f),
         }),
-        {}
+        {},
       ),
     },
   },

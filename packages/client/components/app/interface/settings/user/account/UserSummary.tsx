@@ -1,20 +1,13 @@
 import { Show } from "solid-js";
 
-import { User } from "@upryzing/upryzing.js";
-import dayjs from "dayjs";
-import { cva } from "styled-system/css";
+import { User } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
-import { Avatar, Button, CategoryButtonGroup, iconSize } from "@revolt/ui";
+import { useTime } from "@revolt/i18n";
+import { Avatar, CategoryButton, IconButton, iconSize } from "@revolt/ui";
 
 import MdCakeFill from "@material-design-icons/svg/filled/cake.svg?component-solid";
 import MdEdit from "@material-design-icons/svg/outlined/edit.svg?component-solid";
-
-const banner = cva({
-  base: {
-    background: "var(--colours-settings-background)",
-  },
-});
 
 export function UserSummary(props: {
   user: User;
@@ -22,9 +15,21 @@ export function UserSummary(props: {
   bannerUrl?: string;
   onEdit?: () => void;
 }) {
+  const dayjs = useTime();
+  const bannerStyle = () =>
+    props.bannerUrl
+      ? {
+        "background-image": `linear-gradient(color-mix(in srgb, var(--md-sys-color-surface-container-low) 70%, transparent), color-mix(in srgb, var(--md-sys-color-surface-container-low) 70%, transparent)), url("${props.bannerUrl}")`,
+        color: "black",
+      }
+      : {
+        background: `var(--md-sys-color-primary-container)`,
+        color: "var(--md-sys-color-on-primary)",
+      };
+
   return (
-    <CategoryButtonGroup>
-      <AccountBox style={banner()}>
+    <CategoryButton.Group>
+      <AccountBox style={bannerStyle()}>
         <ProfileDetails>
           <Avatar src={props.user.animatedAvatarURL} size={58} />
           <Username>
@@ -34,9 +39,9 @@ export function UserSummary(props: {
             </span>
           </Username>
           <Show when={props.onEdit}>
-            <Button size="fab" onPress={props.onEdit}>
+            <IconButton variant="filled" shape="square" onPress={props.onEdit}>
               <MdEdit />
-            </Button>
+            </IconButton>
           </Show>
         </ProfileDetails>
         <Show when={props.showBadges}>
@@ -52,23 +57,20 @@ export function UserSummary(props: {
                 use:floating={{
                   tooltip: {
                     placement: "top",
+                    // todo
                     content: dayjs(props.user.createdAt).format(
-                      "[Account created] Do MMMM YYYY [at] HH:mm"
+                      "[Account created] Do MMMM YYYY [at] HH:mm",
                     ),
                   },
                 }}
               >
-                {/* TODO)) Change colour to something more... appropriate... */}
-                <MdCakeFill
-                  fill="var(--colours-settings-foreground)"
-                  {...iconSize(18)}
-                />
+                <MdCakeFill {...iconSize(14)} />
               </span>
             </ProfileBadges>
           </BottomBar>
         </Show>
       </AccountBox>
-    </CategoryButtonGroup>
+    </CategoryButton.Group>
   );
 }
 
@@ -97,6 +99,8 @@ const Username = styled("div", {
 
     display: "flex",
     flexDirection: "column",
+
+    color: "var(--md-sys-color-on-secondary-container)",
 
     // Display Name
     "& :nth-child(1)": {
@@ -133,9 +137,10 @@ const ProfileBadges = styled("div", {
     display: "flex",
     gap: "var(--gap-sm)",
     width: "fit-content",
-    padding: "var(--gap-sm) var(--gap-sm)",
+    padding: "var(--gap-md)",
     borderRadius: "var(--borderRadius-md)",
 
-    background: "var(--colours-settings-background)",
+    fill: "var(--md-sys-color-on-secondary)",
+    background: "var(--md-sys-color-secondary)",
   },
 });

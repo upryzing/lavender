@@ -1,29 +1,40 @@
-import { JSX, Show } from "solid-js";
+import { JSX, Match, Show, Switch } from "solid-js";
 
-import { Channel, Message, ServerMember, User } from "@upryzing/upryzing.js";
+import { Trans } from "@lingui-solid/solid/macro";
+import { useNavigate } from "@solidjs/router";
+import { Channel, Message, ServerMember, User } from "upryzing.js";
 
 import { useClient } from "@revolt/client";
-import { getController } from "@revolt/common";
-import { useTranslation } from "@revolt/i18n";
+import { useModals } from "@revolt/modal";
+import { useSmartParams } from "@revolt/routing";
+import { useState } from "@revolt/state";
+import { Slider, Text } from "@revolt/ui";
 
 import MdAddCircleOutline from "@material-design-icons/svg/outlined/add_circle_outline.svg?component-solid";
 import MdAdminPanelSettings from "@material-design-icons/svg/outlined/admin_panel_settings.svg?component-solid";
 import MdAlternateEmail from "@material-design-icons/svg/outlined/alternate_email.svg?component-solid";
+import MdAssignmentInd from "@material-design-icons/svg/outlined/assignment_ind.svg?component-solid";
 import MdBadge from "@material-design-icons/svg/outlined/badge.svg?component-solid";
 import MdBlock from "@material-design-icons/svg/outlined/block.svg?component-solid";
 import MdCancel from "@material-design-icons/svg/outlined/cancel.svg?component-solid";
+import MdChat from "@material-design-icons/svg/outlined/chat.svg?component-solid";
 import MdClose from "@material-design-icons/svg/outlined/close.svg?component-solid";
 import MdDoNotDisturbOn from "@material-design-icons/svg/outlined/do_not_disturb_on.svg?component-solid";
 import MdFace from "@material-design-icons/svg/outlined/face.svg?component-solid";
+import MdMicOff from "@material-design-icons/svg/outlined/mic_off.svg?component-solid";
 import MdPersonAddAlt from "@material-design-icons/svg/outlined/person_add_alt.svg?component-solid";
 import MdPersonRemove from "@material-design-icons/svg/outlined/person_remove.svg?component-solid";
 import MdReport from "@material-design-icons/svg/outlined/report.svg?component-solid";
+
+import MdChecked from "@material-symbols/svg-400/outlined/check_box.svg?component-solid";
+import MdUnchecked from "@material-symbols/svg-400/outlined/check_box_outline_blank.svg?component-solid";
 
 import {
   ContextMenu,
   ContextMenuButton,
   ContextMenuDivider,
 } from "./ContextMenu";
+import { NotificationContextMenu } from "./shared/NotificationContextMenu";
 
 /**
  * Context menu for users
@@ -33,17 +44,30 @@ export function UserContextMenu(props: {
   channel?: Channel;
   member?: ServerMember;
   contextMessage?: Message;
+  inVoice?: boolean;
 }) {
   // TODO: if we take serverId instead, we could dynamically fetch server member here
   // same for the floating menu I guess?
+  const state = useState();
   const client = useClient();
-  const t = useTranslation();
+  const navigate = useNavigate();
+  const { openModal } = useModals();
+
+  // server context
+  const params = useSmartParams();
+
+  /**
+   * Open direct message channel
+   */
+  function openDm() {
+    props.user.openDM().then((channel) => navigate(channel.url));
+  }
 
   /**
    * Delete channel
    */
   function closeDm() {
-    getController("modal").push({
+    openModal({
       type: "delete_channel",
       channel: props.channel!,
     });
@@ -53,14 +77,15 @@ export function UserContextMenu(props: {
    * Mention the user
    */
   function mention() {
-    getController("state").draft.insertText(props.user.toString());
+    if (!state.draft._setNodeReplacement) return;
+    state.draft._setNodeReplacement([props.user.toString()]);
   }
 
   /**
    * Edit server identity for user
    */
   function editIdentity() {
-    getController("modal").push({
+    openModal({
       type: "server_identity",
       member: props.member!,
     });
@@ -70,7 +95,7 @@ export function UserContextMenu(props: {
    * Report the user
    */
   function reportUser() {
-    getController("modal").push({
+    openModal({
       type: "report_content",
       target: props.user!,
       client: client(),
@@ -79,10 +104,20 @@ export function UserContextMenu(props: {
   }
 
   /**
+   * Edit this user's roles
+   */
+  function editRoles() {
+    openModal({
+      type: "user_profile_roles",
+      member: props.member!,
+    });
+  }
+
+  /**
    * Kick the member
    */
   function kickMember() {
-    getController("modal").push({
+    openModal({
       type: "kick_member",
       member: props.member!,
     });
@@ -92,9 +127,20 @@ export function UserContextMenu(props: {
    * Ban the member
    */
   function banMember() {
-    getController("modal").push({
+    openModal({
       type: "ban_member",
       member: props.member!,
+    });
+  }
+
+  /**
+   * Ban the user
+   */
+  function banUser() {
+    openModal({
+      type: "ban_non_member",
+      user: props.user!,
+      server: client().servers.get(params().serverId!)!,
     });
   }
 
@@ -127,12 +173,12 @@ export function UserContextMenu(props: {
   }
 
   /**
-   * Open user in Revolt Admin Panel
+   * Open user in Upryzing Admin Panel
    */
   function openAdminPanel() {
     window.open(
-      `https://admin.revolt.chat/panel/inspect/user/${props.user.id}`,
-      "_blank"
+      `https://legacy-admin.stoatinternal.com/panel/inspect/user/${props.user.id}`,
+      "_blank",
     );
   }
 
@@ -144,24 +190,76 @@ export function UserContextMenu(props: {
   }
 
   return (
-    <ContextMenu>
+    <ContextMenu class="UserContextMenu">
+      <Show when={props.inVoice && !props.user.self}>
+        <ContextMenuButton
+          onMouseDown={(e) => e.stopImmediatePropagation()}
+          onClick={(e) => e.stopImmediatePropagation()}
+        >
+          <Text class="label">
+            <Trans>Volume</Trans>
+          </Text>
+          <Slider
+            min={0}
+            max={3}
+            step={0.1}
+            value={state.voice.getUserVolume(props.user.id)}
+            onInput={(event) =>
+              state.voice.setUserVolume(
+                props.user.id,
+                event.currentTarget.value,
+              )
+            }
+            labelFormatter={(label) => (label * 100).toFixed(0) + "%"}
+          />
+        </ContextMenuButton>
+        <ContextMenuButton
+          icon={MdMicOff}
+          onClick={() =>
+            state.voice.setUserMuted(
+              props.user.id,
+              !state.voice.getUserMuted(props.user.id),
+            )
+          }
+          actionSymbol={
+            state.voice.getUserMuted(props.user.id) ? MdChecked : MdUnchecked
+          }
+        >
+          <Trans>Mute</Trans>
+        </ContextMenuButton>
+
+        <ContextMenuDivider />
+      </Show>
+
       <Show when={props.channel?.type === "DirectMessage"}>
         <ContextMenuButton icon={MdClose} onClick={closeDm}>
-          {t("app.context_menu.close_dm")}
+          <Trans>Close chat</Trans>
         </ContextMenuButton>
       </Show>
       <Show when={props.channel?.type === "TextChannel"}>
         <ContextMenuButton icon={MdAlternateEmail} onClick={mention}>
-          {t("app.context_menu.mention")}
+          <Trans>Mention</Trans>
         </ContextMenuButton>
       </Show>
+      <Show when={props.user.relationship === "Friend"}>
+        <ContextMenuButton icon={MdChat} onClick={openDm}>
+          <Trans>Message</Trans>
+        </ContextMenuButton>
+      </Show>
+
       <Show
         when={
-          props.channel &&
-          (props.channel.type === "DirectMessage" ||
-            props.channel.type === "TextChannel")
+          props.user.relationship === "Friend" ||
+          (props.channel &&
+            (props.channel.type === "DirectMessage" ||
+              props.channel.type === "TextChannel"))
         }
       >
+        <ContextMenuDivider />
+      </Show>
+
+      <Show when={props.channel?.type === "DirectMessage"}>
+        <NotificationContextMenu channel={props.channel!} />
         <ContextMenuDivider />
       </Show>
 
@@ -170,21 +268,33 @@ export function UserContextMenu(props: {
           props.member &&
           (props.user.self
             ? props.member!.server!.havePermission("ChangeNickname") ||
-              props.member!.server!.havePermission("ChangeAvatar")
+            props.member!.server!.havePermission("ChangeAvatar")
             : (props.member!.server!.havePermission("ManageNicknames") ||
-                props.member!.server!.havePermission("RemoveAvatars")) &&
-              props.member!.inferiorTo(props.member!.server!.member!))
+              props.member!.server!.havePermission("RemoveAvatars")) &&
+            props.member!.inferiorTo(props.member!.server!.member!))
         }
       >
         <ContextMenuButton icon={MdFace} onClick={editIdentity}>
-          {t(
-            `app.context_menu.${
-              props.user.self ? "edit_your_identity" : "edit_identity"
-            }`
-          )}
+          <Switch fallback={<Trans>Edit identity</Trans>}>
+            <Match when={props.user.self}>
+              <Trans>Edit your identity</Trans>
+            </Match>
+          </Switch>
         </ContextMenuButton>
       </Show>
+
       <Show when={props.member}>
+        <Show
+          when={
+            props.member?.server?.owner?.self ||
+            (props.member?.server?.havePermission("AssignRoles") &&
+              props.member.inferiorTo(props.member.server.member!))
+          }
+        >
+          <ContextMenuButton icon={MdAssignmentInd} onClick={editRoles}>
+            <Trans>Edit roles</Trans>
+          </ContextMenuButton>
+        </Show>
         {/** TODO: #287 timeout users */}
         <Show
           when={
@@ -198,7 +308,7 @@ export function UserContextMenu(props: {
             onClick={kickMember}
             destructive
           >
-            {t("app.context_menu.kick_member")}
+            <Trans>Kick member</Trans>
           </ContextMenuButton>
         </Show>
         <Show
@@ -213,63 +323,89 @@ export function UserContextMenu(props: {
             onClick={banMember}
             destructive
           >
-            {t("app.context_menu.ban_member")}
+            <Trans>Ban member</Trans>
           </ContextMenuButton>
         </Show>
       </Show>
-      <Show when={props.member}>
-        <ContextMenuDivider />
+
+      <Show
+        when={
+          !props.user.self &&
+          props.member?.server?.havePermission("BanMembers") &&
+          params().serverId &&
+          !props.member
+        }
+      >
+        <ContextMenuButton
+          icon={MdDoNotDisturbOn}
+          onClick={banUser}
+          destructive
+        >
+          <Trans>Ban user</Trans>
+        </ContextMenuButton>
       </Show>
 
       <Show when={!props.user.self}>
         <ContextMenuButton icon={MdReport} onClick={reportUser} destructive>
-          {t("app.context_menu.report_user")}
+          <Trans>Report user</Trans>
         </ContextMenuButton>
         {/* TODO: #286 show profile / message */}
         <Show when={props.user.relationship === "None" && !props.user.bot}>
           <ContextMenuButton icon={MdPersonAddAlt} onClick={addFriend}>
-            {t("app.context_menu.add_friend")}
+            <Trans>Add friend</Trans>
           </ContextMenuButton>
         </Show>
         <Show when={props.user.relationship === "Friend"}>
           <ContextMenuButton icon={MdPersonRemove} onClick={removeFriend}>
-            {t("app.context_menu.remove_friend")}
+            <Trans>Remove friend</Trans>
           </ContextMenuButton>
         </Show>
         <Show when={props.user.relationship === "Incoming"}>
           <ContextMenuButton icon={MdPersonAddAlt} onClick={addFriend}>
-            {t("app.context_menu.accept_friend")}
+            <Trans>Accept friend request</Trans>
           </ContextMenuButton>
         </Show>
         <Show when={props.user.relationship === "Incoming"}>
           <ContextMenuButton icon={MdCancel} onClick={removeFriend}>
-            {t("app.context_menu.reject_friend")}
+            <Trans>Reject friend request</Trans>
           </ContextMenuButton>
         </Show>
         <Show when={props.user.relationship === "Outgoing"}>
           <ContextMenuButton icon={MdCancel} onClick={removeFriend}>
-            {t("app.context_menu.cancel_friend")}
+            <Trans>Cancel friend request</Trans>
           </ContextMenuButton>
         </Show>
         <Show when={props.user.relationship !== "Blocked"}>
           <ContextMenuButton icon={MdBlock} onClick={blockUser}>
-            {t("app.context_menu.block_user")}
+            <Trans>Block user</Trans>
           </ContextMenuButton>
         </Show>
         <Show when={props.user.relationship === "Blocked"}>
           <ContextMenuButton icon={MdAddCircleOutline} onClick={unblockUser}>
-            {t("app.context_menu.unblock_user")}
+            <Trans>Unblock user</Trans>
           </ContextMenuButton>
         </Show>
+      </Show>
+
+      <Show
+        when={
+          state.settings.getValue("advanced:admin_panel") ||
+          state.settings.getValue("advanced:copy_id")
+        }
+      >
         <ContextMenuDivider />
       </Show>
 
-      <ContextMenuButton icon={MdAdminPanelSettings} onClick={openAdminPanel}>
-        Admin Panel
-      </ContextMenuButton>
-      <ContextMenuButton icon={MdBadge} onClick={copyId}>
-        {t("app.context_menu.copy_uid")}
-      </ContextMenuButton>
+      <Show when={state.settings.getValue("advanced:admin_panel")}>
+        <ContextMenuButton icon={MdAdminPanelSettings} onClick={openAdminPanel}>
+          <Trans>Admin Panel</Trans>
+        </ContextMenuButton>
+      </Show>
+      <Show when={state.settings.getValue("advanced:copy_id")}>
+        <ContextMenuButton icon={MdBadge} onClick={copyId}>
+          <Trans>Copy user ID</Trans>
+        </ContextMenuButton>
+      </Show>
     </ContextMenu>
   );
 }
@@ -282,7 +418,7 @@ export function UserContextMenu(props: {
 export function floatingUserMenus(
   user: User,
   member?: ServerMember,
-  contextMessage?: Message
+  contextMessage?: Message,
 ): JSX.Directives["floating"] & object {
   return {
     userCard: {
@@ -299,6 +435,7 @@ export function floatingUserMenus(
           user={user}
           member={member}
           contextMessage={contextMessage}
+          channel={contextMessage?.channel}
         />
       );
     },
@@ -306,5 +443,7 @@ export function floatingUserMenus(
 }
 
 export function floatingUserMenusFromMessage(message: Message) {
-  return floatingUserMenus(message.author!, message.member, message);
+  return message.author
+    ? floatingUserMenus(message.author!, message.member, message)
+    : {}; // TODO: webhook menu
 }

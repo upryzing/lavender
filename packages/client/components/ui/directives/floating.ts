@@ -1,4 +1,11 @@
-import { type Accessor, type JSX, createSignal, onCleanup } from "solid-js";
+import {
+  type Accessor,
+  type JSX,
+  createEffect,
+  createSignal,
+  on,
+  onCleanup,
+} from "solid-js";
 
 type Props = JSX.Directives["floating"] & object;
 
@@ -10,7 +17,7 @@ export type FloatingElement = {
 };
 
 const [floatingElements, setFloatingElements] = createSignal<FloatingElement[]>(
-  []
+  [],
 );
 
 export { floatingElements };
@@ -29,7 +36,7 @@ export function registerFloatingElement(element: FloatingElement) {
  */
 export function unregisterFloatingElement(element: HTMLElement) {
   setFloatingElements((elements) =>
-    elements.filter((entry) => entry.element !== element)
+    elements.filter((entry) => entry.element !== element),
   );
 }
 
@@ -113,6 +120,8 @@ export function floating(element: HTMLElement, accessor: Accessor<Props>) {
   function onContextMenu(event: MouseEvent) {
     event.preventDefault();
     event.stopPropagation();
+    event.stopImmediatePropagation();
+
     trigger("contextMenu");
   }
 
@@ -130,41 +139,65 @@ export function floating(element: HTMLElement, accessor: Accessor<Props>) {
     trigger("tooltip", false);
   }
 
-  if (config.userCard) {
-    element.style.cursor = "pointer";
-    element.style.userSelect = "none";
-    element.addEventListener("click", onClick);
-  }
+  createEffect(
+    on(
+      () => accessor().userCard,
+      (userCard) => {
+        if (userCard) {
+          element.style.cursor = "pointer";
+          element.style.userSelect = "none";
+          element.addEventListener("click", onClick);
 
-  if (config.tooltip) {
-    element.ariaLabel =
-      typeof config.tooltip.content === "string"
-        ? config.tooltip.content
-        : config.tooltip!.aria!;
+          onCleanup(() => element.removeEventListener("click", onClick));
+        }
+      },
+    ),
+  );
 
-    element.addEventListener("mouseenter", onMouseEnter);
-    element.addEventListener("mouseleave", onMouseLeave);
-  }
+  createEffect(
+    on(
+      () => accessor().tooltip,
+      (tooltip) => {
+        if (tooltip) {
+          element.ariaLabel =
+            typeof tooltip.content === "string"
+              ? tooltip.content
+              : tooltip!.aria!;
 
-  if (config.contextMenu) {
-    element.addEventListener("contextmenu", onContextMenu);
-    // TODO: iOS events for touch
-  }
+          element.addEventListener("mouseenter", onMouseEnter);
+          element.addEventListener("mouseleave", onMouseLeave);
 
-  onCleanup(() => {
-    unregisterFloatingElement(element);
+          onCleanup(() => {
+            element.removeEventListener("mouseenter", onMouseEnter);
+            element.removeEventListener("mouseleave", onMouseLeave);
+          });
+        }
+      },
+    ),
+  );
 
-    if (config.userCard) {
-      element.removeEventListener("click", onClick);
-    }
+  createEffect(
+    on(
+      () => accessor().contextMenu,
+      (contextMenu) => {
+        if (contextMenu) {
+          element.addEventListener(
+            accessor().contextMenuHandler ?? "contextmenu",
+            onContextMenu,
+          );
 
-    if (config.tooltip) {
-      element.removeEventListener("mouseenter", onMouseEnter);
-      element.removeEventListener("mouseleave", onMouseLeave);
-    }
+          // TODO: iOS events for touch
 
-    if (config.contextMenu) {
-      element.removeEventListener("contextmenu", onContextMenu);
-    }
-  });
+          onCleanup(() => {
+            element.removeEventListener(
+              config.contextMenuHandler ?? "contextmenu",
+              onContextMenu,
+            );
+          });
+        }
+      },
+    ),
+  );
+
+  onCleanup(() => unregisterFloatingElement(element));
 }

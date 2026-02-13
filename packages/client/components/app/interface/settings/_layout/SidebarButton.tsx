@@ -19,25 +19,18 @@ export const SidebarButton = styled("a", {
     fontSize: "15px",
     userSelect: "none",
     transition: "background-color 0.1s ease-in-out",
-    color: "var(--colours-settings-sidebar-foreground)",
+    color: "var(--md-sys-color-on-surface)",
+    fill: "var(--md-sys-color-on-surface)",
     background: "unset",
 
     "& svg": {
       flexShrink: 0,
     },
-
-    "&:hover": {
-      backgroundColor: "var(--colours-settings-sidebar-button-hover)",
-    },
-
-    "&:active": {
-      backgroundColor: "var(--colours-settings-sidebar-button-active)",
-    },
   },
   variants: {
     "aria-selected": {
       true: {
-        background: "var(--colours-settings-sidebar-button-hover)",
+        background: "var(--md-sys-color-primary-container)",
       },
     },
   },
@@ -64,6 +57,11 @@ export const SidebarButtonContent = styled("div", {
 
 export const SidebarButtonIcon = styled("div", {
   base: {
-    fill: "var(--colours-settings-foreground)",
+    display: "flex",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: "nowrap",
+    flexShrink: 0,
+    gap: "2px",
   },
 });

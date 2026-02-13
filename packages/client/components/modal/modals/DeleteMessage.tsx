@@ -1,34 +1,39 @@
-import { useTranslation } from "@revolt/i18n";
+import { Trans } from "@lingui-solid/solid/macro";
+import { useMutation } from "@tanstack/solid-query";
 
-import { createFormModal } from "../form";
-import { PropGenerator } from "../types";
+import { Dialog, DialogProps } from "@revolt/ui";
+
+import { useModals } from "..";
+import { Modals } from "../types";
 
 /**
  * Modal to delete a message
  */
-const DeleteMessage: PropGenerator<"delete_message"> = (props) => {
-  const t = useTranslation();
+export function DeleteMessageModal(
+  props: DialogProps & Modals & { type: "delete_message" },
+) {
+  const { showError } = useModals();
 
-  return createFormModal({
-    modalProps: {
-      title: t("app.context_menu.delete_message"),
-      description: t("app.special.modals.prompt.confirm_delete_message_long"),
-    },
-    schema: {
-      message: "custom",
-    },
-    data: {
-      message: {
-        // TODO: find a fix or render part of it?
-        element: "MESSAGE",
-      },
-    },
-    callback: () => props.message.delete(),
-    submit: {
-      variant: "error",
-      children: t("app.special.modals.actions.delete"),
-    },
-  });
-};
+  const deleteMessage = useMutation(() => ({
+    mutationFn: () => props.message.delete(),
+    onError: showError,
+  }));
 
-export default DeleteMessage;
+  return (
+    <Dialog
+      show={props.show}
+      onClose={props.onClose}
+      title={<Trans>Delete message</Trans>}
+      actions={[
+        { text: <Trans>Cancel</Trans> },
+        {
+          text: <Trans>Delete</Trans>,
+          onClick: () => deleteMessage.mutateAsync(),
+        },
+      ]}
+      isDisabled={deleteMessage.isPending}
+    >
+      <Trans>Are you sure you want to delete this?</Trans>
+    </Dialog>
+  );
+}

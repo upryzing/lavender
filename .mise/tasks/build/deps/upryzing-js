@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+#MISE description="Build upryzing.js"
+set -e
+
+pnpm --filter upryzing.js build

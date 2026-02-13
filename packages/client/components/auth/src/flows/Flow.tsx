@@ -3,7 +3,7 @@ import { JSX, Show } from "solid-js";
 import { defineKeyframes } from "@pandacss/dev";
 import { styled } from "styled-system/jsx";
 
-import { Column, Row, Text, Typography } from "@revolt/ui";
+import { Column, Row, Text } from "@revolt/ui";
 
 import envelope from "./envelope.svg";
 import wave from "./wave.svg";
@@ -17,8 +17,8 @@ export const FlowBase = styled("div", {
     flexDirection: "column",
     gap: "var(--gap-lg)",
     flexGrow: 0,
-    background: "var(--colours-messaging-message-box-background)",
-    color: "var(--colours-messaging-message-box-foreground)",
+    background: "var(--md-sys-color-surface-container)",
+    color: "var(--md-sys-color-on-surface)",
     width: "360px",
     maxWidth: "360px",
     maxHeight: "600px",

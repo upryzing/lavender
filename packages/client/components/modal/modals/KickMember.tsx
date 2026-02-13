@@ -1,40 +1,44 @@
-import { useTranslation } from "@revolt/i18n";
-import { Avatar, Column } from "@revolt/ui";
+import { Trans } from "@lingui-solid/solid/macro";
+import { useMutation } from "@tanstack/solid-query";
 
-import { createFormModal } from "../form";
-import { PropGenerator } from "../types";
+import { Avatar, Column, Dialog, DialogProps, Text } from "@revolt/ui";
+
+import { useModals } from "..";
+import { Modals } from "../types";
 
 /**
- * Modal to kick server member
+ * Kick a server member
  */
-const KickMember: PropGenerator<"kick_member"> = (props) => {
-  const t = useTranslation();
+export function KickMemberModal(
+  props: DialogProps & Modals & { type: "kick_member" },
+) {
+  const { showError } = useModals();
 
-  return createFormModal({
-    modalProps: {
-      title: t("app.context_menu.kick_member"),
-    },
-    schema: {
-      member: "custom",
-    },
-    data: {
-      member: {
-        element: (
-          <Column align="center">
-            <Avatar src={props.member.user?.animatedAvatarURL} size={64} />
-            {t("app.special.modals.prompt.confirm_kick", {
-              name: props.member.user?.username as string,
-            })}
-          </Column>
-        ),
-      },
-    },
-    callback: () => props.member.kick(),
-    submit: {
-      variant: "error",
-      children: t("app.special.modals.actions.ban"),
-    },
-  });
-};
+  const kick = useMutation(() => ({
+    mutationFn: () => props.member.kick(),
+    onError: showError,
+  }));
 
-export default KickMember;
+  return (
+    <Dialog
+      show={props.show}
+      onClose={props.onClose}
+      title={<Trans>Kick Member</Trans>}
+      actions={[
+        { text: <Trans>Cancel</Trans> },
+        {
+          text: <Trans>Kick</Trans>,
+          onClick: kick.mutateAsync,
+        },
+      ]}
+      isDisabled={kick.isPending}
+    >
+      <Column align>
+        <Avatar src={props.member.user?.animatedAvatarURL} size={64} />
+        <Text>
+          <Trans>You are about to kick {props.member.user?.username}</Trans>
+        </Text>
+      </Column>
+    </Dialog>
+  );
+}

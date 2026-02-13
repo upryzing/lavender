@@ -11,17 +11,21 @@ import { useLocation } from "@solidjs/router";
  */
 export {
   Navigate,
-  Router,
   Route,
+  Router,
+  useBeforeLeave,
+  useLocation,
   useNavigate,
   useParams,
-  useLocation,
-  useBeforeLeave,
 } from "@solidjs/router";
 
 const RE_SERVER = /\/server\/([A-Z0-9]{26})/;
 const RE_CHANNEL = /\/channel\/([A-Z0-9]{26})/;
 const RE_MESSAGE_ID = /\/channel\/[A-Z0-9]{26}\/([A-Z0-9]{26})/;
+const RE_BOT_ID = /\/bot\/([A-Z0-9]{26})/;
+
+const RE_INVITE_EXACT = /^\/invite\/([\w\d]+)$/;
+const RE_BOT_ID_EXACT = /^\/bot\/[A-Z0-9]{26}$/;
 
 const RE_SERVER_EXACT = /^\/server\/([A-Z0-9]{26})$/;
 const RE_CHANNEL_EXACT =
@@ -33,6 +37,11 @@ const RE_MESSAGE_ID_EXACT =
  * Route parameters available globally
  */
 type GlobalParams = {
+  /**
+   * Invite ID
+   */
+  inviteId?: string;
+
   /**
    * Server ID
    */
@@ -62,6 +71,16 @@ type GlobalParams = {
    * Exact match for message?
    */
   exactMessage: boolean;
+
+  /**
+   * Bot ID
+   */
+  botId?: string;
+
+  /**
+   * Exact match for bot?
+   */
+  exactBot: boolean;
 };
 
 /**
@@ -74,7 +93,14 @@ export function paramsFromPathname(pathname: string): GlobalParams {
     exactServer: !!pathname.match(RE_SERVER_EXACT),
     exactChannel: !!pathname.match(RE_CHANNEL_EXACT),
     exactMessage: !!pathname.match(RE_MESSAGE_ID_EXACT),
+    exactBot: !!pathname.match(RE_BOT_ID_EXACT),
   };
+
+  // Check for invite ID
+  const invite = pathname.match(RE_INVITE_EXACT);
+  if (invite) {
+    params.inviteId = invite[1];
+  }
 
   // Check for server ID
   const server = pathname.match(RE_SERVER);
@@ -92,6 +118,12 @@ export function paramsFromPathname(pathname: string): GlobalParams {
   const message = pathname.match(RE_MESSAGE_ID);
   if (message) {
     params.messageId = message[1];
+  }
+
+  // Check for bot ID
+  const bot = pathname.match(RE_BOT_ID);
+  if (bot) {
+    params.botId = bot[1];
   }
 
   return params;

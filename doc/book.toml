@@ -1,19 +1,5 @@
 [book]
 authors = []
 language = "en"
-multilingual = false
 src = "src"
 title = "Upryzing Frontend (Lavender)"
-
-[preprocessor]
-
-[preprocessor.mermaid]
-command = "mdbook-mermaid"
-
-[preprocessor.katex]
-after = ["links"]
-
-[output]
-
-[output.html]
-additional-js = ["mermaid.min.js", "mermaid-init.js"]

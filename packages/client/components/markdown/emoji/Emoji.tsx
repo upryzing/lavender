@@ -10,11 +10,14 @@ import { CustomEmoji, UnicodeEmoji } from ".";
 export const EmojiBase = styled("img", {
   base: {
     objectFit: "contain",
-    display: "inline",
+    display: "inline-block",
     width: "var(--emoji-size)",
     height: "var(--emoji-size)",
     margin: "0 0.05em 0 0.1em",
     verticalAlign: "-0.3em",
+
+    // hide alt text
+    color: "transparent",
 
     "&:before": {
       content: "' '",

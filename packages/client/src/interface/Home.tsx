@@ -1,20 +1,21 @@
 import { Match, Show, Switch } from "solid-js";
 
-import { cva } from "styled-system/css";
+import { Trans } from "@lingui-solid/solid/macro";
+import { PublicChannelInvite } from "upryzing.js";
+import { css, cva } from "styled-system/css";
 import { styled } from "styled-system/jsx";
 
 import { IS_DEV, useClient } from "@revolt/client";
 import { CONFIGURATION } from "@revolt/common";
-import { useTranslation } from "@revolt/i18n";
-import { modalController } from "@revolt/modal";
+import { useModals } from "@revolt/modal";
 import { useNavigate } from "@revolt/routing";
 import {
   Button,
   CategoryButton,
   Column,
   Header,
-  Typography,
   iconSize,
+  main,
   typography,
 } from "@revolt/ui";
 
@@ -26,16 +27,9 @@ import MdPayments from "@material-design-icons/svg/filled/payments.svg?component
 import MdRateReview from "@material-design-icons/svg/filled/rate_review.svg?component-solid";
 import MdSettings from "@material-design-icons/svg/filled/settings.svg?component-solid";
 
-import RevoltSvg from "../../public/assets/wordmark_wide_500px.svg?component-solid";
+import Wordmark from "../../public/assets/web/wordmark.svg?component-solid";
 
 import { HeaderIcon } from "./common/CommonHeader";
-
-const Logo = styled(RevoltSvg, {
-  base: {
-    width: "240px",
-    fill: "var(--colours-foreground)",
-  },
-});
 
 /**
  * Base layout of the home page (i.e. the header/background)
@@ -45,6 +39,8 @@ const Base = styled("div", {
     width: "100%",
     display: "flex",
     flexDirection: "column",
+
+    color: "var(--md-sys-color-on-surface)",
   },
 });
 
@@ -53,15 +49,13 @@ const Base = styled("div", {
  */
 const content = cva({
   base: {
-    minHeight: 0,
-    width: "100%",
-    margin: "auto",
-    padding: "var(--gap-xxl) 0",
+    ...main.raw(),
 
-    display: "flex",
-    gap: "var(--gap-xl)",
+    padding: "48px 0",
+
+    gap: "32px",
     alignItems: "center",
-    flexDirection: "column",
+    justifyContent: "center",
   },
 });
 
@@ -70,11 +64,13 @@ const content = cva({
  */
 const Buttons = styled("div", {
   base: {
+    gap: "8px",
+    padding: "8px",
     display: "flex",
-    gap: "var(--gap-md)",
-    padding: "var(--gap-md)",
     borderRadius: "var(--borderRadius-lg)",
-    background: "var(--colours-sidebar-channels-background)",
+
+    color: "var(--md-sys-color-on-surface-variant)",
+    background: "var(--md-sys-color-surface-variant)",
   },
 });
 
@@ -93,113 +89,152 @@ const SeparatedColumn = styled(Column, {
 });
 
 /**
- * Make sure the image is separated from the welcome text
- */
-const Image = styled("img", {
-  base: {
-    marginTop: "0.5em",
-    height: "36px",
-    filter: "var(--effects-invert-black)",
-  },
-});
-
-/**
  * Home page
  */
 export function HomePage() {
-  const t = useTranslation();
+  const { openModal } = useModals();
   const navigate = useNavigate();
   const client = useClient();
 
-  // check if we're web.upryzing.app; if so, check if the user is in the Lounge
+  // check if we're stoat.chat; if so, check if the user is in the Lounge
   const showLoungeButton = CONFIGURATION.IS_UPRYZING;
   const isInLounge =
-    client()!.servers.get("01JESQYCPY76XFN67R79YGCWMR") !== undefined;
+    client()!.servers.get("01F7ZSBSFHQ8TA81725KQCSDDP") !== undefined;
 
   return (
-    // TODO: i18n
     <Base>
       <Header placement="primary">
         <HeaderIcon>
           <MdHome {...iconSize(22)} />
         </HeaderIcon>
-        Home
+        <Trans>Home</Trans>
       </Header>
       <div use:scrollable={{ class: content() }}>
         <Column>
           <span class={typography({ class: "headline" })}>
-            {t("app.special.modals.onboarding.welcome")}
+            <Trans>Welcome to</Trans>
           </span>
-          <Logo />
+          <Wordmark
+            class={css({
+              width: "160px",
+              fill: "var(--md-sys-color-on-surface)",
+            })}
+          />
         </Column>
         <Buttons>
           <SeparatedColumn>
             <CategoryButton
               onClick={() =>
-                modalController.push({
-                  type: "create_group",
+                openModal({
+                  type: "create_group_or_server",
                   client: client()!,
                 })
               }
-              description={t("app.home.group_desc")}
+              description={
+                <Trans>
+                  Invite all of your friends, some cool bots, and throw a big
+                  party.
+                </Trans>
+              }
               icon={<MdAddCircle />}
             >
-              {t("app.home.group")}
+              <Trans>Create a group or server</Trans>
             </CategoryButton>
             <Switch fallback={null}>
               <Match when={showLoungeButton && isInLounge}>
                 <CategoryButton
-                  onClick={() => navigate("/server/01JESQYCPY76XFN67R79YGCWMR")}
-                  description={t("app.home.goto-testers_desc")}
+                  onClick={() => navigate("/server/01F7ZSBSFHQ8TA81725KQCSDDP")}
+                  description={
+                    <Trans>
+                      You can report issues and discuss improvements with us
+                      directly here.
+                    </Trans>
+                  }
                   icon={<MdGroups3 />}
                 >
-                  {t("app.home.goto-testers")}
+                  <Trans>Go to the Upryzing Garden</Trans>
                 </CategoryButton>
               </Match>
               <Match when={showLoungeButton && !isInLounge}>
                 <CategoryButton
-                  description={t("app.home.join-testers_desc")}
+                  onClick={() => {
+                    client()
+                      .api.get("/invites/Testers")
+                      .then((invite) =>
+                        PublicChannelInvite.from(client(), invite),
+                      )
+                      .then((invite) => openModal({ type: "invite", invite }));
+                  }}
+                  description={
+                    <Trans>
+                      You can report issues and discuss improvements with us
+                      directly here.
+                    </Trans>
+                  }
                   icon={<MdGroups3 />}
                 >
-                  {t("app.home.join-testers")}
+                  <Trans>Join the Upryzing Garden</Trans>
                 </CategoryButton>
               </Match>
             </Switch>
+            {/*
             <CategoryButton
+              variant="tertiary"
               onClick={() =>
-                //window.open("https://wiki.revolt.chat/notes/project/financial-support/?utm_source=revoltapp")
-                console.log("g")
+                window.open(
+                  "https://wiki.revolt.chat/notes/project/financial-support/",
+                )
               }
-              description={t("app.home.donate_desc")}
+              description={
+                <Trans>Support the project by donating - thank you!</Trans>
+              }
               icon={<MdPayments />}
             >
-              {t("app.home.donate")}
+              <Trans>Donate to Upryzing</Trans>
             </CategoryButton>
+            */}
           </SeparatedColumn>
           <SeparatedColumn>
-            {/* <Show when={CONFIGURATION.IS_REVOLT}>
+            <Show when={CONFIGURATION.IS_UPRYZING}>
               <CategoryButton
                 onClick={() => navigate("/discover")}
-                description={t("app.home.discover_desc")}
+                description={
+                  <Trans>
+                    Find a community based on your hobbies or interests.
+                  </Trans>
+                }
                 icon={<MdExplore />}
               >
-                {t("app.home.discover")}
+                <Trans>Discover Upryzing</Trans>
               </CategoryButton>
-            </Show> */}
-            <CategoryButton
-              description={t("app.home.feedback_desc")}
-              icon={<MdRateReview {...iconSize(22)} />}
-            >
-              {t("app.home.feedback")}
-            </CategoryButton>
+            </Show>
             <CategoryButton
               onClick={() =>
-                modalController.push({ type: "settings", config: "user" })
+                openModal({
+                  type: "settings",
+                  config: "user",
+                  context: { page: "feedback" },
+                })
               }
-              description={t("app.home.settings-tooltip")}
+              description={
+                <Trans>
+                  Let us know how we can improve our app by giving us feedback.
+                </Trans>
+              }
+              icon={<MdRateReview {...iconSize(22)} />}
+            >
+              <Trans>Give feedback on Upryzing</Trans>
+            </CategoryButton>
+            <CategoryButton
+              onClick={() => openModal({ type: "settings", config: "user" })}
+              description={
+                <Trans>
+                  You can also click the gear icon in the bottom left.
+                </Trans>
+              }
               icon={<MdSettings />}
             >
-              {t("app.home.settings")}
+              <Trans>Open settings</Trans>
             </CategoryButton>
           </SeparatedColumn>
         </Buttons>

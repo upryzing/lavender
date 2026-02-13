@@ -1,10 +1,15 @@
-import { JSX, Show, createSignal, onMount } from "solid-js";
+import {
+  JSX,
+  Show,
+  createContext,
+  createSignal,
+  onMount,
+  useContext,
+} from "solid-js";
 import { SetStoreFunction, createStore } from "solid-js/store";
 
 import equal from "fast-deep-equal";
 import localforage from "localforage";
-
-import { registerController } from "@revolt/common";
 
 import { AbstractStore, Store } from "./stores";
 import { Auth } from "./stores/Auth";
@@ -12,10 +17,16 @@ import { Draft } from "./stores/Draft";
 import { Experiments } from "./stores/Experiments";
 import { Keybinds } from "./stores/Keybinds";
 import { Layout } from "./stores/Layout";
+import { LinkSafety } from "./stores/LinkSafety";
 import { Locale } from "./stores/Locale";
 import { NotificationOptions } from "./stores/NotificationOptions";
 import { Ordering } from "./stores/Ordering";
 import { Settings } from "./stores/Settings";
+import { Sync } from "./stores/Sync";
+import { Theme } from "./stores/Theme";
+import { Voice } from "./stores/Voice";
+
+export { SyncWorker } from "./SyncWorker";
 
 /**
  * Introduce some delay before writing state to disk
@@ -42,10 +53,14 @@ export class State {
   experiments = new Experiments(this);
   keybinds = new Keybinds(this);
   layout = new Layout(this);
+  linkSafety = new LinkSafety(this);
   locale = new Locale(this);
   notifications = new NotificationOptions(this);
   ordering = new Ordering(this);
   settings = new Settings(this);
+  sync = new Sync(this);
+  theme = new Theme(this);
+  voice = new Voice(this);
 
   /**
    * Iterate over all available stores
@@ -56,7 +71,7 @@ export class State {
       Object.keys(this).filter(
         (key) =>
           (this[key as keyof State] as unknown as { _storeHint: boolean })
-            ?._storeHint
+            ?._storeHint,
       ) as (keyof Store)[]
     ).map((key) => this[key] as AbstractStore<typeof key, Store[typeof key]>);
   }
@@ -84,8 +99,6 @@ export class State {
     this.store = store as never;
     this.setStore = setStore;
     this.writeQueue = {};
-
-    registerController("state", this);
   }
 
   /**
@@ -97,6 +110,9 @@ export class State {
 
     // resolve key
     const key = args[0] as string;
+
+    // touch the key if syncable
+    this.sync.touchIfSyncable(key);
 
     // remove existing queued task if it exists
     if (this.writeQueue[key]) {
@@ -113,15 +129,15 @@ export class State {
         localforage.setItem(
           key,
           JSON.parse(
-            JSON.stringify((this.store as Record<string, unknown>)[key])
-          )
+            JSON.stringify((this.store as Record<string, unknown>)[key]),
+          ),
         );
 
         if (import.meta.env.DEV) {
-          console.info("Wrote state to disk.");
+          console.info("[store.save] Wrote state to disk.");
         }
       },
-      IGNORE_WRITE_DELAY.includes(key) ? 0 : DISK_WRITE_WAIT_MS
+      IGNORE_WRITE_DELAY.includes(key) ? 0 : DISK_WRITE_WAIT_MS,
     ) as unknown as number;
   };
 
@@ -134,7 +150,7 @@ export class State {
 
     // run side-effects
     if (import.meta.env.DEV) {
-      console.info("[store] updated data", args[0]);
+      console.debug("[store] updated data", args[0]);
     }
   };
 
@@ -176,6 +192,29 @@ export class State {
 }
 
 /**
- * Global application state
+ * State context
  */
-export const state = new State();
+const stateContext = createContext<State>(null! as State);
+
+/**
+ * Mount state context
+ */
+export function StateContext(props: { children: JSX.Element }) {
+  const stateLocal = new State();
+  const [ready, setReady] = createSignal(false);
+
+  onMount(() => stateLocal.hydrate().then(() => setReady(true)));
+
+  return (
+    <stateContext.Provider value={stateLocal}>
+      <Show when={ready()}>{props.children}</Show>
+    </stateContext.Provider>
+  );
+}
+
+/**
+ * Use application state
+ */
+export function useState() {
+  return useContext(stateContext);
+}

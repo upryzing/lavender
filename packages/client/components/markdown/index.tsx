@@ -1,8 +1,8 @@
-import { createEffect, createResource, createSignal, on } from "solid-js";
+import { ComponentProps, JSX, createEffect, createSignal, on } from "solid-js";
 
-import rehypeShiki from "@shikijs/rehype";
 import "katex/dist/katex.min.css";
 import { html } from "property-information";
+import rehypeHighlight from "rehype-highlight";
 import rehypeKatex from "rehype-katex";
 import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
@@ -28,6 +28,7 @@ import {
   mentionHandler,
   remarkMentions,
 } from "./plugins/mentions";
+import { remarkLinkify } from "./plugins/remarkLinkify";
 import {
   RenderSpoiler,
   remarkSpoiler,
@@ -52,6 +53,24 @@ import { defaults } from "./solid-markdown/defaults";
  */
 const Null = () => null;
 
+function RenderOrderedList(props: {
+  start?: string;
+  style?: Record<string, unknown>;
+  [key: string]: unknown;
+}) {
+  return (
+    <elements.orderedList
+      {...props}
+      style={{
+        ...(props.start
+          ? { "--start-number": (parseInt(props.start, 10) - 1).toString() }
+          : {}),
+        ...props.style,
+      }}
+    />
+  );
+}
+
 /**
  * Custom Markdown components
  */
@@ -65,6 +84,8 @@ const components = () => ({
   a: RenderAnchor,
   p: elements.paragraph,
   em: elements.emphasis,
+  strong: elements.strong,
+  del: elements.strikethrough,
   h1: elements.heading1,
   h2: elements.heading2,
   h3: elements.heading3,
@@ -74,7 +95,7 @@ const components = () => ({
   pre: RenderCodeblock,
   li: elements.listItem,
   ul: elements.unorderedList,
-  ol: elements.orderedList,
+  ol: RenderOrderedList,
   blockquote: elements.blockquote,
   table: elements.table,
   th: elements.tableHeader,
@@ -94,24 +115,97 @@ const components = () => ({
   style: Null,
 });
 
+const replyComponents = () => ({
+  unicodeEmoji: RenderUnicodeEmoji,
+  customEmoji: RenderCustomEmoji,
+  mention: (props: ComponentProps<typeof RenderMention>) => {
+    // eslint-disable-next-line solid/reactivity
+    props.disabled = true;
+    return RenderMention(props);
+  },
+  spoiler: (props: ComponentProps<typeof RenderSpoiler>) => {
+    // eslint-disable-next-line solid/reactivity
+    props.disabled = true;
+    return RenderSpoiler(props);
+  },
+  a: (props: ComponentProps<typeof RenderAnchor>) => {
+    // eslint-disable-next-line solid/reactivity
+    props.disabled = true;
+    return RenderAnchor(props);
+  },
+
+  strong: elements.strong,
+  em: elements.emphasis,
+  code: elements.code,
+  del: elements.strikethrough,
+
+  p: (props: { children: JSX.Element }) => <>{props.children}</>,
+  h1: (props: { children: JSX.Element }) => <>{props.children}</>,
+  h2: (props: { children: JSX.Element }) => <>{props.children}</>,
+  h3: (props: { children: JSX.Element }) => <>{props.children}</>,
+  h4: (props: { children: JSX.Element }) => <>{props.children}</>,
+  h5: (props: { children: JSX.Element }) => <>{props.children}</>,
+  h6: (props: { children: JSX.Element }) => <>{props.children}</>,
+  li: (props: { children: JSX.Element }) => <>{props.children}</>,
+  ul: (props: { children: JSX.Element }) => <>{props.children}</>,
+  ol: (props: { children: JSX.Element }) => <>{props.children}</>,
+  blockquote: (props: { children: JSX.Element }) => <>{props.children}</>,
+  td: (props: { children: JSX.Element }) => <>{props.children}</>,
+  th: (props: { children: JSX.Element }) => <>{props.children}</>,
+  time: RenderTimestamp,
+  timestamp: RenderTimestamp,
+  pre: Null,
+  table: Null,
+  img: Null,
+  video: Null,
+  figure: Null,
+  picture: Null,
+  source: Null,
+  audio: Null,
+  script: Null,
+  style: Null,
+});
+
 /**
  * Unified Markdown renderer
  */
-const pipeline = unified()
+export const unifiedPipeline = unified()
   .use(remarkParse)
   .use(remarkBreaks)
   .use(remarkGfm)
   .use(remarkMath, {
     // TODO: fork for \[\] support
     singleDollarTextMath: false,
-  })
-  .use(remarkMentions)
-  .use(remarkTimestamps)
-  .use(remarkChannels)
-  .use(remarkUnicodeEmoji)
-  .use(remarkCustomEmoji)
-  .use(remarkSpoiler)
-  .use(remarkHtmlToText)
+  });
+
+/**
+ * for schema only, todo: clean up
+ */
+export const UNIFIED_PLUGINS = [
+  remarkMentions,
+  remarkTimestamps,
+  remarkChannels,
+  remarkUnicodeEmoji,
+  remarkCustomEmoji,
+  remarkSpoiler,
+  remarkHtmlToText,
+];
+
+const HTML_UNIFIED_PLUGINS = [
+  remarkMentions,
+  remarkTimestamps,
+  remarkChannels,
+  remarkUnicodeEmoji,
+  remarkCustomEmoji,
+  remarkSpoiler,
+  remarkLinkify,
+  remarkHtmlToText,
+];
+
+const htmlPipeline = HTML_UNIFIED_PLUGINS.reduce(
+  (pipeline, plugin) => pipeline.use(plugin) as never,
+  unifiedPipeline,
+)
   // @ts-expect-error non-standard elements not recognised by typing
   .use(remarkRehype, {
     handlers: {
@@ -129,11 +223,29 @@ const pipeline = unified()
     trust: false,
     strict: false,
     output: "html",
-    errorColor: "var(--customColours-error-color)",
+    errorColor: "var(--md-sys-color-error)",
   })
-  .use(rehypeShiki, {
-    theme: "github-dark",
-  });
+  .use(rehypeHighlight);
+
+const replyPipeline = unified()
+  .use(remarkParse)
+  .use(remarkBreaks)
+  .use(remarkGfm)
+  .use(remarkMentions)
+  .use(remarkUnicodeEmoji)
+  .use(remarkCustomEmoji)
+  .use(remarkSpoiler)
+  .use(remarkLinkify)
+  // @ts-expect-error non-standard elements not recognized by typing
+  .use(remarkRehype, {
+    handlers: {
+      unicodeEmoji: unicodeEmojiHandler,
+      customEmoji: customEmojiHandler,
+      mention: mentionHandler,
+      spoiler: spoilerHandler,
+    },
+  })
+  .use(remarkInsertBreaks);
 
 export interface MarkdownProps {
   /**
@@ -147,8 +259,32 @@ export interface MarkdownProps {
   disallowBigEmoji?: boolean;
 }
 
-export { TextWithEmoji } from "./emoji/TextWithEmoji";
 export { Emoji } from "./emoji/Emoji";
+export { TextWithEmoji } from "./emoji/TextWithEmoji";
+
+export function renderSimpleMarkdown(content: string) {
+  const file = new VFile();
+  file.value = sanitise(content);
+
+  const hastNode = replyPipeline.runSync(replyPipeline.parse(file), file);
+
+  if (hastNode.type !== "root") {
+    throw new TypeError("Expected a `root` node");
+  }
+
+  return childrenToSolid(
+    {
+      options: {
+        ...defaults,
+        // @ts-expect-error it doesn't like the td component
+        components: replyComponents(),
+      },
+      schema: html,
+      listDepth: 0,
+    },
+    hastNode,
+  );
+}
 
 /**
  * Remark renderer component
@@ -158,26 +294,17 @@ export function Markdown(props: MarkdownProps) {
    * Render some given Markdown content
    * @param content content
    */
-  async function render(content = "") {
+  function render(content = "") {
     const file = new VFile();
     file.value = sanitise(content);
 
-    const parsedFile = pipeline.parse(file);
-
-    let hastNode = await pipeline.run(parsedFile, file);
-
-    console.log(hastNode.children);
+    const hastNode = htmlPipeline.runSync(htmlPipeline.parse(file), file);
 
     if (hastNode.type !== "root") {
       throw new TypeError("Expected a `root` node");
     }
 
-    // @ts-expect-error i know. i know. this is fucking terrible. but shiki does some fuckery where the node is nothing and the *child* is the root. i have no clue why
-    if (hastNode.children[0].type === "root") {
-      hastNode = hastNode.children[0];
-    }
-
-    injectEmojiSize(props, hastNode as any);
+    injectEmojiSize(props, hastNode as never);
 
     return childrenToSolid(
       {
@@ -189,22 +316,21 @@ export function Markdown(props: MarkdownProps) {
         schema: html,
         listDepth: 0,
       },
-      hastNode
+      hastNode,
     );
   }
 
   // Render once immediately
-  const [content, setContent] = createSignal(props.content);
-
-  const [children] = createResource(content, render);
+  // eslint-disable-next-line solid/reactivity
+  const [children, setChildren] = createSignal(render(props.content));
 
   // If it ever updates, re-render the whole tree:
   createEffect(
     on(
       () => props.content,
-      (content) => setContent(content),
-      { defer: true }
-    )
+      (content) => setChildren(render(content)),
+      { defer: true },
+    ),
   );
 
   // Give it to Solid:

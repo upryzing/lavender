@@ -1,9 +1,11 @@
 import { Match, Show, Switch, createSignal, onMount } from "solid-js";
 
-import { clientController, mapAnyError } from "@revolt/client";
-import { useTranslation } from "@revolt/i18n";
+import { Trans } from "@lingui-solid/solid/macro";
+
+import { useApi, useClientLifecycle } from "@revolt/client";
+import { useModals } from "@revolt/modal";
 import { useNavigate, useParams } from "@revolt/routing";
-import { Button, Preloader, Text } from "@revolt/ui";
+import { Button, CircularProgress } from "@revolt/ui";
 
 import { FlowTitle } from "./Flow";
 
@@ -13,7 +15,7 @@ type State =
     }
   | {
       state: "error";
-      error: string;
+      error: unknown;
     }
   | {
       state: "success";
@@ -24,9 +26,11 @@ type State =
  * Flow for confirming email
  */
 export default function FlowVerify() {
-  const t = useTranslation();
+  const api = useApi();
   const params = useParams();
+  const modals = useModals();
   const navigate = useNavigate();
+  const { login } = useClientLifecycle();
 
   const [state, setState] = createSignal<State>({
     state: "verifying",
@@ -46,25 +50,28 @@ export default function FlowVerify() {
         }
       }
 
-      const data = (await clientController.api.post(
-        `/auth/account/verify/${params.token}`
-      )) as { ticket?: { token: string } };
+      const data = (await api.post(`/auth/account/verify/${params.token}`)) as {
+        ticket?: { token: string };
+      };
 
       setState({ state: "success", mfa_ticket: data.ticket?.token });
     } catch (err) {
-      setState({ state: "error", error: mapAnyError(err) });
+      setState({ state: "error", error: err });
     }
   });
 
   /**
-   * Use MFA ticket to log into Revolt
+   * Use MFA ticket to login
    */
-  async function login() {
+  async function performLogin() {
     const v = state();
     if (v.state === "success" && v.mfa_ticket) {
-      await clientController.login({
-        mfa_ticket: v.mfa_ticket,
-      });
+      await login(
+        {
+          mfa_ticket: v.mfa_ticket,
+        },
+        modals,
+      );
 
       navigate("/login/auth", { replace: true });
     }
@@ -73,26 +80,42 @@ export default function FlowVerify() {
   return (
     <Switch>
       <Match when={state().state === "verifying"}>
-        <FlowTitle>{t("login.verifying_account")}</FlowTitle>
-        <Preloader type="ring" />
+        <FlowTitle>
+          <Trans>Verifying your account…</Trans>
+        </FlowTitle>
+        <CircularProgress />
       </Match>
       <Match when={state().state === "error"}>
-        <FlowTitle>{t("login.error.verify")}</FlowTitle>
-        <Text class="body" size="small">
+        <FlowTitle>
+          <Trans>Failed to verify!</Trans>
+        </FlowTitle>
+        {/* <Text class="body" size="small">
           {t(
             `error.${(state() as State & { state: "error" }).error}` as any,
             undefined,
             (state() as State & { state: "error" }).error
           )}
-        </Text>
-        <a href="/login/auth">{t("login.remembered")}</a>
+        </Text> TODO */}
+        <a href="/login/auth">
+          <Button variant="text">
+            <Trans>Go back to login</Trans>
+          </Button>
+        </a>
       </Match>
       <Match when={state().state === "success"}>
-        <FlowTitle>{t("login.verified_account")}</FlowTitle>
+        <FlowTitle>
+          <Trans>Your account has been verified!</Trans>
+        </FlowTitle>
         <Show when={"mfa_ticket" in state()}>
-          <Button onPress={login}>{t("login.verified_continue")}</Button>
+          <Button onPress={performLogin}>
+            <Trans>Continue to app</Trans>
+          </Button>
         </Show>
-        <a href="/login/auth">{t("login.remembered")}</a>
+        <a href="/login/auth">
+          <Button variant="text">
+            <Trans>Go back to login</Trans>
+          </Button>
+        </a>
       </Match>
     </Switch>
   );

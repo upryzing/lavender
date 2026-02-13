@@ -13,8 +13,8 @@ const Spoiler = styled("span", {
   variants: {
     shown: {
       true: {
-        color: "var(--colours-background)",
-        background: "var(--colours-foreground)",
+        color: "var(--md-sys-color-inverse-on-surface)",
+        background: "var(--md-sys-color-inverse-surface)",
       },
       false: {
         cursor: "pointer",
@@ -31,11 +31,17 @@ const Spoiler = styled("span", {
   },
 });
 
-export function RenderSpoiler(props: { children: Element }) {
+export function RenderSpoiler(props: {
+  children: Element;
+  disabled?: boolean;
+}) {
   const [shown, setShown] = createSignal(false);
 
   return (
-    <Spoiler shown={shown()} onClick={() => setShown(true)}>
+    <Spoiler
+      shown={shown()}
+      onClick={props.disabled ? undefined : () => setShown(true)}
+    >
       {props.children}
     </Spoiler>
   );
@@ -49,12 +55,12 @@ export const remarkSpoiler: Plugin = () => (tree) => {
       node: {
         children: (
           | { type: "text"; value: string }
-          | { type: "paragraph"; children: any[] }
-          | { type: "spoiler"; children: any[] }
+          | { type: "paragraph"; children: unknown[] }
+          | { type: "spoiler"; children: unknown[] }
         )[];
       },
-      idx,
-      parent
+      _idx,
+      _parent,
     ) => {
       // Visitor state
       let searchingForEnd = -1;
@@ -74,7 +80,7 @@ export const remarkSpoiler: Plugin = () => (tree) => {
             // Get all preceding elements
             const elements = node.children.splice(
               searchingForEnd,
-              i - searchingForEnd
+              i - searchingForEnd,
             );
 
             // Create a spoiler
@@ -122,7 +128,7 @@ export const remarkSpoiler: Plugin = () => (tree) => {
                 {
                   type: "text",
                   value: components.shift()!,
-                }
+                },
               );
 
               i += 2;
@@ -139,7 +145,7 @@ export const remarkSpoiler: Plugin = () => (tree) => {
           }
         }
       }
-    }
+    },
   );
 };
 

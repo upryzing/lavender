@@ -1,10 +1,10 @@
-import { useTranslation } from "@revolt/i18n";
+import { Trans } from "@lingui-solid/solid/macro";
+
 import {
   CategoryButton,
   CategoryButtonGroup,
   Checkbox,
   Column,
-  FormGroup,
   Time,
   iconSize,
 } from "@revolt/ui";
@@ -17,45 +17,46 @@ import MdPalette from "@material-design-icons/svg/outlined/palette.svg?component
  * Sync Configuration Page
  */
 export default function Sync() {
-  const t = useTranslation();
-
   return (
     <Column gap="lg">
       <CategoryButtonGroup>
-        <FormGroup>
-          <CategoryButton
-            action={<Checkbox value onChange={(value) => void value} />}
-            onClick={() => void 0}
-            icon={<MdPalette {...iconSize(22)} />}
-            description={t("app.settings.pages.sync.descriptions.appearance")}
-          >
-            {t("app.settings.pages.appearance.title")}
-          </CategoryButton>
-        </FormGroup>
-        <FormGroup>
-          <CategoryButton
-            action={<Checkbox value onChange={(value) => void value} />}
-            onClick={() => void 0}
-            icon={<MdBrush {...iconSize(22)} />}
-            description={t("app.settings.pages.sync.descriptions.theme")}
-          >
-            {t("app.settings.pages.appearance.theme")}
-          </CategoryButton>
-        </FormGroup>
-        <FormGroup>
-          <CategoryButton
-            action={<Checkbox value onChange={(value) => void value} />}
-            onClick={() => void 0}
-            icon={<MdLanguage {...iconSize(22)} />}
-            description={t("app.settings.pages.sync.descriptions.locale")}
-          >
-            {t("app.settings.pages.language.title")}
-          </CategoryButton>
-        </FormGroup>
+        <CategoryButton
+          action={<Checkbox checked onChange={(value) => void value} />}
+          onClick={() => void 0}
+          icon={<MdPalette {...iconSize(22)} />}
+          description={
+            <Trans>
+              Sync appearance options, such as chosen emoji pack and message
+              density.
+            </Trans>
+          }
+        >
+          <Trans>Appearance</Trans>
+        </CategoryButton>
+        <CategoryButton
+          action={<Checkbox checked onChange={(value) => void value} />}
+          onClick={() => void 0}
+          icon={<MdBrush {...iconSize(22)} />}
+          description={
+            <Trans>Sync your chosen theme, colours, and any custom CSS.</Trans>
+          }
+        >
+          <Trans>Theme</Trans>
+        </CategoryButton>
+        <CategoryButton
+          action={<Checkbox checked onChange={(value) => void value} />}
+          onClick={() => void 0}
+          icon={<MdLanguage {...iconSize(22)} />}
+          description={<Trans>Sync your currently chosen language.</Trans>}
+        >
+          <Trans>Language</Trans>
+        </CategoryButton>
       </CategoryButtonGroup>
       <CategoryButtonGroup>
         <CategoryButton>
-          Last sync <Time format="relative" value={0} />
+          <Trans>
+            Last sync <Time format="relative" value={0} />
+          </Trans>
         </CategoryButton>
       </CategoryButtonGroup>
     </Column>

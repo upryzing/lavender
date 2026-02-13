@@ -1,6 +1,7 @@
 import { Show } from "solid-js";
 
-import { useTranslation } from "@revolt/i18n";
+import { Trans } from "@lingui-solid/solid/macro";
+
 import { Button } from "@revolt/ui";
 
 interface Props {
@@ -103,8 +104,8 @@ function mapMailProvider(email?: string): [string, string] | undefined {
       return ["Rambler", "https://rambler.ru/"];
     case "revolt.chat":
     case "revolt.wtf":
-    case "insert.moe":
-      return ["Revolt Mail", "https://webmail.revolt.wtf"];
+    case "stoat.chat":
+      return ["Upryzing Mail", "https://webmail.revolt.wtf"];
     default:
       return [domain, `https://${domain}`];
   }
@@ -114,8 +115,6 @@ function mapMailProvider(email?: string): [string, string] | undefined {
  * Provide button to navigate to email provider
  */
 export function MailProvider(props: Props) {
-  const t = useTranslation();
-
   /**
    * Convert email to provider
    * @returns Provider
@@ -126,7 +125,7 @@ export function MailProvider(props: Props) {
     <Show when={provider()}>
       <a href={provider()![1]} target="_blank" rel="noreferrer">
         <Button>
-          {t("login.open_mail_provider", { provider: provider()![0] })}
+          <Trans>Open {provider()![0]}</Trans>
         </Button>
       </a>
     </Show>

@@ -15,21 +15,25 @@ import {
   splitProps,
 } from "solid-js";
 
-import { Channel, Message as MessageInterface } from "@upryzing/upryzing.js";
 import isEqual from "lodash.isequal";
+import { Channel, Message as MessageInterface } from "upryzing.js";
 import { styled } from "styled-system/jsx";
 
-import { useClient } from "@revolt/client";
-import { dayjs } from "@revolt/i18n";
+import { useClient, useClientLifecycle } from "@revolt/client";
+import { State } from "@revolt/client/Controller";
+import { useTime } from "@revolt/i18n";
+import { useState } from "@revolt/state";
 import {
   BlockedMessage,
   ConversationStart,
+  Deferred,
   JumpToBottom,
   ListView,
   MessageDivider,
 } from "@revolt/ui";
 
 import { Message } from "./Message";
+import { useMessageCache } from "./MessageCache";
 
 /**
  * Default fetch limit
@@ -55,7 +59,12 @@ interface Props {
   /**
    * Pending messages to render at the end of the list
    */
-  pendingMessages?: JSX.Element;
+  pendingMessages?: (props: { tail: boolean; ids: string[] }) => JSX.Element;
+
+  /**
+   * Display typing indicator instead of padding
+   */
+  typingIndicator?: JSX.Element;
 
   /**
    * Highlighted message id
@@ -89,7 +98,11 @@ interface Props {
  * Render messages in a Channel
  */
 export function Messages(props: Props) {
+  const cache = useMessageCache();
+  const lifecycle = useClientLifecycle();
   const client = useClient();
+  const state = useState();
+  const dayjs = useTime();
 
   /**
    * Loaded messages
@@ -174,7 +187,7 @@ export function Messages(props: Props) {
    */
   function setMessagesSafely(...messagesArr: MessageInterface[][]) {
     setMessages(
-      messagesArr.flat().toSorted((a, b) => b.id.localeCompare(a.id))
+      messagesArr.flat().toSorted((a, b) => b.id.localeCompare(a.id)),
     );
   }
 
@@ -203,10 +216,21 @@ export function Messages(props: Props) {
 
     try {
       // Fetch messages for channel
-      const { messages } = await props.channel.fetchMessagesWithUsers({
-        limit: props.fetchLimit,
-        nearby,
-      });
+      let messages;
+
+      const existingState = cache!.unmanage(props.channel);
+      const useExistingState = existingState && !nearby;
+
+      if (useExistingState) {
+        messages = existingState.messages;
+      } else {
+        messages = await props.channel
+          .fetchMessagesWithUsers({
+            limit: props.fetchLimit,
+            nearby,
+          })
+          .then(({ messages }) => messages);
+      }
 
       // Cancel if we've been pre-empted
       if (preempted()) return;
@@ -218,13 +242,21 @@ export function Messages(props: Props) {
           // If the messages fetched include the latest message,
           // then we are at the end and mark the channel as such.
           messages.findIndex(
-            (msg) => msg.id === props.channel.lastMessageId
-          ) !== -1
+            (msg) => msg.id === props.channel.lastMessageId,
+          ) !== -1,
         );
       }
       // Check if we're at the start of the conversation otherwise
-      else if (messages.length < (props.fetchLimit ?? DEFAULT_FETCH_LIMIT)) {
+      else if (
+        !useExistingState &&
+        messages.length < (props.fetchLimit ?? DEFAULT_FETCH_LIMIT)
+      ) {
         setStart(true);
+      }
+      // Apply existing state if present
+      else if (existingState) {
+        setStart(existingState.atStart);
+        setEnd(existingState.atEnd);
       }
 
       // Merge list with any new ones that have come in if we are at the end
@@ -232,7 +264,7 @@ export function Messages(props: Props) {
         const knownIds = new Set(collectedMessages!.map((x) => x.id));
         setMessagesSafely(
           collectedMessages!,
-          messages.filter((x) => !knownIds.has(x.id))
+          messages.filter((x) => !knownIds.has(x.id)),
         );
       }
       // Otherwise just replace the whole list
@@ -245,7 +277,26 @@ export function Messages(props: Props) {
 
       // Mark as fetching has ended
       setFetching();
-    } catch (err) {
+
+      // If we're not at the end, restore scroll position
+      if (existingState && !existingState.atEnd) {
+        setTimeout(() =>
+          listRef!.scrollTo({
+            top: existingState.scrollTop!,
+            behavior: "instant",
+          }),
+        );
+      }
+      // Or... reset scroll to the end
+      else if (atEnd()) {
+        setTimeout(() =>
+          listRef!.scrollTo({
+            top: 9999999,
+            behavior: "instant",
+          }),
+        );
+      }
+    } catch {
       // Keep track of any failures (and allow retry / other actions)
       setFailure(true);
     }
@@ -288,7 +339,7 @@ export function Messages(props: Props) {
         // Calculate how much we need to cut off the other end
         const tooManyBy = Math.max(
           0,
-          result.messages.length + messages().length - (props.limit ?? 0)
+          result.messages.length + messages().length - (props.limit ?? 0),
         );
 
         // If it's at least one element, we are no longer at the end
@@ -317,7 +368,7 @@ export function Messages(props: Props) {
         // Mark as fetching has ended
         setFetching();
       }
-    } catch (err) {
+    } catch {
       // Keep track of any failures (and allow retry / other actions)
       setFailure(true);
     }
@@ -360,7 +411,7 @@ export function Messages(props: Props) {
         // Calculate how much we need to cut off the other end
         const tooManyBy = Math.max(
           0,
-          result.messages.length + messages().length - (props.limit ?? 0)
+          result.messages.length + messages().length - (props.limit ?? 0),
         );
 
         // If it's at least one element, we are no longer at the start
@@ -389,7 +440,7 @@ export function Messages(props: Props) {
         // Mark as fetching has ended
         setFetching();
       }
-    } catch (err) {
+    } catch {
       // Keep track of any failures (and allow retry / other actions)
       setFailure(true);
     }
@@ -459,7 +510,7 @@ export function Messages(props: Props) {
         const knownIds = new Set(collectedMessages!.map((x) => x.id));
         setMessagesSafely(
           collectedMessages!,
-          messages.filter((x) => !knownIds.has(x.id))
+          messages.filter((x) => !knownIds.has(x.id)),
         );
 
         // Stop collecting messages
@@ -484,7 +535,7 @@ export function Messages(props: Props) {
             setFetching();
           });
         });
-      } catch (err) {
+      } catch {
         // Keep track of any failures (and allow retry / other actions)
         setFailure(true);
       }
@@ -501,7 +552,7 @@ export function Messages(props: Props) {
      */
     const scrollToNearestMessage = () => {
       const index = messagesWithTail().findIndex(
-        (entry) => entry.t === 0 && entry.message.id === messageId
+        (entry) => entry.t === 0 && entry.message.id === messageId,
       ); // use localeCompare
 
       listRef!.children[index + (atStart() ? 1 : 0)].scrollIntoView({
@@ -547,7 +598,7 @@ export function Messages(props: Props) {
         // Mark as fetching has ended
         setFetching();
       });
-    } catch (err) {
+    } catch {
       // Keep track of any failures (and allow retry / other actions)
       setFailure(true);
     }
@@ -565,8 +616,22 @@ export function Messages(props: Props) {
   createEffect(
     on(
       () => props.channel,
-      () => caseInitialLoad(props.highlightedMessageId())
-    )
+      (channel) => {
+        caseInitialLoad(props.highlightedMessageId());
+
+        // move state into cache when navigating away
+        onCleanup(() => {
+          if (fetching() !== "initial") {
+            cache!.manage(channel, {
+              messages: messages(),
+              atStart: atStart(),
+              atEnd: atEnd(),
+              scrollTop: listRef?.scrollTop,
+            });
+          }
+        });
+      },
+    ),
   );
 
   /**
@@ -580,8 +645,8 @@ export function Messages(props: Props) {
         if (messageId && messages()) {
           caseJumpToMessage(messageId);
         }
-      }
-    )
+      },
+    ),
   );
 
   /**
@@ -603,7 +668,7 @@ export function Messages(props: Props) {
       messages().find((msg) => msg.id === message.id)
     ) {
       setMessages((messages) =>
-        messages.filter((msg) => msg.id !== message.id)
+        messages.filter((msg) => msg.id !== message.id),
       );
     }
   }
@@ -620,6 +685,23 @@ export function Messages(props: Props) {
     c.removeListener("messageCreate", onMessage);
     c.removeListener("messageDelete", onMessageDelete);
   });
+
+  // Ensure that we reload when lifecycle state changes
+  createEffect(
+    on(
+      () => lifecycle.lifecycle.state(),
+      (state) => {
+        if (
+          state === State.Connected &&
+          atEnd() &&
+          !props.highlightedMessageId
+        ) {
+          caseInitialLoad();
+        }
+      },
+      { defer: true },
+    ),
+  );
 
   // We need to cache created objects to prevent needless re-rendering
   const objectCache = new Map();
@@ -670,12 +752,20 @@ export function Messages(props: Props) {
 
         // Compare time and properties of messages
         if (
+          // split up different authors
           message.authorId !== next.authorId ||
+          // split up chains which are too far apart
           Math.abs(btime - atime) >= 420000 ||
+          // treat masquerade as a change in author
           !isEqual(message.masquerade, next.masquerade) ||
+          // ensure all system messages render independently
           message.systemMessage ||
           next.systemMessage ||
-          message.replyIds?.length
+          // replies present on current message
+          message.replyIds?.length ||
+          // next message in history has already been read
+          // so there will be a message divider present
+          (next.id.localeCompare(lastReadId) === -1 && !insertedUnreadDivider)
         ) {
           tail = false;
         }
@@ -694,7 +784,7 @@ export function Messages(props: Props) {
           objectCache.get(true) ?? {
             t: 1,
             unread: true,
-          }
+          },
         );
       }
 
@@ -710,7 +800,7 @@ export function Messages(props: Props) {
             t: 0,
             message,
             tail,
-          }
+          },
         );
       }
 
@@ -720,13 +810,19 @@ export function Messages(props: Props) {
           objectCache.get(date) ?? {
             t: 1,
             date: dayjs(date).format("LL"),
-          }
+          },
         );
       }
     });
 
     // Push remainder of blocked messages
     createBlockedMessageCount();
+
+    // Strip unread divider if it is the first item
+    // (hence would show alone at the bottom of messages)
+    if (messagesWithTail[0]?.t === 1) {
+      messagesWithTail.shift();
+    }
 
     // Flush cache
     objectCache.clear();
@@ -754,6 +850,46 @@ export function Messages(props: Props) {
     }
   }
 
+  /**
+   * Select last message for editing if signal is true
+   */
+  createEffect(
+    on(
+      () => state.draft.editingMessageId,
+      (shouldSetEditingMessageId) =>
+        shouldSetEditingMessageId === true &&
+        state.draft.setEditingMessage(
+          messages().find((message) => message.author?.self),
+        ),
+    ),
+  );
+
+  /**
+   * Check whether to trail the currently pending messages
+   * @returns Whether to trail pending message
+   */
+  function pendingMessageIsTrailing() {
+    const messages = messagesWithTail();
+    const lastMessage = messages[messages.length - 1];
+
+    return lastMessage &&
+      lastMessage.t === 0 &&
+      // check if last message is authored by us
+      lastMessage.message.author?.self &&
+      // split up chains that are too far apart
+      Math.abs(+new Date() - +lastMessage.message.createdAt) < 420000
+      ? true
+      : false;
+  }
+
+  /**
+   * Message ids
+   * @returns List of message ids
+   */
+  function sentMessageIdempotency() {
+    return messages().map((msg) => msg.nonce!);
+  }
+
   return (
     <>
       <ListView
@@ -761,25 +897,37 @@ export function Messages(props: Props) {
         fetchTop={caseFetchUpwards}
         fetchBottom={caseFetchDownwards}
       >
-        <div>
-          <div ref={listRef}>
-            <Show when={atStart()}>
-              <ConversationStart channel={props.channel} />
-            </Show>
-            {/* TODO: else show (loading icon) OR (load more) */}
-            <For each={messagesWithTail()}>
-              {(entry) => (
-                <Entry
-                  {...entry}
-                  highlightedMessageId={props.highlightedMessageId}
-                />
-              )}
-            </For>
-            {/* TODO: show (loading icon) OR (load more) */}
-            <Show when={atEnd()}>{props.pendingMessages}</Show>
-            <Padding />
+        <Deferred>
+          <div>
+            <div ref={listRef}>
+              <Show when={atStart()}>
+                <ConversationStart channel={props.channel} />
+              </Show>
+              {/* TODO: else show (loading icon) OR (load more) */}
+              <For each={messagesWithTail()}>
+                {(entry) => (
+                  <Entry
+                    {...entry}
+                    highlightedMessageId={props.highlightedMessageId}
+                    editingMessageId={
+                      typeof state.draft.editingMessageId === "string"
+                        ? state.draft.editingMessageId
+                        : undefined
+                    }
+                  />
+                )}
+              </For>
+              {/* TODO: show (loading icon) OR (load more) */}
+              <Show when={atEnd()}>
+                {props.pendingMessages?.({
+                  tail: pendingMessageIsTrailing(),
+                  ids: sentMessageIdempotency(),
+                })}
+                {props.typingIndicator ?? <Padding />}
+              </Show>
+            </div>
           </div>
-        </div>
+        </Deferred>
       </ListView>
       <Show when={!atEnd()}>
         <AnchorToEnd>
@@ -798,10 +946,10 @@ const AnchorToEnd = styled("div", {
     zIndex: 30,
     position: "relative",
 
-    "& div": {
-      bottom: 0,
+    "& > div": {
       width: "100%",
       position: "absolute",
+      bottom: "var(--gap-md)",
     },
   },
 });
@@ -820,29 +968,36 @@ const Padding = styled("div", {
  */
 type ListEntry =
   | {
-      // Message
-      t: 0;
-      message: MessageInterface;
-      tail: boolean;
-      highlight: boolean;
-    }
+    // Message
+    t: 0;
+    message: MessageInterface;
+    tail: boolean;
+    highlight: boolean;
+  }
   | {
-      // Message Divider
-      t: 1;
-      date?: string;
-      unread?: boolean;
-    }
+    // Message Divider
+    t: 1;
+    date?: string;
+    unread?: boolean;
+  }
   | {
-      // Blocked messages
-      t: 2;
-      count: number;
-    };
+    // Blocked messages
+    t: 2;
+    count: number;
+  };
 
 /**
  * Render individual list entry
  */
-function Entry(props: ListEntry & Pick<Props, "highlightedMessageId">) {
-  const [local, other] = splitProps(props, ["t", "highlightedMessageId"]);
+function Entry(
+  props: ListEntry &
+    Pick<Props, "highlightedMessageId"> & { editingMessageId?: string },
+) {
+  const [local, other] = splitProps(props, [
+    "t",
+    "highlightedMessageId",
+    "editingMessageId",
+  ]);
 
   return (
     <Switch>
@@ -852,6 +1007,10 @@ function Entry(props: ListEntry & Pick<Props, "highlightedMessageId">) {
           highlight={
             (other as ListEntry & { t: 0 }).message.id ===
             local.highlightedMessageId()
+          }
+          editing={
+            (other as ListEntry & { t: 0 }).message.id ===
+            local.editingMessageId
           }
         />
       </Match>

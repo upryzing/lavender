@@ -1,14 +1,14 @@
-import { Match, Switch, createSignal, onMount } from "solid-js";
+import { Show, createSignal, onMount } from "solid-js";
 
+import { Trans } from "@lingui-solid/solid/macro";
+import { useMutation } from "@tanstack/solid-query";
 import { styled } from "styled-system/jsx";
 
-import { mapAnyError } from "@revolt/client";
 import { CONFIGURATION } from "@revolt/common";
-import { useTranslation } from "@revolt/i18n";
+import { Dialog, DialogProps } from "@revolt/ui";
 
-import { modalController } from "..";
-import { createFormModal } from "../form";
-import { PropGenerator } from "../types";
+import { useModals } from "..";
+import { Modals } from "../types";
 
 /**
  * Code block which displays invite
@@ -31,65 +31,54 @@ const Invite = styled("div", {
 /**
  * Modal to create a new invite
  */
-const CreateInvite: PropGenerator<"create_invite"> = (props) => {
-  const t = useTranslation();
-
-  const [processing, setProcessing] = createSignal(false);
+export function CreateInviteModal(
+  props: DialogProps & Modals & { type: "create_invite" },
+) {
+  const { showError } = useModals();
   const [link, setLink] = createSignal("...");
 
-  // Generate an invite code
-  onMount(() => {
-    setProcessing(true);
-
-    props.channel
-      .createInvite()
-      .then(({ _id }) =>
-        setLink(
-          CONFIGURATION.IS_UPRYZING
-            ? `https://web.upryzing.app/invite/${_id}`
-            : `${window.location.protocol}//${window.location.host}/invite/${_id}`
-        )
-      )
-      .catch((err) =>
-        modalController.push({ type: "error", error: mapAnyError(err) })
-      )
-      .finally(() => setProcessing(false));
-  });
-
-  return createFormModal({
-    modalProps: {
-      title: t("app.context_menu.create_invite"),
-    },
-    schema: {
-      invite: "custom",
-    },
-    data: {
-      invite: {
-        element: (
-          <Switch
-            fallback={t("app.special.modals.prompt.create_invite_generate")}
-          >
-            <Match when={!processing()}>
-              <Invite>
-                {t("app.special.modals.prompt.create_invite_created")}
-                <code>{link()}</code>
-              </Invite>
-            </Match>
-          </Switch>
+  const fetchInvite = useMutation(() => ({
+    mutationFn: () =>
+      props.channel
+        .createInvite()
+        .then(({ _id }) =>
+          setLink(
+            CONFIGURATION.IS_UPRYZING
+              ? `https://stt.gg/${_id}`
+              : `${window.location.protocol}//${window.location.host}/invite/${_id}`,
+          ),
         ),
-      },
-    },
-    callback: async () => void 0,
-    submit: {
-      children: t("app.special.modals.actions.ok"),
-    },
-    actions: [
-      {
-        children: t("app.context_menu.copy_link"),
-        onClick: () => modalController.writeText(link()),
-      },
-    ],
-  });
-};
+    onError: showError,
+  }));
 
-export default CreateInvite;
+  onMount(() => fetchInvite.mutate());
+
+  return (
+    <Dialog
+      show={props.show}
+      onClose={props.onClose}
+      title={<Trans>Create Invite</Trans>}
+      actions={[
+        { text: <Trans>OK</Trans> },
+        {
+          text: <Trans>Copy Link</Trans>,
+          onClick: () => {
+            navigator.clipboard.writeText(link());
+            return false;
+          },
+        },
+      ]}
+    >
+      <Show
+        when={!fetchInvite.isPending}
+        fallback={<Trans>Generating invite…</Trans>}
+      >
+        <Invite>
+          <Trans>
+            Here is your new invite code: <code>{link()}</code>
+          </Trans>
+        </Invite>
+      </Show>
+    </Dialog>
+  );
+}

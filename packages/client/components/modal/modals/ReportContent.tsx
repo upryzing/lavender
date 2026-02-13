@@ -1,13 +1,23 @@
-import { API, Server, User } from "@upryzing/upryzing.js";
+import { createFormControl, createFormGroup } from "solid-forms";
+import { For, Match, Switch } from "solid-js";
+
+import { Trans, useLingui } from "@lingui-solid/solid/macro";
+import { API, Message as MessageI, Server, User } from "upryzing.js";
 import { cva } from "styled-system/css";
-import { styled } from "styled-system/jsx";
 
 import { Message } from "@revolt/app";
-import { useTranslation } from "@revolt/i18n";
-import { Avatar, Column, Initials } from "@revolt/ui";
+import {
+  Avatar,
+  Column,
+  Dialog,
+  DialogProps,
+  Form2,
+  Initials,
+  MenuItem,
+} from "@revolt/ui";
 
-import { createFormModal } from "../form";
-import { PropGenerator } from "../types";
+import { useModals } from "..";
+import { Modals } from "../types";
 
 const CONTENT_REPORT_REASONS: API.ContentReportReason[] = [
   "Illegal",
@@ -39,28 +49,118 @@ const USER_REPORT_REASONS: API.UserReportReason[] = [
 /**
  * Modal to report content
  */
-const ReportContent: PropGenerator<"report_content"> = (props) => {
-  const t = useTranslation();
+export function ReportContentModal(
+  props: DialogProps & Modals & { type: "report_content" },
+) {
+  const { t } = useLingui();
+  const { showError } = useModals();
 
-  return createFormModal({
-    modalProps: {
-      title: `Tell us what's wrong with this ${
-        /* TEMP TODO */ props.target instanceof User
-          ? "user"
-          : props.target instanceof Server
-          ? "server"
-          : "message"
-      }`,
-    },
-    schema: {
-      preview: "custom",
-      category: "combo",
-      detail: "text",
-    },
-    data: {
-      preview: {
-        element: (
-          <div class={contentContainer()} use:scrollable>
+  const strings: Record<
+    API.ContentReportReason | API.UserReportReason,
+    string
+  > = {
+    Illegal: t`Content breaks one or more laws`,
+    IllegalGoods: t`Drugs or illegal goods`,
+    IllegalExtortion: t`Extortion or blackmail`,
+    IllegalPornography: t`Revenge or underage pornography`,
+    IllegalHacking: t`Illegal hacking or cracking`,
+    ExtremeViolence: t`Extreme violence, gore or animal cruelty`,
+    PromotesHarm: t`Promotes harm`,
+    UnsolicitedSpam: t`Unsolicited advertising or spam`,
+    Raid: t`Raid or spam attack`,
+    SpamAbuse: t`Spam or similar platform abuse`,
+    ScamsFraud: t`Scams or fraud`,
+    Malware: t`Malware or phishing`,
+    Harassment: t`Harassment or cyberbullying`,
+    NoneSpecified: t`Other`,
+
+    InappropriateProfile: t`User's profile has inappropriate content`,
+    Impersonation: t`Impersonation`,
+    BanEvasion: t`Ban evasion`,
+    Underage: t`Not of minimum age to use the platform`,
+  };
+
+  const group = createFormGroup({
+    category: createFormControl("", { required: true }),
+    detail: createFormControl(""),
+  });
+
+  const reasons =
+    // eslint-disable-next-line solid/reactivity
+    props.target instanceof User ? USER_REPORT_REASONS : CONTENT_REPORT_REASONS;
+
+  async function onSubmit() {
+    try {
+      const category = group.controls.category.value;
+      const detail = group.controls.detail.value;
+
+      if (!category || (category === "NoneSpecified" && !detail)) {
+        throw new Error("NoReasonProvided");
+      }
+
+      await props.client.api.post("/safety/report", {
+        content:
+          props.target instanceof User
+            ? {
+              type: "User",
+              id: props.target.id,
+              report_reason: category as API.UserReportReason,
+              message_id: props.contextMessage?.id,
+            }
+            : props.target instanceof Server
+              ? {
+                type: "Server",
+                id: props.target.id,
+                report_reason: category as API.ContentReportReason,
+              }
+              : {
+                type: "Message",
+                id: props.target.id,
+                report_reason: category as API.ContentReportReason,
+              },
+        additional_context: detail,
+      });
+      props.onClose();
+    } catch (error) {
+      showError(error);
+    }
+  }
+
+  const submit = Form2.useSubmitHandler(group, onSubmit);
+
+  return (
+    <Dialog
+      show={props.show}
+      onClose={props.onClose}
+      title={
+        <Switch>
+          <Match when={props.target instanceof User}>
+            <Trans>Tell us what's wrong with this user</Trans>
+          </Match>
+          <Match when={props.target instanceof Server}>
+            <Trans>Tell us what's wrong with this server</Trans>
+          </Match>
+          <Match when={props.target instanceof MessageI}>
+            <Trans>Tell us what's wrong with this message</Trans>
+          </Match>
+        </Switch>
+      }
+      actions={[
+        { text: <Trans>Cancel</Trans> },
+        {
+          text: <Trans>Report</Trans>,
+          onClick: () => {
+            onSubmit();
+            return false;
+          },
+          isDisabled: !Form2.canSubmit(group),
+        },
+      ]}
+      isDisabled={group.isPending}
+    >
+      <form onSubmit={submit}>
+        <Column>
+          <div class={contentContainer()}>
             {props.target instanceof User ? (
               <Column align>
                 <Avatar src={props.target.animatedAvatarURL} size={64} />
@@ -79,71 +179,33 @@ const ReportContent: PropGenerator<"report_content"> = (props) => {
               <Message message={props.target as never} />
             )}
           </div>
-        ),
-      },
-      category: {
-        options: [
-          {
-            name: "Please select a reason",
-            value: "",
-            disabled: true,
-            selected: true,
-          },
-          ...(props.target instanceof User
-            ? USER_REPORT_REASONS
-            : CONTENT_REPORT_REASONS
-          ).map((value) => ({
-            name: t(
-              `app.special.modals.report.content_reason.${value}` as any,
-              {},
-              value
-            ),
-            value,
-          })),
-        ],
-        field: "Pick a category",
-      },
-      detail: {
-        field: "Give us some detail",
-      },
-    },
-    callback: async ({ category, detail }) => {
-      if (!category || (category === "NoneSpecified" && !detail))
-        throw "NoReasonProvided";
 
-      await props.client.api.post("/safety/report", {
-        content:
-          props.target instanceof User
-            ? {
-                type: "User",
-                id: props.target.id,
-                report_reason: category as API.UserReportReason,
-                message_id: props.contextMessage?.id,
-              }
-            : props.target instanceof Server
-            ? {
-                type: "Server",
-                id: props.target.id,
-                report_reason: category as API.ContentReportReason,
-              }
-            : {
-                type: "Message",
-                id: props.target.id,
-                report_reason: category as API.ContentReportReason,
-              },
-        additional_context: detail,
-      });
-    },
-    submit: {
-      children: "Report",
-    },
-  });
-};
+          <Form2.TextField.Select control={group.controls.category}>
+            <MenuItem value="">
+              <Trans>Please select a reason</Trans>
+            </MenuItem>
+            <For each={reasons}>
+              {(value) => <MenuItem value={value}>{strings[value]}</MenuItem>}
+            </For>
+          </Form2.TextField.Select>
+
+          {/* TODO: use TextEditor? */}
+          <Form2.TextField
+            name="detail"
+            control={group.controls.detail}
+            label={t`Give us some detail`}
+          />
+        </Column>
+      </form>
+    </Dialog>
+  );
+}
 
 const contentContainer = cva({
   base: {
     maxWidth: "100%",
-    maxHeight: "240px",
+    maxHeight: "80vh",
+    overflowY: "hidden",
     "& > div": {
       marginTop: "0 !important",
       pointerEvents: "none",
@@ -151,5 +213,3 @@ const contentContainer = cva({
     },
   },
 });
-
-export default ReportContent;
